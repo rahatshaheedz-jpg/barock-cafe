@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="BAROCK CAFE menu - handcrafted coffee, refreshing drinks, desserts, and light bites."
+    />
+    <title>Our Menu - BAROCK CAFE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main>
+      <header class="site-header">
+        <a class="brand" href="./index.html" aria-label="BAROCK CAFE home">
+          <img src="./assets/barock-logo.png" alt="BAROCK CAFE" />
+        </a>
+        <nav class="nav-links" aria-label="Primary navigation">
+          <a href="./index.html#home">Home</a>
+          <a href="./index.html#about">About</a>
+          <a aria-current="page" href="./menu.html">Menu</a>
+          <a href="./index.html#gallery">Gallery</a>
+          <a href="./index.html#location">Location</a>
+          <a href="./index.html#contact">Contact</a>
+        </nav>
+        <a class="visit-pill" href="./index.html#location">Visit Us Soon</a>
+        <button class="menu-toggle" type="button" data-menu-toggle aria-label="Open navigation">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </header>
+
+      <nav class="mobile-menu" data-mobile-menu aria-label="Mobile navigation">
+        <a href="./index.html#home">Home</a>
+        <a href="./index.html#about">About</a>
+        <a aria-current="page" href="./menu.html">Menu</a>
+        <a href="./index.html#gallery">Gallery</a>
+        <a href="./index.html#location">Location</a>
+        <a href="./index.html#contact">Contact</a>
+      </nav>
+
+      <section class="menu-page-hero">
+        <img
+          class="menu-page-hero-bg"
+          src="https://preview--aroma-gate-landing.lovable.app/assets/gallery-cappuccino-D37XPvl8.jpg"
+          alt="Cappuccino with latte art"
+        />
+        <div class="menu-page-hero-overlay"></div>
+        <div class="ambient-grain" aria-hidden="true"></div>
+        <div class="section-shell menu-page-hero-content reveal">
+          <p class="eyebrow">BAROCK CAFE</p>
+          <h1>Our Menu</h1>
+          <p>Handcrafted coffee, refreshing drinks, desserts, and light bites.</p>
+        </div>
+      </section>
+
+      <section class="menu-catalog section">
+        <div class="section-shell">
+          <div class="menu-toolbar reveal">
+            <label class="menu-search">
+              <span>Search menu</span>
+              <input
+                type="search"
+                placeholder="Search coffee, desserts, snacks..."
+                data-menu-search
+              />
+            </label>
+            <div class="menu-page-filters" aria-label="Filter menu categories">
+              <button type="button" data-menu-category="all" aria-pressed="true">All</button>
+              <button type="button" data-menu-category="hot">Hot Coffee</button>
+              <button type="button" data-menu-category="cold">Cold Coffee</button>
+              <button type="button" data-menu-category="refreshers">Refreshers</button>
+              <button type="button" data-menu-category="desserts">Desserts</button>
+              <button type="button" data-menu-category="snacks">Snacks</button>
+            </div>
+          </div>
+
+          <div class="menu-catalog-meta reveal">
+            <p><span data-menu-count>0</span> items available</p>
+            <p>Sample menu items for launch preview</p>
+          </div>
+
+          <div class="menu-catalog-grid reveal-group" data-menu-list></div>
+          <div class="empty-menu-state" data-empty-state hidden>
+            <h2>No items found</h2>
+            <p>Try another category or search term.</p>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="section-shell footer-grid">
+          <div>
+            <img src="./assets/barock-logo.png" alt="BAROCK CAFE" />
+            <p>
+              A premium coffee experience opening soon in Gulshan-2, Dhaka.
+              Slow-crafted brews, fresh desserts, and a space made to linger in.
+            </p>
+          </div>
+          <div>
+            <h3>Visit</h3>
+            <ul>
+              <li>House : 9/B, Road : 51</li>
+              <li>Gulshan-2, Dhaka, Bangladesh, 1212</li>
+              <li>Daily - 8AM to 11PM</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Quick Links</h3>
+            <ul>
+              <li><a href="./index.html#about">About</a></li>
+              <li><a href="./menu.html">Menu</a></li>
+              <li><a href="./index.html#gallery">Gallery</a></li>
+              <li><a href="./index.html#contact">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Follow</h3>
+            <div class="socials">
+              <a href="https://www.instagram.com/barock_cafe/" target="_blank" rel="noreferrer">Instagram</a>
+              <a href="https://www.facebook.com/profile.php?id=61590421534188" target="_blank" rel="noreferrer">Facebook</a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>Copyright <span data-year></span> BAROCK CAFE. All rights reserved.</span>
+          <span>Crafted with warmth in Dhaka.</span>
+        </div>
+      </footer>
+    </main>
+
+    <script src="./menu.js"></script>
+  </body>
+</html>
