@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="BAROCK CAFE - Premium coffee opening soon in Gulshan-2, Dhaka."
+    />
+    <title>BAROCK CAFE - Premium Coffee Opening Soon in Gulshan-2, Dhaka</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main>
+      <header class="site-header" id="home">
+        <a class="brand" href="#home" aria-label="BAROCK CAFE home">
+          <img src="./assets/barock-logo.png" alt="BAROCK CAFE" />
+        </a>
+        <nav class="nav-links" aria-label="Primary navigation">
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="./menu.html">Menu</a>
+          <a href="#gallery">Gallery</a>
+          <a href="#location">Location</a>
+          <a href="#contact">Contact</a>
+        </nav>
+        <a class="visit-pill" href="./menu.html">View Menu</a>
+        <button class="menu-toggle" type="button" data-menu-toggle aria-label="Open navigation">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </header>
+
+      <nav class="mobile-menu" data-mobile-menu aria-label="Mobile navigation">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="./menu.html">Menu</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#location">Location</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <section class="hero">
+        <img
+          class="hero-bg"
+          src="https://preview--aroma-gate-landing.lovable.app/assets/hero-coffee-kcZlvpyx.jpg"
+          alt="Steaming latte on a rustic cafe table"
+        />
+        <div class="hero-overlay"></div>
+        <div class="ambient-grain" aria-hidden="true"></div>
+        <div class="steam-wrap" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <div class="hero-content reveal">
+          <p class="eyebrow">Opening Soon in Gulshan-2</p>
+          <h1><span>Something Perfect</span> is Brewing</h1>
+          <p>
+            A premium coffee house for slow-crafted brews, warm desserts, and
+            elegant corners made for lingering a little longer.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="./menu.html">Explore Menu</a>
+            <a class="button ghost" href="#location">Find Us</a>
+          </div>
+        </div>
+
+        <div class="hero-card reveal" aria-label="Opening details">
+          <img src="./assets/barock-logo.png" alt="BAROCK CAFE" />
+          <span>House : 9/B, Road : 51</span>
+          <strong>Gulshan-2, Dhaka, Bangladesh, 1212</strong>
+        </div>
+
+        <div class="hero-stats reveal" aria-label="Cafe highlights">
+          <article>
+            <strong>100%</strong>
+            <span>Arabica Beans</span>
+          </article>
+          <article>
+            <strong>24+</strong>
+            <span>Signature Drinks</span>
+          </article>
+          <article>
+            <strong>Daily</strong>
+            <span>Fresh Desserts</span>
+          </article>
+        </div>
+      </section>
+
+      <div class="section-divider" aria-hidden="true"></div>
+
+      <section class="section about" id="about">
+        <div class="section-shell about-grid">
+          <div class="section-heading reveal">
+            <p class="eyebrow">Our Story</p>
+            <h2>Crafted for coffee lovers with a taste for quiet luxury.</h2>
+          </div>
+          <div class="about-copy reveal">
+            <p>
+              BAROCK CAFE is a love letter to the ritual of coffee. From the
+              first crackle of beans to the final sip, every detail is
+              considered: premium brews, freshly baked desserts, soulful snacks,
+              and service that feels personal from the second visit.
+            </p>
+            <div class="about-cards">
+              <article>
+                <span>01</span>
+                <h3>Premium Coffee</h3>
+                <p>Single-origin beans, roasted in small batches and pulled by hand for a cup that lingers.</p>
+              </article>
+              <article>
+                <span>02</span>
+                <h3>Fresh Desserts</h3>
+                <p>Cakes, pastries, and chocolate creations baked fresh every morning in our kitchen.</p>
+              </article>
+              <article>
+                <span>03</span>
+                <h3>Cozy Ambience</h3>
+                <p>Warm light, dark textures, and unhurried corners designed for conversation or quiet.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section menu" id="menu">
+        <div class="section-shell">
+          <div class="center-heading reveal">
+            <p class="eyebrow">Our Menu</p>
+            <h2>A Taste of BAROCK</h2>
+            <p>A preview of the menu - refined, comforting, and made for coffee-led moments.</p>
+          </div>
+
+          <div class="menu-filters reveal" aria-label="Filter menu items">
+            <button type="button" data-filter="all" aria-pressed="true">All</button>
+            <button type="button" data-filter="hot">Hot Coffee</button>
+            <button type="button" data-filter="cold">Cold Coffee</button>
+            <button type="button" data-filter="refreshers">Refreshers</button>
+            <button type="button" data-filter="desserts">Desserts</button>
+            <button type="button" data-filter="snacks">Snacks</button>
+          </div>
+
+          <div class="menu-grid reveal-group">
+            <article class="menu-card reveal" data-category="hot">
+              <img src="https://preview--aroma-gate-landing.lovable.app/assets/menu-cappuccino-dOQkuuY3.jpg" alt="Classic Cappuccino" />
+              <div>
+                <span>Hot Coffee</span>
+                <h3>Classic Cappuccino</h3>
+                <strong>BDT 280</strong>
+                <p>Velvety milk, rich espresso, signature foam.</p>
+              </div>
+            </article>
+            <article class="menu-card reveal" data-category="hot">
+              <img src="https://preview--aroma-gate-landing.lovable.app/assets/menu-espresso-CnmzVZk6.jpg" alt="Double Espresso" />
+              <div>
+                <span>Hot Coffee</span>
+                <h3>Double Espresso</h3>
+                <strong>BDT 220</strong>
+                <p>Two shots of intensity, golden crema.</p>
+              </div>
+            </article>
+            <article class="menu-card reveal" data-category="cold">
+              <img src="https://preview--aroma-gate-landing.lovable.app/assets/menu-coldbrew-BLwLUPhm.jpg" alt="Slow Cold Brew" />
+              <div>
+                <span>Cold Coffee</span>
+                <h3>Slow Cold Brew</h3>
+                <strong>BDT 320</strong>
+                <p>Steeped 16 hours, smooth and chocolatey.</p>
+              </div>
+            </article>
+            <article class="menu-card reveal" data-category="refreshers">
+              <img src="https://preview--aroma-gate-landing.lovable.app/assets/menu-refresher-CDhCwMp1.jpg" alt="Berry Bloom Refresher" />
+              <div>
+                <span>Refreshers</span>
+                <h3>Berry Bloom Refresher</h3>
+                <strong>BDT 300</strong>
+                <p>Mixed berries, mint, sparkling lift.</p>
+              </div>
+            </article>
+            <article class="menu-card reveal" data-category="desserts">
+              <img src="https://preview--aroma-gate-landing.lovable.app/assets/menu-cheesecake-IJxGKb95.jpg" alt="Berry Cheesecake" />
+              <div>
+                <span>Desserts</span>
+                <h3>Berry Cheesecake</h3>
+                <strong>BDT 380</strong>
+                <p>Vanilla cheesecake with seasonal berries.</p>
+              </div>
+            </article>
+            <article class="menu-card reveal" data-category="snacks">
+              <img src="https://preview--aroma-gate-landing.lovable.app/assets/menu-sandwich-CYoZrlWE.jpg" alt="Classic Club Sandwich" />
+              <div>
+                <span>Snacks</span>
+                <h3>Classic Club Sandwich</h3>
+                <strong>BDT 450</strong>
+                <p>Triple stacked with golden fries on the side.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <div class="luxury-band reveal" aria-label="Brand statement">
+        <span></span>
+        <p>Slow coffee. Warm light. A quieter kind of luxury.</p>
+        <span></span>
+      </div>
+
+      <section class="section signature">
+        <div class="section-shell">
+          <div class="split-heading reveal">
+            <p class="eyebrow">Signature</p>
+            <h2><span>Three things you have</span> to try first</h2>
+          </div>
+          <div class="signature-grid reveal-group">
+            <article class="reveal">
+              <img src="https://preview--aroma-gate-landing.lovable.app/assets/signature-latte-BiROs_4w.jpg" alt="Signature Latte" />
+              <div>
+                <span>01 - House Special</span>
+                <h3>Signature Latte</h3>
+                <p>Our flagship blend, slow-steamed milk, and a hand-poured rosetta.</p>
+              </div>
+            </article>
+            <article class="reveal">
+              <img src="https://preview--aroma-gate-landing.lovable.app/assets/iced-caramel-C_8bRu5i.jpg" alt="Iced Caramel Coffee" />
+              <div>
+                <span>02 - Iced & Sweet</span>
+                <h3>Iced Caramel Coffee</h3>
+                <p>Espresso over ice, ribbons of house-made caramel, finished with cream.</p>
+              </div>
+            </article>
+            <article class="reveal">
+              <img src="https://preview--aroma-gate-landing.lovable.app/assets/chocolate-dessert-DDRWZGfI.jpg" alt="Molten Chocolate" />
+              <div>
+                <span>03 - Dessert</span>
+                <h3>Molten Chocolate</h3>
+                <p>Warm chocolate centre, dusted cocoa, perfect with a black coffee.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section gallery" id="gallery">
+        <div class="section-shell">
+          <div class="center-heading reveal">
+            <p class="eyebrow">Gallery</p>
+            <h2>A peek inside BAROCK</h2>
+          </div>
+          <div class="gallery-grid reveal-group">
+            <img class="reveal" src="https://preview--aroma-gate-landing.lovable.app/assets/gallery-interior-tCSuRazx.jpg" alt="Warm cafe interior with pendant lights" />
+            <img class="reveal" src="https://preview--aroma-gate-landing.lovable.app/assets/gallery-cappuccino-D37XPvl8.jpg" alt="Cappuccino with latte art top-down" />
+            <img class="reveal" src="https://preview--aroma-gate-landing.lovable.app/assets/gallery-pastries-BVf-ZN5N.jpg" alt="Fresh pastries on marble" />
+            <img class="reveal" src="https://preview--aroma-gate-landing.lovable.app/assets/gallery-friends-EGdaPmPu.jpg" alt="Friends laughing over coffee" />
+            <img class="reveal" src="https://preview--aroma-gate-landing.lovable.app/assets/gallery-seating-DYGCS3ox.jpg" alt="Cozy reading corner with leather armchair" />
+            <img class="reveal" src="https://preview--aroma-gate-landing.lovable.app/assets/gallery-beans-f9SuyNaU.jpg" alt="Coffee being poured over fresh beans" />
+          </div>
+        </div>
+      </section>
+
+      <section class="section experience">
+        <div class="section-shell">
+          <div class="center-heading reveal">
+            <p class="eyebrow">Experience</p>
+            <h2>However you like your coffee</h2>
+          </div>
+          <div class="experience-grid reveal-group">
+            <article class="reveal">
+              <h3>Dine In</h3>
+              <p>Settle in. Stay a while.</p>
+            </article>
+            <article class="reveal">
+              <h3>Takeaway</h3>
+              <p>Grab your favourite, go.</p>
+            </article>
+            <article class="reveal">
+              <h3>Pick-up</h3>
+              <p>Order ahead, skip the line.</p>
+            </article>
+            <article class="reveal">
+              <h3>Delivery</h3>
+              <p>Coming soon to your door.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section location" id="location">
+        <div class="section-shell location-grid">
+          <div class="location-copy reveal">
+            <p class="eyebrow">Find Us</p>
+            <h2>Come visit when we open</h2>
+            <p>
+              Tucked into the heart of Gulshan-2, BAROCK CAFE is a short stroll
+              away from the city's favourite corners.
+            </p>
+            <div class="info-list">
+              <article>
+                <span>Address</span>
+                <strong>House : 9/B, Road : 51, Gulshan-2, Dhaka, Bangladesh, 1212</strong>
+              </article>
+              <article>
+                <span>Hours after opening</span>
+                <strong>Daily - 8:00 AM to 11:00 PM</strong>
+              </article>
+            </div>
+            <a
+              class="button primary"
+              href="https://maps.app.goo.gl/AjKAMoXJ5qYde1Ww5"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Get Directions
+            </a>
+          </div>
+          <iframe
+            class="reveal"
+            title="BAROCK CAFE location map"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q=House%209%2FB%2C%20Road%2051%2C%20Gulshan-2%2C%20Dhaka%2C%20Bangladesh%2C%201212&output=embed"
+          ></iframe>
+        </div>
+      </section>
+
+      <section class="section contact" id="contact">
+        <div class="section-shell contact-grid">
+          <div class="reveal">
+            <p class="eyebrow">Contact</p>
+            <h2>Say hello</h2>
+            <p>
+              Questions, collaborations, or just want to know when we open?
+              We'd love to hear from you.
+            </p>
+            <div class="contact-links">
+              <a href="tel:+8801000000000"><span>Phone</span> +880 1XXX-XXXXXX</a>
+              <a href="mailto:hello@barockcafe.com"><span>Email</span> hello@barockcafe.com</a>
+            </div>
+            <div class="socials">
+              <a href="https://www.instagram.com/barock_cafe/" target="_blank" rel="noreferrer">Instagram</a>
+              <a href="https://www.facebook.com/profile.php?id=61590421534188" target="_blank" rel="noreferrer">Facebook</a>
+            </div>
+          </div>
+          <form class="contact-form reveal" data-contact-form>
+            <label>
+              Name
+              <input type="text" name="name" placeholder="Your name" required />
+            </label>
+            <label>
+              Phone
+              <input type="tel" name="phone" placeholder="+880" required />
+            </label>
+            <label>
+              Message
+              <textarea name="message" placeholder="Tell us anything..." required></textarea>
+            </label>
+            <button class="button primary" type="submit">Send Message</button>
+          </form>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="section-shell footer-grid">
+          <div>
+            <img src="./assets/barock-logo.png" alt="BAROCK CAFE" />
+            <p>
+              A premium coffee experience opening soon in Gulshan-2, Dhaka.
+              Slow-crafted brews, fresh desserts, and a space made to linger in.
+            </p>
+          </div>
+          <div>
+            <h3>Visit</h3>
+            <ul>
+              <li>House : 9/B, Road : 51</li>
+              <li>Gulshan-2, Dhaka, Bangladesh, 1212</li>
+              <li>Daily - 8AM to 11PM</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Quick Links</h3>
+            <ul>
+              <li><a href="#about">About</a></li>
+              <li><a href="./menu.html">Menu</a></li>
+              <li><a href="#gallery">Gallery</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Follow</h3>
+            <div class="socials">
+              <a href="https://www.instagram.com/barock_cafe/" target="_blank" rel="noreferrer">Instagram</a>
+              <a href="https://www.facebook.com/profile.php?id=61590421534188" target="_blank" rel="noreferrer">Facebook</a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>Copyright <span data-year></span> BAROCK CAFE. All rights reserved.</span>
+          <span>Crafted with warmth in Dhaka.</span>
+        </div>
+      </footer>
+    </main>
+
+    <div class="toast" data-toast role="status" aria-live="polite">
+      Thanks. Your message is ready for BAROCK CAFE.
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
