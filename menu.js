@@ -147,6 +147,27 @@ let searchTerm = "";
 
 year.textContent = new Date().getFullYear();
 
+function initScrollProgress() {
+  const progress = document.createElement("div");
+  progress.className = "scroll-progress";
+  progress.setAttribute("aria-hidden", "true");
+  progress.innerHTML = '<span class="scroll-progress__bar"></span>';
+  document.body.prepend(progress);
+
+  const bar = progress.querySelector(".scroll-progress__bar");
+  const updateProgress = () => {
+    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+    const percentage = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
+    bar.style.width = `${Math.min(100, Math.max(0, percentage))}%`;
+  };
+
+  updateProgress();
+  window.addEventListener("scroll", updateProgress, { passive: true });
+  window.addEventListener("resize", updateProgress);
+}
+
+initScrollProgress();
+
 const revealObserver = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
@@ -233,7 +254,7 @@ function renderMenu() {
         .join("");
 
       return `
-        <article class="menu-category-card reveal is-visible${isOpen ? " is-open" : ""}" style="--delay: ${index * 80}ms">
+        <article class="menu-category-card glass-card reveal is-visible${isOpen ? " is-open" : ""}" style="--delay: ${index * 80}ms">
           <button
             class="menu-category-trigger"
             type="button"
@@ -248,7 +269,7 @@ function renderMenu() {
               <span class="menu-category-kicker">${String(category.visibleItems.length).padStart(2, "0")} items</span>
               <span class="menu-category-title">${escapeHtml(category.title)}</span>
               <span class="menu-category-subtitle">${escapeHtml(category.subtitle)}</span>
-              <span class="menu-category-action">
+              <span class="menu-category-action glass-button">
                 View Items
                 <span class="menu-category-icon" aria-hidden="true"></span>
               </span>

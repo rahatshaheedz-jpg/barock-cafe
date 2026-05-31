@@ -100,7 +100,7 @@ function ReviewCard({ review }) {
     "article",
     {
       className:
-        "fade-card rounded-[8px] border border-borderGold bg-cardBrown/95 p-6 shadow-cafe backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-gold hover:shadow-softCafe",
+        "fade-card glass-card rounded-[8px] border border-borderGold bg-cardBrown/95 p-6 shadow-cafe backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-gold hover:shadow-softCafe",
     },
     React.createElement(
       "div",
@@ -303,7 +303,7 @@ function ReviewsApp() {
           {
             onSubmit: submitReview,
             className:
-              "h-fit rounded-[8px] border border-borderGold bg-cardBrown/95 p-6 shadow-cafe backdrop-blur-xl lg:sticky lg:top-28",
+              "glass-card h-fit rounded-[8px] border border-borderGold bg-cardBrown/95 p-6 shadow-cafe backdrop-blur-xl lg:sticky lg:top-28",
           },
           React.createElement("p", { className: "mb-3 text-xs font-black uppercase tracking-[0.14em] text-gold" }, "Add Review"),
           React.createElement("h2", { className: "mb-5 font-display text-4xl leading-none text-cream" }, "Share your moment"),
@@ -341,7 +341,7 @@ function ReviewsApp() {
               type: "submit",
               disabled: isSubmitting,
               className:
-                "w-full rounded-full border border-gold bg-gold px-5 py-4 font-black text-cafeBlack shadow-[0_0_0_rgba(212,168,95,0)] transition duration-300 hover:-translate-y-0.5 hover:bg-goldHover hover:shadow-[0_0_34px_rgba(212,168,95,0.35)] disabled:cursor-not-allowed disabled:opacity-70",
+                "glass-button w-full rounded-full border border-gold bg-gold px-5 py-4 font-black text-cafeBlack shadow-[0_0_0_rgba(212,168,95,0)] transition duration-300 hover:-translate-y-0.5 hover:bg-goldHover hover:shadow-[0_0_34px_rgba(212,168,95,0.35)] disabled:cursor-not-allowed disabled:opacity-70",
             },
             isSubmitting ? "Submitting..." : "Submit Review",
           ),
@@ -355,7 +355,7 @@ function ReviewsApp() {
 function StatCard({ label, value, suffix = "" }) {
   return React.createElement(
     "article",
-    { className: "rounded-[8px] border border-borderGold bg-cardBrown/95 p-6 shadow-cafe backdrop-blur-xl" },
+    { className: "glass-card rounded-[8px] border border-borderGold bg-cardBrown/95 p-6 shadow-cafe backdrop-blur-xl" },
     React.createElement("p", { className: "mb-3 text-xs font-black uppercase tracking-[0.14em] text-gold" }, label),
     React.createElement("strong", { className: "font-display text-5xl leading-none text-cream" }, React.createElement(CountUp, { value, suffix })),
     React.createElement(
@@ -376,6 +376,27 @@ root.render(React.createElement(ReviewsApp));
 
 const menuToggle = document.querySelector("[data-menu-toggle]");
 const mobileMenu = document.querySelector("[data-mobile-menu]");
+
+function initScrollProgress() {
+  const progress = document.createElement("div");
+  progress.className = "scroll-progress";
+  progress.setAttribute("aria-hidden", "true");
+  progress.innerHTML = '<span class="scroll-progress__bar"></span>';
+  document.body.prepend(progress);
+
+  const bar = progress.querySelector(".scroll-progress__bar");
+  const updateProgress = () => {
+    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+    const percentage = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
+    bar.style.width = `${Math.min(100, Math.max(0, percentage))}%`;
+  };
+
+  updateProgress();
+  window.addEventListener("scroll", updateProgress, { passive: true });
+  window.addEventListener("resize", updateProgress);
+}
+
+initScrollProgress();
 
 menuToggle.addEventListener("click", () => {
   const isOpen = mobileMenu.classList.toggle("is-open");
