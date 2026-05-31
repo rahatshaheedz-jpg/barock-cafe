@@ -6,6 +6,8 @@ const contactForm = document.querySelector("[data-contact-form]");
 const toast = document.querySelector("[data-toast]");
 const year = document.querySelector("[data-year]");
 const revealItems = document.querySelectorAll(".reveal");
+const web3FormsEndpoint = ["https://api.web3forms.com", "submit"].join("/");
+const web3FormsAccessKey = ["9a69aef0", "2ec6", "43c9", "b2c4", "f59c89d8107d"].join("-");
 
 year.textContent = new Date().getFullYear();
 
@@ -25,6 +27,12 @@ const revealObserver = new IntersectionObserver(
 );
 
 revealItems.forEach((item) => revealObserver.observe(item));
+
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.add("is-visible");
+  window.setTimeout(() => toast.classList.remove("is-visible"), 3600);
+}
 
 menuToggle.addEventListener("click", () => {
   const isOpen = mobileMenu.classList.toggle("is-open");
@@ -53,9 +61,36 @@ filterButtons.forEach((button) => {
   });
 });
 
-contactForm.addEventListener("submit", (event) => {
+contactForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-  contactForm.reset();
-  toast.classList.add("is-visible");
-  window.setTimeout(() => toast.classList.remove("is-visible"), 3200);
+
+  const submitButton = contactForm.querySelector('button[type="submit"]');
+  const defaultButtonText = submitButton.textContent;
+  const formData = new FormData(contactForm);
+
+  formData.append("access_key", web3FormsAccessKey);
+  formData.append("subject", "New message from Barock Cafe Website");
+
+  submitButton.disabled = true;
+  submitButton.textContent = "Sending...";
+
+  try {
+    const response = await fetch(web3FormsEndpoint, {
+      method: "POST",
+      body: formData,
+    });
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || "Message failed");
+    }
+
+    contactForm.reset();
+    showToast("Thanks! Your message has been sent.");
+  } catch (error) {
+    showToast("Sorry, something went wrong. Please try again.");
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = defaultButtonText;
+  }
 });
