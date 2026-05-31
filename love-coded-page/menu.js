@@ -3,7 +3,7 @@ const menuCategories = [
     id: "coffee-hot-drinks",
     title: "Coffee & Hot Drinks",
     subtitle: "Classic brews and warm comfort",
-    image: "https://preview--aroma-gate-landing.lovable.app/assets/menu-cappuccino-dOQkuuY3.jpg",
+    image: "./assets/site/coffee-cup.svg",
     items: [
       "Cappuccino",
       "Cafe Latte",
@@ -27,7 +27,7 @@ const menuCategories = [
     id: "cold-drinks-chillers",
     title: "Cold Drinks & Chillers",
     subtitle: "Iced, refreshing, and signature coolers",
-    image: "https://preview--aroma-gate-landing.lovable.app/assets/iced-caramel-C_8bRu5i.jpg",
+    image: "./assets/site/iced-coffee.svg",
     items: [
       "Iced Latte",
       "Iced Mocha",
@@ -49,7 +49,7 @@ const menuCategories = [
     id: "appetizers-starters",
     title: "Appetizers / Starters",
     subtitle: "Quick bites to begin your moment",
-    image: "https://preview--aroma-gate-landing.lovable.app/assets/gallery-pastries-BVf-ZN5N.jpg",
+    image: "./assets/site/dessert.svg",
     note: "Available from 12 PM at Gulshan 1 & Gulshan 2",
     items: [
       "Fried Calamari Rings",
@@ -70,7 +70,7 @@ const menuCategories = [
     id: "sandwiches-burgers-fast-food",
     title: "Sandwiches, Burgers & Fast Food",
     subtitle: "Hearty cafe favorites",
-    image: "https://preview--aroma-gate-landing.lovable.app/assets/menu-sandwich-CYoZrlWE.jpg",
+    image: "./assets/site/sandwich.svg",
     items: [
       "Club Sandwich",
       "Grilled Chicken Sandwich",
@@ -84,7 +84,7 @@ const menuCategories = [
     id: "pizza",
     title: "Pizza",
     subtitle: "Real thin crust delights",
-    image: "https://preview--aroma-gate-landing.lovable.app/assets/gallery-friends-EGdaPmPu.jpg",
+    image: "./assets/site/friends.svg",
     items: [
       "Margherita Pizza",
       "BBQ Chicken Pizza",
@@ -99,7 +99,7 @@ const menuCategories = [
     id: "kitchen-items-mains",
     title: "Kitchen Items / Mains",
     subtitle: "Signature plates and all-day specials",
-    image: "https://preview--aroma-gate-landing.lovable.app/assets/signature-latte-BiROs_4w.jpg",
+    image: "./assets/site/coffee-cup.svg",
     items: [
       "Prawn & Calamari Spinach Apple Pasta",
       "Chicken Parmesan",
@@ -121,7 +121,7 @@ const menuCategories = [
     id: "desserts",
     title: "Desserts",
     subtitle: "Sweet endings, perfectly yours",
-    image: "https://preview--aroma-gate-landing.lovable.app/assets/menu-cheesecake-IJxGKb95.jpg",
+    image: "./assets/site/dessert.svg",
     items: [
       "Blueberry Blast",
       "Choco Fantasy",
@@ -141,6 +141,7 @@ const menuList = document.querySelector("[data-menu-list]");
 const menuCount = document.querySelector("[data-menu-count]");
 const emptyState = document.querySelector("[data-empty-state]");
 const revealItems = document.querySelectorAll(".reveal");
+const defaultCafeImage = "./assets/site/hero-coffee.svg";
 
 let openCategoryId = "";
 let searchTerm = "";
@@ -159,6 +160,7 @@ function initScrollProgress() {
     const scrollable = document.documentElement.scrollHeight - window.innerHeight;
     const percentage = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
     bar.style.width = `${Math.min(100, Math.max(0, percentage))}%`;
+    document.querySelector(".site-header")?.classList.toggle("is-scrolled", window.scrollY > 18);
   };
 
   updateProgress();
@@ -167,6 +169,29 @@ function initScrollProgress() {
 }
 
 initScrollProgress();
+
+function initImageFallbacks() {
+  document.querySelectorAll("img").forEach((image) => {
+    image.addEventListener(
+      "error",
+      () => {
+        if (image.dataset.fallbackApplied === "true") {
+          return;
+        }
+
+        image.dataset.fallbackApplied = "true";
+        image.src = defaultCafeImage;
+      },
+      { once: true },
+    );
+
+    if (image.complete && image.naturalWidth === 0) {
+      image.dispatchEvent(new Event("error"));
+    }
+  });
+}
+
+initImageFallbacks();
 
 const revealObserver = new IntersectionObserver(
   (entries) => {
@@ -290,6 +315,7 @@ function renderMenu() {
 
   menuCount.textContent = String(getTotalVisibleItems(visibleCategories));
   emptyState.hidden = visibleCategories.length > 0;
+  initImageFallbacks();
 }
 
 function toggleCategory(categoryId) {

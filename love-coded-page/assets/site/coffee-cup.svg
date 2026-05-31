@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Cappuccino cup">
+  <rect width="1200" height="900" fill="#120C08"/>
+  <circle cx="820" cy="210" r="360" fill="#D4A85F" opacity=".18"/>
+  <circle cx="350" cy="740" r="300" fill="#8B5A2B" opacity=".22"/>
+  <g transform="translate(270 170)">
+    <ellipse cx="340" cy="520" rx="330" ry="78" fill="#050302" opacity=".45"/>
+    <path d="M125 160 h360 a90 90 0 0 1 90 90 v90 a205 205 0 0 1-205 205 h-130 a205 205 0 0 1-205-205 v-90 a90 90 0 0 1 90-90z" fill="#FFF7E8"/>
+    <path d="M555 250 h72 c76 0 116 45 116 104s-42 108-116 108h-74" fill="none" stroke="#FFF7E8" stroke-width="42" stroke-linecap="round"/>
+    <ellipse cx="306" cy="160" rx="180" ry="42" fill="#8B5A2B"/>
+    <path d="M186 158 c76-50 176-50 242 0 c-70 36-158 38-242 0z" fill="#D4A85F" opacity=".4"/>
+    <path d="M220 90 C175 20 282 10 238-55 M344 92 C302 20 420 15 374-58" fill="none" stroke="#FFF7E8" stroke-width="12" stroke-linecap="round" opacity=".5"/>
+  </g>
+  <text x="64" y="812" fill="#FFF7E8" font-family="Georgia,serif" font-size="62" font-weight="700">Classic Brews</text>
+</svg>
