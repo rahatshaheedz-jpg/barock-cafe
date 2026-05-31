@@ -61,7 +61,7 @@ function Stars({ rating, interactive = false, onChange, hoveredRating, onHover }
           className: [
             "text-2xl leading-none transition duration-200",
             interactive ? "hover:scale-125 focus:scale-125 focus:outline-none" : "cursor-default",
-            isActive ? "text-gold drop-shadow-[0_0_10px_rgba(212,168,117,0.35)]" : "text-paper/20",
+            isActive ? "text-gold drop-shadow-[0_0_12px_rgba(212,168,95,0.45)]" : "text-muted/45",
           ].join(" "),
           "aria-label": interactive ? `${star} stars` : undefined,
         },
@@ -100,7 +100,7 @@ function ReviewCard({ review }) {
     "article",
     {
       className:
-        "fade-card rounded-[8px] border border-paper/12 bg-paper/[0.07] p-6 shadow-cafe backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-gold/40 hover:bg-paper/[0.1]",
+        "fade-card rounded-[8px] border border-borderGold bg-cardBrown/95 p-6 shadow-cafe backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-gold hover:shadow-softCafe",
     },
     React.createElement(
       "div",
@@ -108,12 +108,12 @@ function ReviewCard({ review }) {
       React.createElement(
         "div",
         null,
-        React.createElement("h3", { className: "font-display text-3xl leading-none text-paper" }, review.name),
-        React.createElement("p", { className: "mt-2 text-sm font-bold text-paper/45" }, formatDate(review.created_at)),
+        React.createElement("h3", { className: "font-display text-3xl leading-none text-cream" }, review.name),
+        React.createElement("p", { className: "mt-2 text-sm font-bold text-muted" }, formatDate(review.created_at)),
       ),
       React.createElement(Stars, { rating: review.rating }),
     ),
-    React.createElement("p", { className: "text-[1rem] leading-7 text-paper/70" }, review.message),
+    React.createElement("p", { className: "text-[1rem] leading-7 text-secondary" }, review.message),
   );
 }
 
@@ -219,28 +219,28 @@ function ReviewsApp() {
 
   return React.createElement(
     "div",
-    { className: "min-h-screen overflow-hidden bg-cafeBlack text-paper" },
+    { className: "min-h-screen overflow-hidden bg-cafeBlack text-cream" },
     React.createElement(
       "section",
       { className: "relative isolate grid min-h-[82svh] items-center overflow-hidden px-5 pb-20 pt-36 md:pt-40" },
       React.createElement("div", {
         className:
-          "absolute inset-0 -z-40 bg-[url('https://preview--aroma-gate-landing.lovable.app/assets/hero-coffee-kcZlvpyx.jpg')] bg-cover bg-center opacity-45 saturate-75",
+          "absolute inset-0 -z-40 bg-[url('https://preview--aroma-gate-landing.lovable.app/assets/hero-coffee-kcZlvpyx.jpg')] bg-cover bg-center opacity-55 saturate-75",
       }),
       React.createElement("div", {
         className:
-          "absolute inset-0 -z-30 bg-[radial-gradient(circle_at_72%_22%,rgba(185,133,82,0.24),transparent_28%),linear-gradient(90deg,rgba(8,6,4,0.96),rgba(27,16,11,0.82)_55%,rgba(8,6,4,0.58))]",
+          "absolute inset-0 -z-30 bg-[radial-gradient(circle_at_72%_22%,rgba(212,168,95,0.22),transparent_28%),linear-gradient(90deg,rgba(11,7,5,0.98),rgba(18,12,8,0.9)_55%,rgba(11,7,5,0.7))]",
       }),
       React.createElement("div", {
         className:
-          "absolute inset-0 -z-20 bg-[linear-gradient(90deg,rgba(255,249,239,0.035)_1px,transparent_1px),linear-gradient(rgba(255,249,239,0.026)_1px,transparent_1px)] bg-[length:84px_84px]",
+          "absolute inset-0 -z-20 bg-[linear-gradient(90deg,rgba(255,247,232,0.055)_1px,transparent_1px),linear-gradient(rgba(255,247,232,0.04)_1px,transparent_1px)] bg-[length:84px_84px]",
       }),
       React.createElement(
         "div",
         { className: "review-steam absolute right-[10%] top-[28%] -z-10 hidden h-80 w-64 md:block", "aria-hidden": "true" },
-        React.createElement("span", { className: "absolute bottom-0 left-[22%] h-44 w-px rounded-full bg-gradient-to-t from-transparent via-paper/40 to-transparent" }),
-        React.createElement("span", { className: "absolute bottom-0 left-[48%] h-60 w-px rounded-full bg-gradient-to-t from-transparent via-paper/40 to-transparent" }),
-        React.createElement("span", { className: "absolute bottom-0 left-[72%] h-52 w-px rounded-full bg-gradient-to-t from-transparent via-paper/40 to-transparent" }),
+        React.createElement("span", { className: "absolute bottom-0 left-[22%] h-44 w-px rounded-full bg-gradient-to-t from-transparent via-cream/55 to-transparent" }),
+        React.createElement("span", { className: "absolute bottom-0 left-[48%] h-60 w-px rounded-full bg-gradient-to-t from-transparent via-cream/55 to-transparent" }),
+        React.createElement("span", { className: "absolute bottom-0 left-[72%] h-52 w-px rounded-full bg-gradient-to-t from-transparent via-cream/55 to-transparent" }),
       ),
       React.createElement(
         "div",
@@ -249,17 +249,17 @@ function ReviewsApp() {
           "div",
           { className: "animate-[fadeUp_900ms_ease_forwards]" },
           React.createElement("p", { className: "mb-4 inline-flex items-center gap-3 text-xs font-black uppercase tracking-[0.16em] text-gold before:h-px before:w-10 before:bg-current" }, "Barock Cafe Experience"),
-          React.createElement("h1", { className: "max-w-4xl font-display text-[4rem] font-bold leading-[0.88] text-paper sm:text-[6rem] lg:text-[8rem]" }, "Customer Reviews"),
-          React.createElement("p", { className: "mt-6 max-w-2xl text-xl leading-8 text-paper/72" }, "Every moment, perfectly shared by our guests."),
-          React.createElement("p", { className: "mt-4 max-w-xl text-paper/52" }, "Every Moment, Perfectly Yours"),
+          React.createElement("h1", { className: "max-w-4xl font-display text-[4rem] font-bold leading-[0.88] text-cream drop-shadow-[0_10px_30px_rgba(0,0,0,0.45)] sm:text-[6rem] lg:text-[8rem]" }, "Customer Reviews"),
+          React.createElement("p", { className: "mt-6 max-w-2xl text-xl leading-8 text-secondary" }, "Every moment, perfectly shared by our guests."),
+          React.createElement("p", { className: "mt-4 max-w-xl font-bold text-muted" }, "Every Moment, Perfectly Yours"),
         ),
         React.createElement(
           "div",
-          { className: "rounded-[8px] border border-paper/15 bg-paper/[0.07] p-6 shadow-cafe backdrop-blur-xl" },
+          { className: "rounded-[8px] border border-borderGold bg-cardBrown/90 p-6 shadow-cafe backdrop-blur-xl" },
           React.createElement("p", { className: "text-xs font-black uppercase tracking-[0.14em] text-gold" }, "Guest sentiment"),
           React.createElement("div", { className: "mt-5 flex items-end gap-3" },
-            React.createElement("strong", { className: "font-display text-6xl leading-none" }, React.createElement(CountUp, { value: averageRating })),
-            React.createElement("span", { className: "pb-2 text-paper/54" }, "/ 5")
+            React.createElement("strong", { className: "font-display text-6xl leading-none text-cream" }, React.createElement(CountUp, { value: averageRating })),
+            React.createElement("span", { className: "pb-2 font-bold text-secondary" }, "/ 5")
           ),
           React.createElement("div", { className: "mt-4" }, React.createElement(Stars, { rating: Math.round(averageRating) })),
         ),
@@ -267,7 +267,7 @@ function ReviewsApp() {
     ),
     React.createElement(
       "section",
-      { className: "border-y border-paper/10 bg-espresso px-5 py-10" },
+      { className: "border-y border-borderGold bg-espresso px-5 py-10" },
       React.createElement(
         "div",
         { className: "mx-auto grid max-w-[1180px] gap-4 md:grid-cols-3" },
@@ -278,7 +278,7 @@ function ReviewsApp() {
     ),
     React.createElement(
       "section",
-      { className: "bg-[radial-gradient(circle_at_12%_8%,rgba(185,133,82,0.13),transparent_26%),#080604] px-5 py-20" },
+      { className: "bg-[radial-gradient(circle_at_12%_8%,rgba(212,168,95,0.12),transparent_26%),#0B0705] px-5 py-20" },
       React.createElement(
         "div",
         { className: "mx-auto grid max-w-[1180px] gap-12 lg:grid-cols-[1fr_380px]" },
@@ -288,9 +288,9 @@ function ReviewsApp() {
           React.createElement("div", { className: "mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end" },
             React.createElement("div", null,
               React.createElement("p", { className: "mb-3 text-xs font-black uppercase tracking-[0.14em] text-gold" }, "Guest notes"),
-              React.createElement("h2", { className: "font-display text-5xl leading-none text-paper md:text-6xl" }, "Reviews Grid")
+              React.createElement("h2", { className: "font-display text-5xl leading-none text-cream md:text-6xl" }, "Reviews Grid")
             ),
-            isLoading ? React.createElement("p", { className: "text-paper/52" }, "Loading reviews...") : null
+            isLoading ? React.createElement("p", { className: "font-bold text-secondary" }, "Loading reviews...") : null
           ),
           React.createElement(
             "div",
@@ -303,21 +303,21 @@ function ReviewsApp() {
           {
             onSubmit: submitReview,
             className:
-              "h-fit rounded-[8px] border border-paper/12 bg-paper/[0.07] p-6 shadow-cafe backdrop-blur-xl lg:sticky lg:top-28",
+              "h-fit rounded-[8px] border border-borderGold bg-cardBrown/95 p-6 shadow-cafe backdrop-blur-xl lg:sticky lg:top-28",
           },
           React.createElement("p", { className: "mb-3 text-xs font-black uppercase tracking-[0.14em] text-gold" }, "Add Review"),
-          React.createElement("h2", { className: "mb-5 font-display text-4xl leading-none text-paper" }, "Share your moment"),
-          React.createElement("label", { className: "mb-4 grid gap-2 text-sm font-bold text-paper/70" },
+          React.createElement("h2", { className: "mb-5 font-display text-4xl leading-none text-cream" }, "Share your moment"),
+          React.createElement("label", { className: "mb-4 grid gap-2 text-sm font-bold text-secondary" },
             "Name",
             React.createElement("input", {
               value: form.name,
               onChange: (event) => updateForm("name", event.target.value),
-              className: "min-h-12 rounded-[8px] border border-paper/14 bg-paper/10 px-4 text-paper outline-none transition focus:border-gold/70 focus:ring-4 focus:ring-gold/10",
+              className: "min-h-12 rounded-[8px] border border-borderGold bg-espresso px-4 text-cream placeholder:text-muted outline-none transition focus:border-gold focus:ring-4 focus:ring-gold/15",
               placeholder: "Your name",
             })
           ),
           React.createElement("div", { className: "mb-4 grid gap-2" },
-            React.createElement("span", { className: "text-sm font-bold text-paper/70" }, "Rating"),
+            React.createElement("span", { className: "text-sm font-bold text-secondary" }, "Rating"),
             React.createElement(Stars, {
               rating: form.rating,
               interactive: true,
@@ -326,12 +326,12 @@ function ReviewsApp() {
               onChange: (rating) => updateForm("rating", rating),
             })
           ),
-          React.createElement("label", { className: "mb-5 grid gap-2 text-sm font-bold text-paper/70" },
+          React.createElement("label", { className: "mb-5 grid gap-2 text-sm font-bold text-secondary" },
             "Message",
             React.createElement("textarea", {
               value: form.message,
               onChange: (event) => updateForm("message", event.target.value),
-              className: "min-h-36 rounded-[8px] border border-paper/14 bg-paper/10 px-4 py-3 text-paper outline-none transition focus:border-gold/70 focus:ring-4 focus:ring-gold/10",
+              className: "min-h-36 rounded-[8px] border border-borderGold bg-espresso px-4 py-3 text-cream placeholder:text-muted outline-none transition focus:border-gold focus:ring-4 focus:ring-gold/15",
               placeholder: "Write your review...",
             })
           ),
@@ -341,11 +341,11 @@ function ReviewsApp() {
               type: "submit",
               disabled: isSubmitting,
               className:
-                "w-full rounded-full border border-gold/30 bg-gradient-to-r from-paper to-gold px-5 py-4 font-black text-espresso shadow-[0_0_0_rgba(212,168,117,0)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_34px_rgba(212,168,117,0.28)] disabled:cursor-not-allowed disabled:opacity-70",
+                "w-full rounded-full border border-gold bg-gold px-5 py-4 font-black text-cafeBlack shadow-[0_0_0_rgba(212,168,95,0)] transition duration-300 hover:-translate-y-0.5 hover:bg-goldHover hover:shadow-[0_0_34px_rgba(212,168,95,0.35)] disabled:cursor-not-allowed disabled:opacity-70",
             },
             isSubmitting ? "Submitting..." : "Submit Review",
           ),
-          status ? React.createElement("p", { className: "mt-4 rounded-[8px] border border-paper/10 bg-paper/5 p-3 text-sm font-bold text-paper/72" }, status) : null,
+          status ? React.createElement("p", { className: "mt-4 rounded-[8px] border border-borderGold bg-espresso p-3 text-sm font-bold text-secondary" }, status) : null,
         ),
       ),
     ),
@@ -355,9 +355,9 @@ function ReviewsApp() {
 function StatCard({ label, value, suffix = "" }) {
   return React.createElement(
     "article",
-    { className: "rounded-[8px] border border-paper/12 bg-paper/[0.06] p-6 shadow-cafe backdrop-blur-xl" },
+    { className: "rounded-[8px] border border-borderGold bg-cardBrown/95 p-6 shadow-cafe backdrop-blur-xl" },
     React.createElement("p", { className: "mb-3 text-xs font-black uppercase tracking-[0.14em] text-gold" }, label),
-    React.createElement("strong", { className: "font-display text-5xl leading-none text-paper" }, React.createElement(CountUp, { value, suffix })),
+    React.createElement("strong", { className: "font-display text-5xl leading-none text-cream" }, React.createElement(CountUp, { value, suffix })),
     React.createElement(
       "div",
       { className: "mt-5 grid grid-cols-5 gap-2" },
