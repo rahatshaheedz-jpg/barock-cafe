@@ -8,6 +8,7 @@ const year = document.querySelector("[data-year]");
 const revealItems = document.querySelectorAll(".reveal");
 const web3FormsEndpoint = ["https://api.web3forms.com", "submit"].join("/");
 const web3FormsAccessKey = ["9a69aef0", "2ec6", "43c9", "b2c4", "f59c89d8107d"].join("-");
+const defaultCafeImage = "./assets/site/hero-coffee.svg";
 
 year.textContent = new Date().getFullYear();
 
@@ -23,6 +24,7 @@ function initScrollProgress() {
     const scrollable = document.documentElement.scrollHeight - window.innerHeight;
     const percentage = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
     bar.style.width = `${Math.min(100, Math.max(0, percentage))}%`;
+    document.querySelector(".site-header")?.classList.toggle("is-scrolled", window.scrollY > 18);
   };
 
   updateProgress();
@@ -31,6 +33,29 @@ function initScrollProgress() {
 }
 
 initScrollProgress();
+
+function initImageFallbacks() {
+  document.querySelectorAll("img").forEach((image) => {
+    image.addEventListener(
+      "error",
+      () => {
+        if (image.dataset.fallbackApplied === "true") {
+          return;
+        }
+
+        image.dataset.fallbackApplied = "true";
+        image.src = defaultCafeImage;
+      },
+      { once: true },
+    );
+
+    if (image.complete && image.naturalWidth === 0) {
+      image.dispatchEvent(new Event("error"));
+    }
+  });
+}
+
+initImageFallbacks();
 
 const revealObserver = new IntersectionObserver(
   (entries) => {

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="Premium coffee table">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#0B0705"/>
+      <stop offset=".55" stop-color="#24150D"/>
+      <stop offset="1" stop-color="#8B5A2B"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="70%" cy="34%" r="55%">
+      <stop offset="0" stop-color="#D4A85F" stop-opacity=".55"/>
+      <stop offset=".42" stop-color="#8B5A2B" stop-opacity=".18"/>
+      <stop offset="1" stop-color="#0B0705" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="16"/></filter>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <rect width="1600" height="1000" fill="url(#glow)"/>
+  <g opacity=".18">
+    <path d="M0 760 C260 690 430 770 680 710 C930 650 1160 680 1600 600" fill="none" stroke="#FFF7E8" stroke-width="2"/>
+    <path d="M0 820 C340 760 460 830 760 780 C1040 734 1230 758 1600 700" fill="none" stroke="#D4A85F" stroke-width="2"/>
+  </g>
+  <ellipse cx="1040" cy="650" rx="330" ry="95" fill="#050302" opacity=".38"/>
+  <g transform="translate(790 260)">
+    <ellipse cx="255" cy="355" rx="260" ry="65" fill="#0B0705" opacity=".45"/>
+    <path d="M108 165 h260 a82 82 0 0 1 82 82 v55 a156 156 0 0 1-156 156 h-112 a156 156 0 0 1-156-156 v-55 a82 82 0 0 1 82-82z" fill="#FFF7E8"/>
+    <path d="M438 228 h54 c60 0 91 36 91 82s-34 84-91 84h-50" fill="none" stroke="#FFF7E8" stroke-width="34" stroke-linecap="round"/>
+    <ellipse cx="238" cy="166" rx="132" ry="28" fill="#8B5A2B"/>
+    <ellipse cx="238" cy="158" rx="86" ry="14" fill="#D4A85F" opacity=".38"/>
+    <path d="M160 102 C126 45 210 44 174-12 M250 104 C210 35 310 28 270-32 M334 104 C300 46 390 34 350-22" fill="none" stroke="#FFF7E8" stroke-width="12" stroke-linecap="round" opacity=".5" filter="url(#blur)"/>
+  </g>
+  <text x="118" y="818" fill="#FFF7E8" font-family="Georgia,serif" font-size="92" font-weight="700">Barock Cafe</text>
+  <text x="124" y="886" fill="#E6D3B3" font-family="Arial,sans-serif" font-size="30" font-weight="700" letter-spacing="6">EVERY MOMENT, PERFECTLY YOURS</text>
+</svg>

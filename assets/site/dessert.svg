@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Dessert cake">
+  <rect width="1200" height="900" fill="#120C08"/>
+  <radialGradient id="a" cx="70%" cy="20%" r="60%"><stop offset="0" stop-color="#D4A85F" stop-opacity=".28"/><stop offset="1" stop-color="#0B0705" stop-opacity="0"/></radialGradient>
+  <rect width="1200" height="900" fill="url(#a)"/>
+  <g transform="translate(250 255)">
+    <ellipse cx="350" cy="410" rx="380" ry="70" fill="#050302" opacity=".42"/>
+    <path d="M120 170 h470 a78 78 0 0 1 78 78 v70 h-626 v-70 a78 78 0 0 1 78-78z" fill="#D4A85F"/>
+    <path d="M50 310 h620 v105 a76 76 0 0 1-76 76 h-468 a76 76 0 0 1-76-76z" fill="#FFF7E8"/>
+    <path d="M50 310 h620 v70 h-620z" fill="#8B5A2B"/>
+    <circle cx="190" cy="134" r="44" fill="#C84D45"/>
+    <circle cx="306" cy="124" r="38" fill="#C84D45"/>
+    <circle cx="430" cy="136" r="42" fill="#C84D45"/>
+  </g>
+  <text x="70" y="800" fill="#FFF7E8" font-family="Georgia,serif" font-size="62" font-weight="700">Sweet Endings</text>
+</svg>

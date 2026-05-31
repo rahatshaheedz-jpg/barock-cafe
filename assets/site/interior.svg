@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Warm cafe interior">
+  <rect width="1200" height="900" fill="#120C08"/>
+  <g opacity=".28" stroke="#D4A85F" stroke-width="2">
+    <path d="M0 180h1200M0 360h1200M0 540h1200M0 720h1200M180 0v900M360 0v900M540 0v900M720 0v900M900 0v900"/>
+  </g>
+  <g fill="#D4A85F">
+    <circle cx="260" cy="170" r="54" opacity=".45"/>
+    <circle cx="600" cy="140" r="74" opacity=".34"/>
+    <circle cx="930" cy="190" r="48" opacity=".4"/>
+  </g>
+  <g transform="translate(170 500)">
+    <rect x="0" y="120" width="860" height="48" rx="24" fill="#8B5A2B"/>
+    <rect x="100" y="0" width="190" height="150" rx="24" fill="#1B120C" stroke="#D4A85F"/>
+    <rect x="575" y="0" width="190" height="150" rx="24" fill="#1B120C" stroke="#D4A85F"/>
+    <rect x="345" y="45" width="170" height="96" rx="18" fill="#FFF7E8" opacity=".18"/>
+  </g>
+  <text x="70" y="800" fill="#FFF7E8" font-family="Georgia,serif" font-size="62" font-weight="700">Warm Interiors</text>
+</svg>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Cafe sandwich">
+  <rect width="1200" height="900" fill="#0B0705"/>
+  <circle cx="850" cy="250" r="330" fill="#D4A85F" opacity=".18"/>
+  <g transform="translate(170 235)">
+    <ellipse cx="430" cy="420" rx="440" ry="80" fill="#050302" opacity=".45"/>
+    <path d="M80 250 L438 65 L780 250 Z" fill="#E6D3B3"/>
+    <path d="M100 270 L438 105 L760 270 Z" fill="#D4A85F"/>
+    <path d="M118 300 h640 l-52 92 h-538z" fill="#8B5A2B"/>
+    <path d="M138 390 h600 l-42 70 h-516z" fill="#FFF7E8"/>
+    <path d="M155 460 h565 l-54 78 h-458z" fill="#D4A85F"/>
+  </g>
+  <text x="70" y="800" fill="#FFF7E8" font-family="Georgia,serif" font-size="62" font-weight="700">Cafe Favorites</text>
+</svg>

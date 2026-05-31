@@ -2,6 +2,7 @@ const { useEffect, useMemo, useRef, useState } = React;
 
 const SUPABASE_URL = "PASTE_SUPABASE_URL_HERE";
 const SUPABASE_ANON_KEY = "PASTE_SUPABASE_ANON_KEY_HERE";
+const defaultCafeImage = "./assets/site/hero-coffee.svg";
 
 const supabaseIsConfigured =
   SUPABASE_URL !== "PASTE_SUPABASE_URL_HERE" &&
@@ -225,7 +226,7 @@ function ReviewsApp() {
       { className: "relative isolate grid min-h-[82svh] items-center overflow-hidden px-5 pb-20 pt-36 md:pt-40" },
       React.createElement("div", {
         className:
-          "absolute inset-0 -z-40 bg-[url('https://preview--aroma-gate-landing.lovable.app/assets/hero-coffee-kcZlvpyx.jpg')] bg-cover bg-center opacity-55 saturate-75",
+          "absolute inset-0 -z-40 bg-[url('./assets/site/hero-coffee.svg')] bg-cover bg-center opacity-55 saturate-75",
       }),
       React.createElement("div", {
         className:
@@ -389,6 +390,7 @@ function initScrollProgress() {
     const scrollable = document.documentElement.scrollHeight - window.innerHeight;
     const percentage = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
     bar.style.width = `${Math.min(100, Math.max(0, percentage))}%`;
+    document.querySelector(".site-header")?.classList.toggle("is-scrolled", window.scrollY > 18);
   };
 
   updateProgress();
@@ -397,6 +399,29 @@ function initScrollProgress() {
 }
 
 initScrollProgress();
+
+function initImageFallbacks() {
+  document.querySelectorAll("img").forEach((image) => {
+    image.addEventListener(
+      "error",
+      () => {
+        if (image.dataset.fallbackApplied === "true") {
+          return;
+        }
+
+        image.dataset.fallbackApplied = "true";
+        image.src = defaultCafeImage;
+      },
+      { once: true },
+    );
+
+    if (image.complete && image.naturalWidth === 0) {
+      image.dispatchEvent(new Event("error"));
+    }
+  });
+}
+
+initImageFallbacks();
 
 menuToggle.addEventListener("click", () => {
   const isOpen = mobileMenu.classList.toggle("is-open");

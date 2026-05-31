@@ -1,6 +1,7 @@
 const revealItems = document.querySelectorAll(".reveal");
 const form = document.querySelector("[data-pf-form]");
 const toast = document.querySelector("[data-pf-toast]");
+const defaultCafeImage = "./assets/site/hero-coffee.svg";
 
 function initScrollProgress() {
   const progress = document.createElement("div");
@@ -14,6 +15,7 @@ function initScrollProgress() {
     const scrollable = document.documentElement.scrollHeight - window.innerHeight;
     const percentage = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
     bar.style.width = `${Math.min(100, Math.max(0, percentage))}%`;
+    document.querySelector(".pf-nav")?.classList.toggle("is-scrolled", window.scrollY > 18);
   };
 
   updateProgress();
@@ -22,6 +24,29 @@ function initScrollProgress() {
 }
 
 initScrollProgress();
+
+function initImageFallbacks() {
+  document.querySelectorAll("img").forEach((image) => {
+    image.addEventListener(
+      "error",
+      () => {
+        if (image.dataset.fallbackApplied === "true") {
+          return;
+        }
+
+        image.dataset.fallbackApplied = "true";
+        image.src = defaultCafeImage;
+      },
+      { once: true },
+    );
+
+    if (image.complete && image.naturalWidth === 0) {
+      image.dispatchEvent(new Event("error"));
+    }
+  });
+}
+
+initImageFallbacks();
 
 const revealObserver = new IntersectionObserver(
   (entries) => {

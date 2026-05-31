@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Friends at cafe">
+  <rect width="1200" height="900" fill="#120C08"/>
+  <circle cx="640" cy="300" r="380" fill="#D4A85F" opacity=".16"/>
+  <g transform="translate(220 245)">
+    <rect x="0" y="315" width="760" height="54" rx="27" fill="#8B5A2B"/>
+    <g fill="#FFF7E8" opacity=".9">
+      <circle cx="150" cy="95" r="58"/><rect x="95" y="160" width="110" height="160" rx="48"/>
+      <circle cx="380" cy="80" r="62"/><rect x="318" y="150" width="124" height="170" rx="54"/>
+      <circle cx="610" cy="100" r="56"/><rect x="555" y="165" width="110" height="155" rx="48"/>
+    </g>
+    <g fill="#D4A85F">
+      <rect x="230" y="250" width="96" height="70" rx="16"/>
+      <rect x="470" y="250" width="96" height="70" rx="16"/>
+    </g>
+  </g>
+  <text x="70" y="800" fill="#FFF7E8" font-family="Georgia,serif" font-size="62" font-weight="700">Shared Moments</text>
+</svg>
