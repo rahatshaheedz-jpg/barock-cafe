@@ -16,7 +16,7 @@
     />
     <link rel="stylesheet" href="./styles.css" />
   </head>
-  <body>
+  <body class="home-page">
     <main>
       <header class="site-header" id="home">
         <a class="brand" href="#home" aria-label="BAROCK CAFE home">
@@ -116,16 +116,19 @@
             </p>
             <div class="about-cards">
               <article>
+                <i aria-hidden="true">☕</i>
                 <span>01</span>
                 <h3>Premium Coffee</h3>
                 <p>Single-origin beans, roasted in small batches and pulled by hand for a cup that lingers.</p>
               </article>
               <article>
+                <i aria-hidden="true">◇</i>
                 <span>02</span>
                 <h3>Fresh Desserts</h3>
                 <p>Cakes, pastries, and chocolate creations baked fresh every morning in our kitchen.</p>
               </article>
               <article>
+                <i aria-hidden="true">✦</i>
                 <span>03</span>
                 <h3>Cozy Ambience</h3>
                 <p>Warm light, dark textures, and unhurried corners designed for conversation or quiet.</p>
@@ -208,6 +211,9 @@
               </div>
             </article>
           </div>
+          <div class="menu-preview-action reveal">
+            <a class="button primary" href="./menu.html">View Full Menu</a>
+          </div>
         </div>
       </section>
 
@@ -259,12 +265,33 @@
             <h2>A peek inside BAROCK</h2>
           </div>
           <div class="gallery-grid reveal-group">
-            <img class="reveal" src="https://preview--aroma-gate-landing.lovable.app/assets/gallery-interior-tCSuRazx.jpg" alt="Warm cafe interior with pendant lights" />
-            <img class="reveal" src="https://preview--aroma-gate-landing.lovable.app/assets/gallery-cappuccino-D37XPvl8.jpg" alt="Cappuccino with latte art top-down" />
-            <img class="reveal" src="https://preview--aroma-gate-landing.lovable.app/assets/gallery-pastries-BVf-ZN5N.jpg" alt="Fresh pastries on marble" />
-            <img class="reveal" src="https://preview--aroma-gate-landing.lovable.app/assets/gallery-friends-EGdaPmPu.jpg" alt="Friends laughing over coffee" />
-            <img class="reveal" src="https://preview--aroma-gate-landing.lovable.app/assets/gallery-seating-DYGCS3ox.jpg" alt="Cozy reading corner with leather armchair" />
-            <img class="reveal" src="https://preview--aroma-gate-landing.lovable.app/assets/gallery-beans-f9SuyNaU.jpg" alt="Coffee being poured over fresh beans" />
+            <figure class="reveal">
+              <img src="https://preview--aroma-gate-landing.lovable.app/assets/gallery-interior-tCSuRazx.jpg" alt="Warm cafe interior with pendant lights" />
+              <figcaption>Warm interiors</figcaption>
+            </figure>
+            <figure class="reveal">
+              <img src="https://preview--aroma-gate-landing.lovable.app/assets/gallery-cappuccino-D37XPvl8.jpg" alt="Cappuccino with latte art top-down" />
+              <figcaption>Signature brews</figcaption>
+            </figure>
+            <figure class="reveal">
+              <img src="https://preview--aroma-gate-landing.lovable.app/assets/gallery-pastries-BVf-ZN5N.jpg" alt="Fresh pastries on marble" />
+              <figcaption>Fresh desserts</figcaption>
+            </figure>
+            <figure class="reveal">
+              <img src="https://preview--aroma-gate-landing.lovable.app/assets/gallery-friends-EGdaPmPu.jpg" alt="Friends laughing over coffee" />
+              <figcaption>Shared moments</figcaption>
+            </figure>
+            <figure class="reveal">
+              <img src="https://preview--aroma-gate-landing.lovable.app/assets/gallery-seating-DYGCS3ox.jpg" alt="Cozy reading corner with leather armchair" />
+              <figcaption>Cozy corners</figcaption>
+            </figure>
+            <figure class="reveal">
+              <img src="https://preview--aroma-gate-landing.lovable.app/assets/gallery-beans-f9SuyNaU.jpg" alt="Coffee being poured over fresh beans" />
+              <figcaption>Arabica ritual</figcaption>
+            </figure>
+          </div>
+          <div class="gallery-action reveal">
+            <a class="button ghost" href="#gallery">View Gallery</a>
           </div>
         </div>
       </section>
@@ -277,23 +304,62 @@
           </div>
           <div class="experience-grid reveal-group">
             <article class="reveal">
+              <span aria-hidden="true">◎</span>
               <h3>Dine In</h3>
               <p>Settle in. Stay a while.</p>
             </article>
             <article class="reveal">
+              <span aria-hidden="true">↗</span>
               <h3>Takeaway</h3>
               <p>Grab your favourite, go.</p>
             </article>
             <article class="reveal">
+              <span aria-hidden="true">◷</span>
               <h3>Pick-up</h3>
               <p>Order ahead, skip the line.</p>
             </article>
             <article class="reveal">
+              <span aria-hidden="true">⌁</span>
               <h3>Delivery</h3>
               <p>Coming soon to your door.</p>
             </article>
           </div>
         </div>
+      </section>
+
+      <section class="section reviews-preview">
+        <div class="section-shell">
+          <div class="center-heading reveal">
+            <p class="eyebrow">Reviews</p>
+            <h2>Loved by Our Guests</h2>
+            <p>Early words from people already waiting for Barock Café to open.</p>
+          </div>
+          <div class="home-review-grid reveal-group">
+            <article class="reveal">
+              <span>★★★★★</span>
+              <p>The atmosphere feels premium and warm. Exactly the kind of café Gulshan needs.</p>
+              <strong>Nabila Rahman</strong>
+            </article>
+            <article class="reveal">
+              <span>★★★★★</span>
+              <p>Beautiful coffee, calm lighting, and a polished café mood. Looking forward to opening day.</p>
+              <strong>Arman Chowdhury</strong>
+            </article>
+            <article class="reveal">
+              <span>★★★★★</span>
+              <p>The brand feels cozy and elegant. The dessert preview already looks amazing.</p>
+              <strong>Tasnima Karim</strong>
+            </article>
+          </div>
+          <div class="reviews-preview-action reveal">
+            <a class="button primary" href="./reviews.html">Read Reviews</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="opening-strip reveal" aria-label="Opening soon announcement">
+        <p>Something Perfect is Brewing in Gulshan-2</p>
+        <span aria-hidden="true"><i></i><i></i><i></i></span>
       </section>
 
       <section class="section location" id="location">

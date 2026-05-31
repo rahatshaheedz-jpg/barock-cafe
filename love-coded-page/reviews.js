@@ -61,11 +61,11 @@ function Stars({ rating, interactive = false, onChange, hoveredRating, onHover }
           className: [
             "text-2xl leading-none transition duration-200",
             interactive ? "hover:scale-125 focus:scale-125 focus:outline-none" : "cursor-default",
-            isActive ? "text-gold drop-shadow-[0_0_12px_rgba(212,168,95,0.45)]" : "text-muted/45",
+            isActive ? "text-gold drop-shadow-[0_0_12px_rgba(212,168,95,0.62)]" : "text-[#C7AA83]",
           ].join(" "),
           "aria-label": interactive ? `${star} stars` : undefined,
         },
-        "★",
+        "\u2605",
       );
     }),
   );
@@ -312,7 +312,7 @@ function ReviewsApp() {
             React.createElement("input", {
               value: form.name,
               onChange: (event) => updateForm("name", event.target.value),
-              className: "min-h-12 rounded-[8px] border border-borderGold bg-espresso px-4 text-cream placeholder:text-muted outline-none transition focus:border-gold focus:ring-4 focus:ring-gold/15",
+              className: "min-h-12 rounded-[8px] border border-borderGold bg-cream px-4 text-cafeBlack placeholder:text-[#8B7A65] outline-none transition focus:border-gold focus:ring-4 focus:ring-gold/20",
               placeholder: "Your name",
             })
           ),
@@ -331,7 +331,7 @@ function ReviewsApp() {
             React.createElement("textarea", {
               value: form.message,
               onChange: (event) => updateForm("message", event.target.value),
-              className: "min-h-36 rounded-[8px] border border-borderGold bg-espresso px-4 py-3 text-cream placeholder:text-muted outline-none transition focus:border-gold focus:ring-4 focus:ring-gold/15",
+              className: "min-h-36 rounded-[8px] border border-borderGold bg-cream px-4 py-3 text-cafeBlack placeholder:text-[#8B7A65] outline-none transition focus:border-gold focus:ring-4 focus:ring-gold/20",
               placeholder: "Write your review...",
             })
           ),
