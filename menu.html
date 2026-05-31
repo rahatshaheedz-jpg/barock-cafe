@@ -68,32 +68,28 @@
         <div class="section-shell">
           <div class="menu-toolbar reveal">
             <label class="menu-search">
-              <span>Search menu</span>
+              <span>Explore the menu</span>
               <input
                 type="search"
-                placeholder="Search coffee, desserts, snacks..."
+                placeholder="Search coffee, pizza, desserts, mains..."
                 data-menu-search
               />
             </label>
-            <div class="menu-page-filters" aria-label="Filter menu categories">
-              <button type="button" data-menu-category="all" aria-pressed="true">All</button>
-              <button type="button" data-menu-category="hot">Hot Coffee</button>
-              <button type="button" data-menu-category="cold">Cold Coffee</button>
-              <button type="button" data-menu-category="refreshers">Refreshers</button>
-              <button type="button" data-menu-category="desserts">Desserts</button>
-              <button type="button" data-menu-category="snacks">Snacks</button>
-            </div>
+            <p>
+              Select a signature category to reveal the handcrafted items inside.
+              Every Moment, Perfectly Yours.
+            </p>
           </div>
 
           <div class="menu-catalog-meta reveal">
-            <p><span data-menu-count>0</span> items available</p>
-            <p>Sample menu items for launch preview</p>
+            <p><span data-menu-count>0</span> items across 7 collections</p>
+            <p>Prices are placeholders and easy to update later</p>
           </div>
 
-          <div class="menu-catalog-grid reveal-group" data-menu-list></div>
+          <div class="menu-category-grid reveal-group" data-menu-list></div>
           <div class="empty-menu-state" data-empty-state hidden>
             <h2>No items found</h2>
-            <p>Try another category or search term.</p>
+            <p>Try another search term or clear the search to see all categories.</p>
           </div>
         </div>
       </section>

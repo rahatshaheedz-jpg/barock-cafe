@@ -1,120 +1,135 @@
-const menuItems = [
+const menuCategories = [
   {
-    name: "Classic Cappuccino",
-    category: "hot",
-    categoryLabel: "Hot Coffee",
-    description: "Velvety milk, rich espresso, and a soft signature foam.",
-    price: "BDT 280",
+    id: "coffee-hot-drinks",
+    title: "Coffee & Hot Drinks",
+    subtitle: "Classic brews and warm comfort",
     image: "https://preview--aroma-gate-landing.lovable.app/assets/menu-cappuccino-dOQkuuY3.jpg",
-    popular: true,
+    items: [
+      "Cappuccino",
+      "Cafe Latte",
+      "Espresso",
+      "Macchiato",
+      "Caffe Americano",
+      "Caffe Mocha",
+      "Caramel Latte",
+      "Very Vanilla Latte",
+      "Chocolate Macadamia Latte",
+      "Tiramisu Cappuccino",
+      "Toffee Nut Latte",
+      "Classic Hot Chocolate",
+      "Flavoured Hot Chocolate",
+      "Peppermint Tea",
+      "Green Tea",
+      "Other Teas",
+    ],
   },
   {
-    name: "Double Espresso",
-    category: "hot",
-    categoryLabel: "Hot Coffee",
-    description: "Two intense shots with golden crema and a clean finish.",
-    price: "BDT 220",
-    image: "https://preview--aroma-gate-landing.lovable.app/assets/menu-espresso-CnmzVZk6.jpg",
-    popular: false,
-  },
-  {
-    name: "Signature Latte",
-    category: "hot",
-    categoryLabel: "Hot Coffee",
-    description: "Slow-steamed milk, house espresso, and a hand-poured rosetta.",
-    price: "BDT 340",
-    image: "https://preview--aroma-gate-landing.lovable.app/assets/signature-latte-BiROs_4w.jpg",
-    popular: true,
-  },
-  {
-    name: "Slow Cold Brew",
-    category: "cold",
-    categoryLabel: "Cold Coffee",
-    description: "Steeped for 16 hours with a smooth chocolate-like body.",
-    price: "BDT 320",
-    image: "https://preview--aroma-gate-landing.lovable.app/assets/menu-coldbrew-BLwLUPhm.jpg",
-    popular: true,
-  },
-  {
-    name: "Iced Caramel Coffee",
-    category: "cold",
-    categoryLabel: "Cold Coffee",
-    description: "Espresso over ice with house caramel and a cream finish.",
-    price: "BDT 360",
+    id: "cold-drinks-chillers",
+    title: "Cold Drinks & Chillers",
+    subtitle: "Iced, refreshing, and signature coolers",
     image: "https://preview--aroma-gate-landing.lovable.app/assets/iced-caramel-C_8bRu5i.jpg",
-    popular: false,
+    items: [
+      "Iced Latte",
+      "Iced Mocha",
+      "Iced Caramel Latte",
+      "Iced Americano",
+      "Espresso Chiller",
+      "Mocha Chiller",
+      "Chocolate Chiller",
+      "Cookies N Cream Chiller",
+      "Vanilla Mint Chiller",
+      "Strawberry Chiller",
+      "Over Ice Drinks",
+      "Smoothies",
+      "Fusion Drinks",
+      "Lychee Cooler",
+    ],
   },
   {
-    name: "Mocha Cloud",
-    category: "cold",
-    categoryLabel: "Cold Coffee",
-    description: "Cold espresso, cocoa, milk, and a cloud of whipped cream.",
-    price: "BDT 390",
-    image: "https://preview--aroma-gate-landing.lovable.app/assets/gallery-cappuccino-D37XPvl8.jpg",
-    popular: false,
-  },
-  {
-    name: "Berry Bloom Refresher",
-    category: "refreshers",
-    categoryLabel: "Refreshers",
-    description: "Mixed berries, mint, citrus, and a sparkling lift.",
-    price: "BDT 300",
-    image: "https://preview--aroma-gate-landing.lovable.app/assets/menu-refresher-CDhCwMp1.jpg",
-    popular: true,
-  },
-  {
-    name: "Citrus Mint Cooler",
-    category: "refreshers",
-    categoryLabel: "Refreshers",
-    description: "Fresh lemon, mint, soda, and a crisp cafe-style finish.",
-    price: "BDT 260",
-    image: "https://preview--aroma-gate-landing.lovable.app/assets/gallery-beans-f9SuyNaU.jpg",
-    popular: false,
-  },
-  {
-    name: "Berry Cheesecake",
-    category: "desserts",
-    categoryLabel: "Desserts",
-    description: "Vanilla cheesecake layered with seasonal berries.",
-    price: "BDT 380",
-    image: "https://preview--aroma-gate-landing.lovable.app/assets/menu-cheesecake-IJxGKb95.jpg",
-    popular: true,
-  },
-  {
-    name: "Molten Chocolate",
-    category: "desserts",
-    categoryLabel: "Desserts",
-    description: "Warm chocolate centre, dusted cocoa, and a rich dark crumb.",
-    price: "BDT 420",
-    image: "https://preview--aroma-gate-landing.lovable.app/assets/chocolate-dessert-DDRWZGfI.jpg",
-    popular: false,
-  },
-  {
-    name: "Butter Croissant",
-    category: "desserts",
-    categoryLabel: "Desserts",
-    description: "Flaky, golden, and baked fresh for a slow morning coffee.",
-    price: "BDT 240",
+    id: "appetizers-starters",
+    title: "Appetizers / Starters",
+    subtitle: "Quick bites to begin your moment",
     image: "https://preview--aroma-gate-landing.lovable.app/assets/gallery-pastries-BVf-ZN5N.jpg",
-    popular: false,
+    note: "Available from 12 PM at Gulshan 1 & Gulshan 2",
+    items: [
+      "Fried Calamari Rings",
+      "Chicken Lemon Lolly",
+      "Chicken Momo",
+      "Dumplings",
+      "Buffalo Wings",
+      "Basil Prawn Rolls",
+      "Soy Garlic Mushroom",
+      "Tuna Pattie with Mint Sauce",
+      "Assorted Dim Sums",
+      "Prawn Hargow",
+      "Velvet Corn Chicken Dumplings",
+      "Cheesy Dumplings",
+    ],
   },
   {
-    name: "Classic Club Sandwich",
-    category: "snacks",
-    categoryLabel: "Snacks",
-    description: "Triple stacked with chicken, greens, cheese, and fries.",
-    price: "BDT 450",
+    id: "sandwiches-burgers-fast-food",
+    title: "Sandwiches, Burgers & Fast Food",
+    subtitle: "Hearty cafe favorites",
     image: "https://preview--aroma-gate-landing.lovable.app/assets/menu-sandwich-CYoZrlWE.jpg",
-    popular: true,
+    items: [
+      "Club Sandwich",
+      "Grilled Chicken Sandwich",
+      "Smoked Chicken Sandwich",
+      "Turkish Chicken Sandwich",
+      "Beef Truffle Burger",
+      "Mediterranean Chicken in Focaccia",
+    ],
   },
   {
-    name: "Truffle Chicken Toast",
-    category: "snacks",
-    categoryLabel: "Snacks",
-    description: "Toasted sourdough, creamy chicken, herbs, and truffle notes.",
-    price: "BDT 390",
+    id: "pizza",
+    title: "Pizza",
+    subtitle: "Real thin crust delights",
     image: "https://preview--aroma-gate-landing.lovable.app/assets/gallery-friends-EGdaPmPu.jpg",
-    popular: false,
+    items: [
+      "Margherita Pizza",
+      "BBQ Chicken Pizza",
+      "Crispy Chicken Pizza",
+      "Spicy Beef Pizza",
+      "Butter Chicken Pizza",
+      "Meat Lover's Pizza",
+      "Chicken Supreme Pizza",
+    ],
+  },
+  {
+    id: "kitchen-items-mains",
+    title: "Kitchen Items / Mains",
+    subtitle: "Signature plates and all-day specials",
+    image: "https://preview--aroma-gate-landing.lovable.app/assets/signature-latte-BiROs_4w.jpg",
+    items: [
+      "Prawn & Calamari Spinach Apple Pasta",
+      "Chicken Parmesan",
+      "BBQ Chicken with Veggies & Mash",
+      "Citrus Miso Prawn & Mango Salad",
+      "Classic British-Style Rib-eye with Yorkshire Pudding",
+      "Melted Cheese Omelette",
+      "Croque Monsieur",
+      "Mini Breakfast",
+      "Granola",
+      "Biscoff French Toast",
+      "Chocolate Waffle",
+      "Meat Lover's Platter",
+      "Whole Grilled Chicken",
+      "Sharing Platters",
+    ],
+  },
+  {
+    id: "desserts",
+    title: "Desserts",
+    subtitle: "Sweet endings, perfectly yours",
+    image: "https://preview--aroma-gate-landing.lovable.app/assets/menu-cheesecake-IJxGKb95.jpg",
+    items: [
+      "Blueberry Blast",
+      "Choco Fantasy",
+      "Red Velveteen",
+      "Salted Caramel Cheesecake",
+      "Waffles",
+      "French Toast with Ice Cream",
+    ],
   },
 ];
 
@@ -122,13 +137,12 @@ const menuToggle = document.querySelector("[data-menu-toggle]");
 const mobileMenu = document.querySelector("[data-mobile-menu]");
 const year = document.querySelector("[data-year]");
 const searchInput = document.querySelector("[data-menu-search]");
-const categoryButtons = document.querySelectorAll("[data-menu-category]");
 const menuList = document.querySelector("[data-menu-list]");
 const menuCount = document.querySelector("[data-menu-count]");
 const emptyState = document.querySelector("[data-empty-state]");
 const revealItems = document.querySelectorAll(".reveal");
 
-let activeCategory = "all";
+let openCategoryId = "";
 let searchTerm = "";
 
 year.textContent = new Date().getFullYear();
@@ -164,47 +178,110 @@ function escapeHtml(value) {
   });
 }
 
-function getVisibleItems() {
+function getVisibleCategories() {
   const normalizedSearch = searchTerm.trim().toLowerCase();
 
-  return menuItems.filter((item) => {
-    const categoryMatches = activeCategory === "all" || item.category === activeCategory;
-    const searchMatches =
-      !normalizedSearch ||
-      item.name.toLowerCase().includes(normalizedSearch) ||
-      item.description.toLowerCase().includes(normalizedSearch) ||
-      item.categoryLabel.toLowerCase().includes(normalizedSearch);
+  if (!normalizedSearch) {
+    return menuCategories.map((category) => ({
+      ...category,
+      visibleItems: category.items,
+      hasSearchMatch: false,
+    }));
+  }
 
-    return categoryMatches && searchMatches;
-  });
+  return menuCategories
+    .map((category) => {
+      const categoryMatches =
+        category.title.toLowerCase().includes(normalizedSearch) ||
+        category.subtitle.toLowerCase().includes(normalizedSearch);
+      const visibleItems = category.items.filter((item) =>
+        item.toLowerCase().includes(normalizedSearch),
+      );
+
+      return {
+        ...category,
+        visibleItems: categoryMatches ? category.items : visibleItems,
+        hasSearchMatch: categoryMatches || visibleItems.length > 0,
+      };
+    })
+    .filter((category) => category.hasSearchMatch);
+}
+
+function getTotalVisibleItems(categories) {
+  return categories.reduce((total, category) => total + category.visibleItems.length, 0);
 }
 
 function renderMenu() {
-  const visibleItems = getVisibleItems();
+  const visibleCategories = getVisibleCategories();
 
-  menuList.innerHTML = visibleItems
-    .map(
-      (item) => `
-        <article class="menu-product-card reveal is-visible">
-          <div class="menu-product-media">
-            <img src="${item.image}" alt="${escapeHtml(item.name)}" loading="lazy" />
-            ${item.popular ? '<span class="popular-badge">Popular</span>' : ""}
-          </div>
-          <div class="menu-product-body">
-            <span>${escapeHtml(item.categoryLabel)}</span>
-            <div class="menu-product-title">
-              <h2>${escapeHtml(item.name)}</h2>
-              <strong>${escapeHtml(item.price)}</strong>
+  if (searchTerm.trim() && visibleCategories.length === 1) {
+    openCategoryId = visibleCategories[0].id;
+  }
+
+  menuList.innerHTML = visibleCategories
+    .map((category, index) => {
+      const isOpen = category.id === openCategoryId;
+      const itemList = category.visibleItems
+        .map(
+          (item) => `
+            <li>
+              <span>${escapeHtml(item)}</span>
+              <strong>BDT ___</strong>
+            </li>
+          `,
+        )
+        .join("");
+
+      return `
+        <article class="menu-category-card reveal is-visible${isOpen ? " is-open" : ""}" style="--delay: ${index * 80}ms">
+          <button
+            class="menu-category-trigger"
+            type="button"
+            data-category-id="${category.id}"
+            aria-expanded="${isOpen}"
+            aria-controls="${category.id}-panel"
+          >
+            <span class="menu-category-media">
+              <img src="${category.image}" alt="${escapeHtml(category.title)}" loading="lazy" />
+            </span>
+            <span class="menu-category-content">
+              <span class="menu-category-kicker">${String(category.visibleItems.length).padStart(2, "0")} items</span>
+              <span class="menu-category-title">${escapeHtml(category.title)}</span>
+              <span class="menu-category-subtitle">${escapeHtml(category.subtitle)}</span>
+              <span class="menu-category-action">
+                View Items
+                <span class="menu-category-icon" aria-hidden="true"></span>
+              </span>
+            </span>
+          </button>
+          <div class="menu-category-panel" id="${category.id}-panel">
+            <div class="menu-category-panel-inner">
+              ${category.note ? `<p class="menu-category-note">${escapeHtml(category.note)}</p>` : ""}
+              <ul class="menu-item-list">
+                ${itemList}
+              </ul>
             </div>
-            <p>${escapeHtml(item.description)}</p>
           </div>
         </article>
-      `,
-    )
+      `;
+    })
     .join("");
 
-  menuCount.textContent = String(visibleItems.length);
-  emptyState.hidden = visibleItems.length > 0;
+  menuCount.textContent = String(getTotalVisibleItems(visibleCategories));
+  emptyState.hidden = visibleCategories.length > 0;
+}
+
+function toggleCategory(categoryId) {
+  openCategoryId = openCategoryId === categoryId ? "" : categoryId;
+  renderMenu();
+
+  const openedCard = document.querySelector(`[data-category-id="${categoryId}"]`);
+  if (openedCard && openCategoryId === categoryId) {
+    openedCard.closest(".menu-category-card").scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+    });
+  }
 }
 
 menuToggle.addEventListener("click", () => {
@@ -219,16 +296,14 @@ mobileMenu.querySelectorAll("a").forEach((link) => {
   });
 });
 
-categoryButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    activeCategory = button.dataset.menuCategory;
+menuList.addEventListener("click", (event) => {
+  const trigger = event.target.closest("[data-category-id]");
 
-    categoryButtons.forEach((item) => {
-      item.setAttribute("aria-pressed", String(item === button));
-    });
+  if (!trigger) {
+    return;
+  }
 
-    renderMenu();
-  });
+  toggleCategory(trigger.dataset.categoryId);
 });
 
 searchInput.addEventListener("input", (event) => {
