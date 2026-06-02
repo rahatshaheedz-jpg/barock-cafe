@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260602-signature-showcase" />
+    <link rel="stylesheet" href="./styles.css?v=20260602-signature-scroll" />
   </head>
   <body class="home-page">
     <main>
@@ -240,33 +240,95 @@
         <span></span>
       </div>
 
-      <section class="section signature">
-        <div class="section-shell">
-          <div class="split-heading reveal">
-            <p class="eyebrow">Signature</p>
-            <h2><span>Three things you have</span> to try first</h2>
+      <section class="section signature signature-section" id="signature" data-signature-section>
+        <div class="signature-shell">
+          <div class="signature-heading reveal">
+            <p class="signature-kicker"><span></span>SIGNATURE</p>
+            <p class="signature-subtitle">THREE THINGS YOU HAVE TO TRY FIRST</p>
+            <h2>Crafted picks for your first BAROCK moment</h2>
           </div>
-          <div class="signature-grid reveal-group">
-            <article class="reveal">
+
+          <div class="signature-pin" data-signature-pin>
+            <div class="signature-orb signature-orb-one" aria-hidden="true"></div>
+            <div class="signature-orb signature-orb-two" aria-hidden="true"></div>
+
+            <article class="signature-showcase glass-card reveal" aria-live="polite">
+              <div class="signature-visual">
+                <span class="signature-glow" aria-hidden="true"></span>
+                <img
+                  src="./assets/site/coffee-cup.svg"
+                  alt="Signature Latte"
+                  data-signature-image
+                />
+              </div>
+
+              <div class="signature-copy">
+                <span class="signature-badge">BAROCK PICK</span>
+                <p class="signature-item-eyebrow" data-signature-eyebrow>01 - HOUSE SPECIAL</p>
+                <h3 data-signature-title>Signature Latte</h3>
+                <p data-signature-description>
+                  Our flagship blend, slow-steamed milk, and a hand-poured rosetta.
+                </p>
+                <div class="signature-progress" aria-label="Signature item progress">
+                  <strong data-signature-current>01</strong>
+                  <span></span>
+                  <em>03</em>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="signature-steps" aria-hidden="true">
+            <span data-signature-step="0"></span>
+            <span data-signature-step="1"></span>
+            <span data-signature-step="2"></span>
+          </div>
+
+          <div class="signature-mobile-list reveal-group">
+            <article
+              class="reveal"
+              data-signature-item
+              data-eyebrow="01 - HOUSE SPECIAL"
+              data-title="Signature Latte"
+              data-description="Our flagship blend, slow-steamed milk, and a hand-poured rosetta."
+              data-image="./assets/site/coffee-cup.svg"
+              data-alt="Signature Latte"
+            >
               <img src="./assets/site/coffee-cup.svg" alt="Signature Latte" />
               <div>
-                <span>01 - House Special</span>
+                <span>01 - HOUSE SPECIAL</span>
                 <h3>Signature Latte</h3>
                 <p>Our flagship blend, slow-steamed milk, and a hand-poured rosetta.</p>
               </div>
             </article>
-            <article class="reveal">
+            <article
+              class="reveal"
+              data-signature-item
+              data-eyebrow="02 - ICED & SWEET"
+              data-title="Iced Caramel Coffee"
+              data-description="Espresso over ice, ribbons of house-made caramel, finished with cream."
+              data-image="./assets/site/iced-coffee.svg"
+              data-alt="Iced Caramel Coffee"
+            >
               <img src="./assets/site/iced-coffee.svg" alt="Iced Caramel Coffee" />
               <div>
-                <span>02 - Iced & Sweet</span>
+                <span>02 - ICED & SWEET</span>
                 <h3>Iced Caramel Coffee</h3>
                 <p>Espresso over ice, ribbons of house-made caramel, finished with cream.</p>
               </div>
             </article>
-            <article class="reveal">
+            <article
+              class="reveal"
+              data-signature-item
+              data-eyebrow="03 - DESSERT"
+              data-title="Molten Chocolate"
+              data-description="Warm chocolate centre, dusted cocoa, perfect with a black coffee."
+              data-image="./assets/site/dessert.svg"
+              data-alt="Molten Chocolate"
+            >
               <img src="./assets/site/dessert.svg" alt="Molten Chocolate" />
               <div>
-                <span>03 - Dessert</span>
+                <span>03 - DESSERT</span>
                 <h3>Molten Chocolate</h3>
                 <p>Warm chocolate centre, dusted cocoa, perfect with a black coffee.</p>
               </div>
@@ -507,6 +569,8 @@
       Thanks. Your message is ready for BAROCK CAFE.
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="./script.js"></script>
   </body>
 </html>

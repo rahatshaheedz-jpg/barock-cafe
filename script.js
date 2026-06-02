@@ -57,6 +57,137 @@ function initImageFallbacks() {
 
 initImageFallbacks();
 
+function initSignatureShowcase() {
+  const section = document.querySelector("[data-signature-section]");
+
+  if (!section) {
+    return;
+  }
+
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const items = Array.from(section.querySelectorAll("[data-signature-item]")).map((item, index) => ({
+    eyebrow: item.dataset.eyebrow,
+    title: item.dataset.title,
+    description: item.dataset.description,
+    image: item.dataset.image,
+    alt: item.dataset.alt,
+    number: String(index + 1).padStart(2, "0"),
+  }));
+
+  const image = section.querySelector("[data-signature-image]");
+  const eyebrow = section.querySelector("[data-signature-eyebrow]");
+  const title = section.querySelector("[data-signature-title]");
+  const description = section.querySelector("[data-signature-description]");
+  const current = section.querySelector("[data-signature-current]");
+  const copy = section.querySelector(".signature-copy");
+  const pin = section.querySelector("[data-signature-pin]");
+  const steps = Array.from(section.querySelectorAll("[data-signature-step]"));
+  const orbs = section.querySelectorAll(".signature-orb");
+
+  if (!items.length || !image || !eyebrow || !title || !description || !current || !pin) {
+    section.classList.add("is-static");
+    return;
+  }
+
+  const setActiveItem = (index) => {
+    const item = items[index] || items[0];
+    const rotation = index % 2 === 0 ? 10 : -10;
+
+    if (window.gsap && !prefersReducedMotion) {
+      gsap.killTweensOf([image, copy]);
+      gsap.to(copy, {
+        opacity: 0,
+        y: 18,
+        duration: 0.18,
+        ease: "power2.out",
+        onComplete: () => {
+          image.src = item.image;
+          image.alt = item.alt;
+          eyebrow.textContent = item.eyebrow;
+          title.textContent = item.title;
+          description.textContent = item.description;
+          current.textContent = item.number;
+
+          gsap.fromTo(
+            image,
+            { rotate: rotation, scale: 0.92, opacity: 0.78 },
+            { rotate: 0, scale: 1, opacity: 1, duration: 0.7, ease: "power3.out" },
+          );
+          gsap.to(copy, { opacity: 1, y: 0, duration: 0.48, ease: "power3.out" });
+        },
+      });
+    } else {
+      image.src = item.image;
+      image.alt = item.alt;
+      eyebrow.textContent = item.eyebrow;
+      title.textContent = item.title;
+      description.textContent = item.description;
+      current.textContent = item.number;
+    }
+  };
+
+  setActiveItem(0);
+
+  if (prefersReducedMotion || !window.gsap || !window.ScrollTrigger) {
+    section.classList.add("is-static");
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  ScrollTrigger.matchMedia({
+    "(min-width: 901px)": () => {
+      ScrollTrigger.create({
+        trigger: section,
+        start: "top top",
+        end: "bottom bottom",
+        pin,
+        pinSpacing: false,
+        anticipatePin: 1,
+      });
+
+      steps.forEach((step, index) => {
+        ScrollTrigger.create({
+          trigger: step,
+          start: "top center",
+          end: "bottom center",
+          onEnter: () => setActiveItem(index),
+          onEnterBack: () => setActiveItem(index),
+        });
+      });
+
+      gsap.to(image, {
+        yPercent: -7,
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+
+      gsap.to(orbs, {
+        y: -120,
+        x: 38,
+        rotate: 10,
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+    },
+  });
+
+  image.addEventListener("load", () => ScrollTrigger.refresh());
+  window.addEventListener("load", () => ScrollTrigger.refresh());
+}
+
+initSignatureShowcase();
+
 const revealObserver = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
