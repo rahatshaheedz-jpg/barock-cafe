@@ -1371,6 +1371,24 @@ ul {
   transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
 }
 
+.menu-item-list li.has-description {
+  align-items: flex-start;
+  min-height: 96px;
+}
+
+.menu-item-list li > span {
+  display: grid;
+  gap: 5px;
+}
+
+.menu-item-list small {
+  max-width: 48ch;
+  color: rgba(255, 249, 239, 0.68);
+  font-size: 0.78rem;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
 .menu-item-list li:hover {
   border-color: rgba(212, 168, 117, 0.48);
   background: rgba(255, 249, 239, 0.075);
