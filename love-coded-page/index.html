@@ -20,7 +20,7 @@
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260629-real-menu" />
+    <link rel="stylesheet" href="./styles.css?v=20260710-layout-repair" />
   </head>
   <body class="home-page">
     <main>
@@ -38,14 +38,21 @@
           <a href="#contact">Contact</a>
         </nav>
         <a class="visit-pill glass-button" href="./menu.html">View Menu</a>
-        <button class="menu-toggle" type="button" data-menu-toggle aria-label="Open navigation">
+        <button
+          class="menu-toggle"
+          type="button"
+          data-menu-toggle
+          aria-label="Open navigation"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
           <span></span>
           <span></span>
           <span></span>
         </button>
       </header>
 
-      <nav class="mobile-menu" data-mobile-menu aria-label="Mobile navigation">
+      <nav class="mobile-menu" id="mobile-menu" data-mobile-menu aria-label="Mobile navigation">
         <a href="#home">Home</a>
         <a href="#about">About</a>
         <a href="./menu.html">Menu</a>
@@ -240,7 +247,7 @@
         </div>
       </section>
 
-      <div class="luxury-band reveal" aria-label="Brand statement">
+      <div class="luxury-band" aria-label="Brand statement">
         <span></span>
         <p>Slow coffee. Warm light. A quieter kind of luxury.</p>
         <span></span>
@@ -252,42 +259,6 @@
             <p class="signature-kicker"><span></span>SIGNATURE</p>
             <p class="signature-subtitle">THREE THINGS YOU HAVE TO TRY FIRST</p>
             <h2>Crafted picks for your first BAROCK moment</h2>
-          </div>
-
-          <div class="signature-pin" data-signature-pin>
-            <div class="signature-orb signature-orb-one" aria-hidden="true"></div>
-            <div class="signature-orb signature-orb-two" aria-hidden="true"></div>
-
-            <article class="signature-showcase glass-card reveal" aria-live="polite">
-              <div class="signature-visual">
-                <span class="signature-glow" aria-hidden="true"></span>
-                <img
-                  src="./assets/site/coffee-cup.svg"
-                  alt="Signature Latte"
-                  data-signature-image
-                />
-              </div>
-
-              <div class="signature-copy">
-                <span class="signature-badge">BAROCK PICK</span>
-                <p class="signature-item-eyebrow" data-signature-eyebrow>01 - HOUSE SPECIAL</p>
-                <h3 data-signature-title>Signature Latte</h3>
-                <p data-signature-description>
-                  Our flagship blend, slow-steamed milk, and a hand-poured rosetta.
-                </p>
-                <div class="signature-progress" aria-label="Signature item progress">
-                  <strong data-signature-current>01</strong>
-                  <span></span>
-                  <em>03</em>
-                </div>
-              </div>
-            </article>
-          </div>
-
-          <div class="signature-steps" aria-hidden="true">
-            <span data-signature-step="0"></span>
-            <span data-signature-step="1"></span>
-            <span data-signature-step="2"></span>
           </div>
 
           <div class="signature-mobile-list reveal-group">
@@ -442,7 +413,7 @@
         </div>
       </section>
 
-      <section class="opening-strip reveal" aria-label="Opening soon announcement">
+      <section class="opening-strip" aria-label="Opening soon announcement">
         <p>Something Perfect is Brewing in Gulshan-2</p>
         <span aria-hidden="true"><i></i><i></i><i></i></span>
       </section>
@@ -575,8 +546,6 @@
       Thanks. Your message is ready for BAROCK CAFE.
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="./script.js"></script>
   </body>
 </html>
