@@ -1199,9 +1199,10 @@ ul {
 
 .menu-category-trigger {
   display: grid;
-  grid-template-columns: minmax(160px, 0.9fr) 1.1fr;
+  grid-template-columns: minmax(150px, 0.82fr) minmax(0, 1.18fr);
   width: 100%;
-  min-height: 248px;
+  height: clamp(286px, 23vw, 336px);
+  min-height: 0;
   border: 0;
   padding: 0;
   background: transparent;
@@ -1213,7 +1214,8 @@ ul {
 .menu-category-media {
   position: relative;
   overflow: hidden;
-  min-height: 248px;
+  height: 100%;
+  min-height: 0;
 }
 
 .menu-category-media::after {
@@ -1241,7 +1243,9 @@ ul {
 
 .menu-category-content {
   display: grid;
-  align-content: center;
+  height: 100%;
+  align-content: stretch;
+  grid-template-rows: auto minmax(0, auto) minmax(0, 1fr) auto;
   gap: 13px;
   padding: clamp(22px, 3vw, 34px);
 }
@@ -1255,22 +1259,32 @@ ul {
 }
 
 .menu-category-title {
+  display: -webkit-box;
+  overflow: hidden;
   color: var(--paper);
   font-family: var(--font-display);
-  font-size: clamp(2.25rem, 4vw, 3.8rem);
+  font-size: clamp(2rem, 3.35vw, 3.35rem);
   font-weight: 700;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   line-height: 0.92;
 }
 
 .menu-category-subtitle {
+  display: -webkit-box;
+  overflow: hidden;
   color: rgba(255, 249, 239, 0.72);
   font-size: 1rem;
   font-weight: 700;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-height: 1.45;
 }
 
 .menu-category-action {
   display: inline-flex;
   width: max-content;
+  align-self: end;
   align-items: center;
   gap: 12px;
   border: 1px solid rgba(212, 168, 117, 0.38);
@@ -1986,19 +2000,16 @@ ul {
 
   .menu-category-trigger {
     grid-template-columns: 1fr;
-  }
-
-  .menu-category-media,
-  .menu-category-trigger {
-    min-height: 0;
+    grid-template-rows: minmax(180px, 0.9fr) minmax(224px, 1fr);
+    height: clamp(456px, 126vw, 548px);
   }
 
   .menu-category-media {
-    aspect-ratio: 1.55;
+    min-height: 0;
   }
 
   .menu-category-title {
-    font-size: clamp(2.2rem, 12vw, 3.5rem);
+    font-size: clamp(2.05rem, 11vw, 3.35rem);
   }
 
   .menu-item-list {
