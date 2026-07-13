@@ -16,10 +16,11 @@ function initScrollProgress() {
   const progress = document.createElement("div");
   progress.className = "scroll-progress";
   progress.setAttribute("aria-hidden", "true");
-  progress.innerHTML = '<span class="scroll-progress__bar"></span>';
+  const bar = document.createElement("span");
+  bar.className = "scroll-progress__bar";
+  progress.appendChild(bar);
   document.body.prepend(progress);
 
-  const bar = progress.querySelector(".scroll-progress__bar");
   const updateProgress = () => {
     const scrollable = document.documentElement.scrollHeight - window.innerHeight;
     const percentage = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
@@ -122,6 +123,19 @@ contactForm.addEventListener("submit", async (event) => {
 
   const submitButton = contactForm.querySelector('button[type="submit"]');
   const defaultButtonText = submitButton.textContent;
+  const nameInput = contactForm.elements.name;
+  const phoneInput = contactForm.elements.phone;
+  const messageInput = contactForm.elements.message;
+
+  nameInput.value = nameInput.value.trim();
+  phoneInput.value = phoneInput.value.trim();
+  messageInput.value = messageInput.value.trim();
+
+  if (!nameInput.value || !phoneInput.value || !messageInput.value) {
+    showToast("Please complete all fields before sending.");
+    return;
+  }
+
   const formData = new FormData(contactForm);
 
   formData.append("access_key", web3FormsAccessKey);
