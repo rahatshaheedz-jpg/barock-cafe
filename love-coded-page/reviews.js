@@ -382,10 +382,11 @@ function initScrollProgress() {
   const progress = document.createElement("div");
   progress.className = "scroll-progress";
   progress.setAttribute("aria-hidden", "true");
-  progress.innerHTML = '<span class="scroll-progress__bar"></span>';
+  const bar = document.createElement("span");
+  bar.className = "scroll-progress__bar";
+  progress.appendChild(bar);
   document.body.prepend(progress);
 
-  const bar = progress.querySelector(".scroll-progress__bar");
   const updateProgress = () => {
     const scrollable = document.documentElement.scrollHeight - window.innerHeight;
     const percentage = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;

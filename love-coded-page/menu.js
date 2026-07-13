@@ -357,10 +357,11 @@ function initScrollProgress() {
   const progress = document.createElement("div");
   progress.className = "scroll-progress";
   progress.setAttribute("aria-hidden", "true");
-  progress.innerHTML = '<span class="scroll-progress__bar"></span>';
+  const bar = document.createElement("span");
+  bar.className = "scroll-progress__bar";
+  progress.appendChild(bar);
   document.body.prepend(progress);
 
-  const bar = progress.querySelector(".scroll-progress__bar");
   const updateProgress = () => {
     const scrollable = document.documentElement.scrollHeight - window.innerHeight;
     const percentage = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
@@ -500,7 +501,7 @@ function renderMenu() {
             aria-controls="${category.id}-panel"
           >
             <span class="menu-category-media">
-              <img src="${category.image}" alt="${escapeHtml(category.title)}" loading="lazy" />
+              <img src="${category.image}" alt="${escapeHtml(category.title)}" loading="lazy" decoding="async" />
             </span>
             <span class="menu-category-content">
               <span class="menu-category-kicker">${String(category.visibleItems.length).padStart(2, "0")} items</span>
@@ -512,7 +513,7 @@ function renderMenu() {
               </span>
             </span>
           </button>
-          <div class="menu-category-panel" id="${category.id}-panel">
+          <div class="menu-category-panel" id="${category.id}-panel" aria-hidden="${!isOpen}">
             <div class="menu-category-panel-inner">
               ${category.note ? `<p class="menu-category-note">${escapeHtml(category.note)}</p>` : ""}
               <ul class="menu-item-list">
@@ -565,9 +566,14 @@ menuList.addEventListener("click", (event) => {
   toggleCategory(trigger.dataset.categoryId);
 });
 
+let searchDebounceId = 0;
+
 searchInput.addEventListener("input", (event) => {
-  searchTerm = event.target.value;
-  renderMenu();
+  window.clearTimeout(searchDebounceId);
+  searchDebounceId = window.setTimeout(() => {
+    searchTerm = event.target.value.trim();
+    renderMenu();
+  }, 120);
 });
 
 renderMenu();
