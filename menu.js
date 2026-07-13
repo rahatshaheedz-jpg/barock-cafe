@@ -1,3 +1,5 @@
+const defaultCafeImage = "./assets/site/hero-coffee.svg";
+
 const menuCategories = [
   {
     id: "classics",
@@ -346,10 +348,14 @@ const menuList = document.querySelector("[data-menu-list]");
 const menuCount = document.querySelector("[data-menu-count]");
 const emptyState = document.querySelector("[data-empty-state]");
 const revealItems = document.querySelectorAll(".reveal");
-const defaultCafeImage = "./assets/site/hero-coffee.svg";
 
 let openCategoryId = "";
 let searchTerm = "";
+let lastFocusedMenuItem = null;
+let previewOpenTimer = 0;
+let previewCloseTimer = 0;
+let activePreviewItem = null;
+let isModalOpen = false;
 
 year.textContent = new Date().getFullYear();
 
@@ -430,6 +436,127 @@ function escapeHtml(value) {
   });
 }
 
+function slugify(value) {
+  return String(value)
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function getCategoryImage(categoryId) {
+  const categoryImages = {
+    classics: "./assets/site/coffee-cup.svg",
+    "hot-chocolate-tea": "./assets/site/coffee-cup.svg",
+    "iced-coffee-chillers": "./assets/site/iced-coffee.svg",
+    refreshers: "./assets/site/iced-coffee.svg",
+    sandwiches: "./assets/site/sandwich.svg",
+    burgers: "./assets/site/sandwich.svg",
+    "soup-starter": "./assets/site/dessert.svg",
+    pizza: "./assets/site/friends.svg",
+    pasta: "./assets/site/beans.svg",
+    "fast-food": "./assets/site/sandwich.svg",
+    desserts: "./assets/site/dessert.svg",
+    seafood: "./assets/site/friends.svg",
+    "steaks-beef": "./assets/site/interior.svg",
+  };
+
+  return categoryImages[categoryId] || defaultCafeImage;
+}
+
+function getItemImage(itemName, categoryId) {
+  const normalized = slugify(itemName);
+  const imageMap = {
+    cappuccino: "./assets/site/coffee-cup.svg",
+    espresso: "./assets/site/coffee-cup.svg",
+    "cafe-latte": "./assets/site/coffee-cup.svg",
+    "caramel-latte": "./assets/site/coffee-cup.svg",
+    "iced-latte": "./assets/site/iced-coffee.svg",
+    "iced-caramel-latte": "./assets/site/iced-coffee.svg",
+    "iced-americano": "./assets/site/iced-coffee.svg",
+    "chocolate-cake": "./assets/site/dessert.svg",
+    "salted-caramel-cheesecake": "./assets/site/dessert.svg",
+    "blueberry-cheesecake": "./assets/site/dessert.svg",
+    "club-sandwich": "./assets/site/sandwich.svg",
+    "smoked-chicken-sandwich": "./assets/site/sandwich.svg",
+  };
+
+  return imageMap[normalized] || getCategoryImage(categoryId);
+}
+
+function getCategoryTags(category) {
+  const tagMap = {
+    classics: ["Hot", "Coffee", "Espresso"],
+    "hot-chocolate-tea": ["Hot", "Comfort Drink"],
+    "iced-coffee-chillers": ["Cold", "Coffee", "Chiller"],
+    refreshers: ["Cold", "Refreshing"],
+    sandwiches: ["Savory", "Cafe Bite"],
+    burgers: ["Savory", "Burger"],
+    "soup-starter": ["Starter", "Shareable"],
+    pizza: ["Pizza", "Baked"],
+    pasta: ["Pasta", "Kitchen"],
+    "fast-food": ["Snack", "Quick Bite"],
+    desserts: ["Sweet", "Dessert"],
+    seafood: ["Seafood", "Signature"],
+    "steaks-beef": ["Beef", "Signature"],
+  };
+
+  return tagMap[category.id] || [category.title];
+}
+
+function getPlaceholderIngredients(category) {
+  const ingredientMap = {
+    classics: ["Cafe-approved espresso recipe pending", "Milk or coffee base as served"],
+    "hot-chocolate-tea": ["Cafe-approved drink recipe pending", "Served hot"],
+    "iced-coffee-chillers": ["Cafe-approved cold drink recipe pending", "Served chilled"],
+    refreshers: ["Cafe-approved refresher recipe pending", "Served chilled"],
+    sandwiches: ["Cafe-approved sandwich build pending", "Prepared fresh to order"],
+    burgers: ["Cafe-approved burger build pending", "Prepared fresh to order"],
+    "soup-starter": ["Cafe-approved starter recipe pending", "Prepared fresh to order"],
+    pizza: ["Cafe-approved pizza recipe pending", "Baked crust and house toppings"],
+    pasta: ["Cafe-approved pasta recipe pending", "Prepared fresh to order"],
+    "fast-food": ["Cafe-approved snack recipe pending", "Prepared fresh to order"],
+    desserts: ["Cafe-approved dessert details pending", "Sweet cafe serving"],
+    seafood: ["Cafe-approved seafood recipe pending", "Prepared fresh to order"],
+    "steaks-beef": ["Cafe-approved beef recipe pending", "Prepared fresh to order"],
+  };
+
+  return ingredientMap[category.id] || ["Cafe-approved recipe details pending"];
+}
+
+function createMenuDetails() {
+  const details = {};
+
+  menuCategories.forEach((category) => {
+    category.items.forEach((item) => {
+      const id = `${category.id}-${slugify(item.name)}`;
+      item.id = id;
+      item.detailsIncomplete = true;
+      details[id] = {
+        id,
+        name: item.name,
+        price: item.price || "BDT ___",
+        image: getItemImage(item.name, category.id),
+        shortDescription:
+          item.description ||
+          `${item.name} from the ${category.title} collection. Cafe-approved recipe details are pending.`,
+        ingredients: getPlaceholderIngredients(category),
+        preparation:
+          item.description ||
+          "Prepared fresh by the Barock Cafe team. Exact preparation notes are pending cafe approval.",
+        category: category.title,
+        tags: getCategoryTags(category),
+        altText: `${item.name} from BAROCK CAFE`,
+        note: "Placeholder details - final cafe-approved ingredients and preparation notes pending.",
+      };
+    });
+  });
+
+  return details;
+}
+
+const menuDetailsById = createMenuDetails();
+
 function getItemSearchText(item) {
   return [item.name, item.price, item.description].filter(Boolean).join(" ").toLowerCase();
 }
@@ -481,11 +608,13 @@ function renderMenu() {
         .map(
           (item) => `
             <li class="${item.description ? "has-description" : ""}">
-              <span>
-                ${escapeHtml(item.name)}
-                ${item.description ? `<small>${escapeHtml(item.description)}</small>` : ""}
-              </span>
-              <strong>${escapeHtml(item.price || "BDT ___")}</strong>
+              <button class="menu-item-button" type="button" data-item-id="${escapeHtml(item.id)}">
+                <span>
+                  ${escapeHtml(item.name)}
+                  ${item.description ? `<small>${escapeHtml(item.description)}</small>` : ""}
+                </span>
+                <strong>${escapeHtml(item.price || "BDT ___")}</strong>
+              </button>
             </li>
           `,
         )
@@ -531,6 +660,265 @@ function renderMenu() {
   initImageFallbacks();
 }
 
+function createElement(tagName, className, text) {
+  const element = document.createElement(tagName);
+
+  if (className) {
+    element.className = className;
+  }
+
+  if (typeof text === "string") {
+    element.textContent = text;
+  }
+
+  return element;
+}
+
+function createMenuModal() {
+  const overlay = createElement("div", "menu-modal-overlay");
+  overlay.dataset.menuModal = "true";
+  overlay.hidden = true;
+
+  const dialog = createElement("section", "menu-modal glass-card");
+  dialog.setAttribute("role", "dialog");
+  dialog.setAttribute("aria-modal", "true");
+  dialog.setAttribute("aria-labelledby", "menu-modal-title");
+  dialog.setAttribute("tabindex", "-1");
+
+  const closeButton = createElement("button", "menu-modal-close", "Close");
+  closeButton.type = "button";
+  closeButton.setAttribute("aria-label", "Close menu item details");
+  closeButton.dataset.menuModalClose = "true";
+
+  const imageWrap = createElement("div", "menu-modal-media");
+  const image = document.createElement("img");
+  image.loading = "lazy";
+  image.decoding = "async";
+  image.width = 420;
+  image.height = 420;
+  imageWrap.append(image);
+
+  const body = createElement("div", "menu-modal-body");
+  const category = createElement("p", "menu-modal-category");
+  const title = createElement("h2", "menu-modal-title");
+  title.id = "menu-modal-title";
+  const price = createElement("p", "menu-modal-price");
+  const description = createElement("p", "menu-modal-description");
+  const tags = createElement("div", "menu-modal-tags");
+  const ingredientsBlock = createElement("div", "menu-modal-block");
+  const ingredientsTitle = createElement("h3", "", "Main ingredients");
+  const ingredientsList = createElement("ul", "menu-modal-list");
+  ingredientsBlock.append(ingredientsTitle, ingredientsList);
+  const preparationBlock = createElement("div", "menu-modal-block");
+  const preparationTitle = createElement("h3", "", "Preparation");
+  const preparation = createElement("p");
+  preparationBlock.append(preparationTitle, preparation);
+  const note = createElement("p", "menu-modal-note");
+
+  body.append(category, title, price, description, tags, ingredientsBlock, preparationBlock, note);
+  dialog.append(closeButton, imageWrap, body);
+  overlay.append(dialog);
+  document.body.append(overlay);
+
+  return {
+    overlay,
+    dialog,
+    closeButton,
+    image,
+    category,
+    title,
+    price,
+    description,
+    tags,
+    ingredientsList,
+    preparation,
+    note,
+  };
+}
+
+function createMenuPreview() {
+  const preview = createElement("aside", "menu-preview glass-card");
+  preview.dataset.menuPreview = "true";
+  preview.hidden = true;
+  preview.setAttribute("aria-hidden", "true");
+
+  const image = document.createElement("img");
+  image.loading = "lazy";
+  image.decoding = "async";
+  image.width = 96;
+  image.height = 96;
+
+  const content = createElement("div", "menu-preview-content");
+  const title = createElement("h3");
+  const price = createElement("strong");
+  const description = createElement("p");
+  content.append(title, price, description);
+  preview.append(image, content);
+  document.body.append(preview);
+
+  return { preview, image, title, price, description };
+}
+
+const menuModal = createMenuModal();
+const menuPreview = createMenuPreview();
+
+function setImageWithFallback(image, src, altText) {
+  image.dataset.fallbackApplied = "false";
+  image.alt = altText;
+  image.onerror = () => {
+    if (image.dataset.fallbackApplied === "true") {
+      return;
+    }
+
+    image.dataset.fallbackApplied = "true";
+    image.src = defaultCafeImage;
+  };
+  image.src = src || defaultCafeImage;
+}
+
+function populateTags(container, tags) {
+  container.replaceChildren();
+  tags.forEach((tag) => {
+    container.append(createElement("span", "", tag));
+  });
+}
+
+function populateIngredients(list, ingredients) {
+  list.replaceChildren();
+  ingredients.forEach((ingredient) => {
+    const item = createElement("li", "", ingredient);
+    list.append(item);
+  });
+}
+
+function populateModal(details) {
+  setImageWithFallback(menuModal.image, details.image, details.altText);
+  menuModal.category.textContent = details.category;
+  menuModal.title.textContent = details.name;
+  menuModal.price.textContent = details.price;
+  menuModal.description.textContent = details.shortDescription;
+  populateTags(menuModal.tags, details.tags);
+  populateIngredients(menuModal.ingredientsList, details.ingredients);
+  menuModal.preparation.textContent = details.preparation;
+  menuModal.note.textContent = details.note || "";
+}
+
+function getFocusableModalElements() {
+  return Array.from(
+    menuModal.dialog.querySelectorAll(
+      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
+    ),
+  );
+}
+
+function openItemModal(itemId, trigger) {
+  const details = menuDetailsById[itemId];
+
+  if (!details) {
+    return;
+  }
+
+  lastFocusedMenuItem = trigger || document.activeElement;
+  hidePreview(true);
+  populateModal(details);
+  menuModal.overlay.hidden = false;
+  document.body.classList.add("menu-modal-open");
+  menuModal.closeButton.focus({ preventScroll: true });
+  window.setTimeout(() => {
+    menuModal.overlay.classList.add("is-open");
+    menuModal.closeButton.focus({ preventScroll: true });
+  }, 10);
+  window.setTimeout(() => menuModal.closeButton.focus({ preventScroll: true }), 240);
+  window.requestAnimationFrame(() => menuModal.closeButton.focus({ preventScroll: true }));
+  isModalOpen = true;
+
+  if (window.history && !window.history.state?.menuModal) {
+    window.history.pushState({ menuModal: true }, "");
+  }
+}
+
+function closeItemModal({ restoreFocus = true, fromPopState = false } = {}) {
+  if (!isModalOpen) {
+    return;
+  }
+
+  menuModal.overlay.classList.remove("is-open");
+  document.body.classList.remove("menu-modal-open");
+  window.setTimeout(() => {
+    menuModal.overlay.hidden = true;
+  }, 220);
+  isModalOpen = false;
+
+  if (restoreFocus && lastFocusedMenuItem && document.contains(lastFocusedMenuItem)) {
+    lastFocusedMenuItem.focus({ preventScroll: true });
+  }
+
+  if (!fromPopState && window.history.state?.menuModal) {
+    window.history.back();
+  }
+}
+
+function showPreview(itemId, trigger) {
+  const details = menuDetailsById[itemId];
+
+  if (!details || window.matchMedia("(hover: none), (pointer: coarse)").matches) {
+    return;
+  }
+
+  activePreviewItem = itemId;
+  setImageWithFallback(menuPreview.image, details.image, details.altText);
+  menuPreview.title.textContent = details.name;
+  menuPreview.price.textContent = details.price;
+  menuPreview.description.textContent = details.shortDescription;
+  menuPreview.preview.hidden = false;
+  menuPreview.preview.classList.add("is-visible");
+
+  const triggerRect = trigger.getBoundingClientRect();
+  const previewRect = menuPreview.preview.getBoundingClientRect();
+  const margin = 14;
+  const top = Math.min(
+    window.innerHeight - previewRect.height - margin,
+    Math.max(margin, triggerRect.top + window.scrollY - 18),
+  );
+  const rightSpace = window.innerWidth - triggerRect.right;
+  const left = rightSpace > previewRect.width + margin * 2
+    ? triggerRect.right + margin
+    : Math.max(margin, triggerRect.left - previewRect.width - margin);
+
+  menuPreview.preview.style.top = `${top}px`;
+  menuPreview.preview.style.left = `${Math.min(left, window.innerWidth - previewRect.width - margin)}px`;
+}
+
+function queuePreview(itemId, trigger) {
+  window.clearTimeout(previewCloseTimer);
+  window.clearTimeout(previewOpenTimer);
+  previewOpenTimer = window.setTimeout(() => {
+    if (!document.contains(trigger) || (!trigger.matches(":hover") && document.activeElement !== trigger)) {
+      return;
+    }
+
+    showPreview(itemId, trigger);
+  }, 150);
+}
+
+function hidePreview(immediate = false) {
+  window.clearTimeout(previewOpenTimer);
+  window.clearTimeout(previewCloseTimer);
+
+  const close = () => {
+    activePreviewItem = null;
+    menuPreview.preview.classList.remove("is-visible");
+    menuPreview.preview.hidden = true;
+  };
+
+  if (immediate) {
+    close();
+    return;
+  }
+
+  previewCloseTimer = window.setTimeout(close, 160);
+}
+
 function toggleCategory(categoryId) {
   openCategoryId = openCategoryId === categoryId ? "" : categoryId;
   renderMenu();
@@ -557,6 +945,13 @@ mobileMenu.querySelectorAll("a").forEach((link) => {
 });
 
 menuList.addEventListener("click", (event) => {
+  const itemButton = event.target.closest("[data-item-id]");
+
+  if (itemButton) {
+    openItemModal(itemButton.dataset.itemId, itemButton);
+    return;
+  }
+
   const trigger = event.target.closest("[data-category-id]");
 
   if (!trigger) {
@@ -564,6 +959,109 @@ menuList.addEventListener("click", (event) => {
   }
 
   toggleCategory(trigger.dataset.categoryId);
+});
+
+menuList.addEventListener("mouseover", (event) => {
+  const itemButton = event.target.closest("[data-item-id]");
+
+  if (itemButton) {
+    queuePreview(itemButton.dataset.itemId, itemButton);
+  }
+});
+
+menuList.addEventListener("mousemove", (event) => {
+  const itemButton = event.target.closest("[data-item-id]");
+
+  if (itemButton && activePreviewItem !== itemButton.dataset.itemId) {
+    queuePreview(itemButton.dataset.itemId, itemButton);
+  }
+});
+
+menuList.addEventListener("mouseout", (event) => {
+  const itemButton = event.target.closest("[data-item-id]");
+
+  if (itemButton && !itemButton.contains(event.relatedTarget)) {
+    hidePreview();
+  }
+});
+
+menuList.addEventListener("focusin", (event) => {
+  const itemButton = event.target.closest("[data-item-id]");
+
+  if (itemButton) {
+    queuePreview(itemButton.dataset.itemId, itemButton);
+  }
+});
+
+menuList.addEventListener("focusout", (event) => {
+  const itemButton = event.target.closest("[data-item-id]");
+
+  if (itemButton && !itemButton.contains(event.relatedTarget)) {
+    hidePreview();
+  }
+});
+
+menuPreview.preview.addEventListener("mouseenter", () => {
+  window.clearTimeout(previewCloseTimer);
+});
+
+menuPreview.preview.addEventListener("mouseleave", () => {
+  hidePreview();
+});
+
+menuModal.closeButton.addEventListener("click", () => closeItemModal());
+
+menuModal.overlay.addEventListener("click", (event) => {
+  if (event.target === menuModal.overlay) {
+    closeItemModal();
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (!isModalOpen) {
+    return;
+  }
+
+  if (event.key === "Escape") {
+    event.preventDefault();
+    closeItemModal();
+    return;
+  }
+
+  if (event.key !== "Tab") {
+    return;
+  }
+
+  const focusableElements = getFocusableModalElements();
+
+  if (!focusableElements.length) {
+    event.preventDefault();
+    menuModal.dialog.focus({ preventScroll: true });
+    return;
+  }
+
+  const first = focusableElements[0];
+  const last = focusableElements[focusableElements.length - 1];
+
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+});
+
+window.addEventListener("popstate", () => {
+  if (isModalOpen) {
+    closeItemModal({ restoreFocus: false, fromPopState: true });
+  }
+});
+
+window.addEventListener("resize", () => {
+  if (activePreviewItem) {
+    hidePreview(true);
+  }
 });
 
 let searchDebounceId = 0;
