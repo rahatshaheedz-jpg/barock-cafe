@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" fill="none">
+  <defs>
+    <radialGradient id="ornGlow" cx="50%" cy="50%" r="50%">
+      <stop stop-color="#D8B16A" stop-opacity=".28"/>
+      <stop offset=".7" stop-color="#8B5A2B" stop-opacity=".12"/>
+      <stop offset="1" stop-color="#0B0705" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft" x="-12%" y="-12%" width="124%" height="124%">
+      <feGaussianBlur stdDeviation=".9"/>
+    </filter>
+  </defs>
+  <rect width="900" height="900" fill="url(#ornGlow)"/>
+  <g filter="url(#soft)" stroke="#D8B16A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".52">
+    <path d="M450 148c-84 78-126 154-126 228 0 64 40 102 89 92 49-10 66-67 28-98-36-30-86-7-89 45"/>
+    <path d="M450 148c84 78 126 154 126 228 0 64-40 102-89 92-49-10-66-67-28-98 36-30 86-7 89 45"/>
+    <path d="M450 752c-84-78-126-154-126-228 0-64 40-102 89-92 49 10 66 67 28 98-36 30-86 7-89-45"/>
+    <path d="M450 752c84-78 126-154 126-228 0-64-40-102-89-92-49 10-66 67-28 98 36 30 86 7 89-45"/>
+    <path d="M148 450c78-84 154-126 228-126 64 0 102 40 92 89-10 49-67 66-98 28-30-36-7-86 45-89"/>
+    <path d="M752 450c-78-84-154-126-228-126-64 0-102 40-92 89 10 49 67 66 98 28 30-36 7-86-45-89"/>
+    <path d="M148 450c78 84 154 126 228 126 64 0 102-40 92-89-10-49-67-66-98-28-30 36-7 86 45 89"/>
+    <path d="M752 450c-78 84-154 126-228 126-64 0-102-40-92-89 10-49 67-66 98-28 30 36 7 86-45 89"/>
+  </g>
+  <g stroke="#FFF7E8" stroke-opacity=".18" stroke-width="2">
+    <circle cx="450" cy="450" r="84"/>
+    <circle cx="450" cy="450" r="186"/>
+    <path d="M450 88v724M88 450h724"/>
+  </g>
+</svg>

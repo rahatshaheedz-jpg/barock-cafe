@@ -4628,3 +4628,195 @@ body {
     height: 40px;
   }
 }
+
+/* Baroque-inspired background atmosphere */
+:root {
+  --baroque-art-opacity: 0.56;
+  --baroque-art-strong: 0.38;
+  --baroque-art-soft: 0.24;
+}
+
+body {
+  background:
+    radial-gradient(circle at 18% 8%, rgba(216, 177, 106, 0.16), transparent 29%),
+    radial-gradient(circle at 88% 18%, rgba(93, 54, 28, 0.28), transparent 31%),
+    radial-gradient(circle at 50% 92%, rgba(216, 177, 106, 0.1), transparent 35%),
+    linear-gradient(90deg, rgba(216, 177, 106, 0.05) 1px, transparent 1px),
+    linear-gradient(rgba(216, 177, 106, 0.045) 1px, transparent 1px),
+    var(--coffee-black) !important;
+  background-size: auto, auto, auto, 72px 72px, 72px 72px, auto;
+}
+
+body::before {
+  z-index: -3;
+  background:
+    url("./assets/site/baroque-ornament.svg") left -120px top 120px / min(760px, 72vw) auto no-repeat,
+    url("./assets/site/baroque-vault.svg") right -160px top 760px / min(920px, 82vw) auto no-repeat,
+    radial-gradient(circle at 14% 18%, rgba(216, 177, 106, 0.18), transparent 30%),
+    radial-gradient(circle at 86% 52%, rgba(139, 90, 43, 0.18), transparent 34%),
+    linear-gradient(rgba(216, 177, 106, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(216, 177, 106, 0.08) 1px, transparent 1px),
+    #0B0705 !important;
+  background-size: min(760px, 72vw) auto, min(920px, 82vw) auto, auto, auto, 44px 44px, 44px 44px, auto;
+  opacity: var(--baroque-art-opacity);
+  filter: saturate(0.96) contrast(1.04);
+}
+
+body::after {
+  z-index: -2;
+  background:
+    radial-gradient(circle at center, transparent 16%, rgba(11, 7, 5, 0.36) 72%),
+    linear-gradient(180deg, rgba(11, 7, 5, 0.1), rgba(11, 7, 5, 0.62)) !important;
+}
+
+.hero,
+.home-page .signature-section,
+.menu-page-hero,
+.menu-catalog,
+.reviews-page main,
+.pf-hero,
+.gallery,
+.reviews-preview,
+.location,
+.contact,
+.footer {
+  position: relative;
+  isolation: isolate;
+}
+
+.hero::before,
+.menu-page-hero::before,
+.pf-hero::before {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    url("./assets/site/baroque-vault.svg") right -90px center / min(860px, 72vw) auto no-repeat,
+    radial-gradient(circle at 76% 26%, rgba(216, 177, 106, 0.18), transparent 34%);
+  content: "";
+  opacity: var(--baroque-art-strong);
+  pointer-events: none;
+  mix-blend-mode: screen;
+  mask-image: linear-gradient(90deg, transparent, #000 36%, #000 82%, transparent);
+}
+
+.hero::after,
+.menu-page-hero::after,
+.pf-hero::after {
+  position: absolute;
+  right: max(12px, calc((100vw - 1240px) / 2));
+  bottom: 5%;
+  z-index: -1;
+  color: rgba(216, 177, 106, 0.085);
+  content: "BAROCK";
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 18vw, 18rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 0.8;
+  pointer-events: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.home-page .signature-section::after,
+.menu-catalog::after,
+.gallery::after,
+.reviews-preview::after,
+.location::after,
+.contact::after,
+.footer::after {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    url("./assets/site/baroque-stilllife.svg") right -120px center / min(620px, 58vw) auto no-repeat,
+    url("./assets/site/baroque-ornament.svg") left -140px bottom -90px / min(640px, 64vw) auto no-repeat;
+  content: "";
+  opacity: var(--baroque-art-soft);
+  pointer-events: none;
+  mix-blend-mode: screen;
+  mask-image: radial-gradient(circle at 70% 44%, #000 0 34%, transparent 72%);
+}
+
+.home-page .signature-section::after {
+  opacity: 0.3;
+  background:
+    url("./assets/site/baroque-vault.svg") right -140px top 4% / min(900px, 72vw) auto no-repeat,
+    url("./assets/site/baroque-ornament.svg") left -160px bottom -120px / min(700px, 70vw) auto no-repeat;
+}
+
+.menu-catalog::after,
+.gallery::after,
+.reviews-preview::after,
+.location::after,
+.contact::after,
+.footer::after {
+  mask-image: linear-gradient(90deg, transparent, #000 20%, #000 82%, transparent);
+}
+
+.about::after,
+.experience::after {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    url("./assets/site/baroque-ornament.svg") right -180px top 24px / min(620px, 68vw) auto no-repeat;
+  content: "";
+  opacity: 0.12;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+.about > *,
+.experience > *,
+.gallery > *,
+.reviews-preview > *,
+.location > *,
+.contact > *,
+.footer > *,
+.home-page .signature-section > *,
+.menu-catalog > * {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 760px) {
+  :root {
+    --baroque-art-opacity: 0.42;
+    --baroque-art-strong: 0.25;
+    --baroque-art-soft: 0.16;
+  }
+
+  body::before {
+    background-position: left -190px top 160px, right -240px top 760px, 14% 18%, 86% 52%, 0 0, 0 0, 0 0;
+  }
+
+  .hero::before,
+  .menu-page-hero::before,
+  .pf-hero::before {
+    background-position: right -220px center, 76% 26%;
+    background-size: 720px auto, auto;
+    mask-image: linear-gradient(180deg, #000, transparent 88%);
+  }
+
+  .hero::after,
+  .menu-page-hero::after,
+  .pf-hero::after {
+    right: -32px;
+    bottom: 10%;
+    font-size: clamp(4.4rem, 28vw, 8.4rem);
+    opacity: 0.62;
+  }
+
+  .home-page .signature-section::after,
+  .menu-catalog::after,
+  .gallery::after,
+  .reviews-preview::after,
+  .location::after,
+  .contact::after,
+  .footer::after {
+    background-size: 520px auto, 460px auto;
+    opacity: 0.14;
+  }
+}
