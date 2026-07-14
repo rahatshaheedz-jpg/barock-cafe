@@ -27,6 +27,15 @@
   box-sizing: border-box;
 }
 
+*:focus {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: rgba(216, 177, 106, 0.28);
+  color: var(--paper);
+}
+
 html {
   scroll-behavior: smooth;
   background: #0B0705;
@@ -99,6 +108,159 @@ button,
 input,
 textarea {
   font: inherit;
+}
+
+:where(
+  .site-header,
+  .brand,
+  .brand *,
+  .nav-links,
+  .nav-links *,
+  .mobile-menu,
+  .mobile-menu a,
+  .visit-pill,
+  .menu-toggle,
+  .button,
+  .hero,
+  .hero h1,
+  .hero-eyebrow,
+  .hero-copy,
+  .hero-cta,
+  .hero-card,
+  .hero-card *,
+  .steam-wrap,
+  .section-kicker,
+  .section-heading,
+  .about-card,
+  .about-card *,
+  .menu-card,
+  .menu-card *,
+  .signature-card,
+  .signature-card *,
+  .gallery-card,
+  .gallery-card *,
+  .experience-card,
+  .experience-card *,
+  .review-card,
+  .review-card *,
+  .location-card,
+  .location-card *,
+  .footer,
+  .footer *,
+  .menu-hero,
+  .menu-hero *,
+  .menu-toolbar > p,
+  .menu-catalog-meta,
+  .menu-category-card,
+  .menu-category-card *,
+  .menu-item-list,
+  .menu-item-list *,
+  .menu-preview,
+  .menu-preview *,
+  .menu-modal,
+  .menu-modal-header,
+  .menu-modal-header *,
+  .menu-modal-media,
+  .menu-modal-tags,
+  .menu-modal-tags *,
+  .menu-modal-block h3,
+  .menu-modal-category,
+  .menu-modal-price,
+  .reviews-hero,
+  .reviews-hero *,
+  .reviews-stat,
+  .reviews-stat *,
+  .review-stars,
+  .review-stars *
+) {
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+:where(
+  a,
+  button,
+  [role="button"],
+  .button,
+  .visit-pill,
+  .menu-toggle,
+  .menu-category-trigger,
+  .menu-item-button,
+  .menu-preview,
+  .menu-modal-close,
+  .menu-category-action,
+  .socials a,
+  .pf-socials a
+) {
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+:where(
+  input,
+  textarea,
+  select,
+  [contenteditable="true"],
+  .menu-search,
+  .menu-search *,
+  .contact-form,
+  .contact-form *,
+  .review-form,
+  .review-form *,
+  .reviews-page form,
+  .reviews-page form *
+) {
+  -webkit-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+  -webkit-tap-highlight-color: rgba(216, 177, 106, 0.18);
+}
+
+:where(
+  input,
+  textarea,
+  select,
+  [contenteditable="true"]
+) {
+  cursor: text;
+}
+
+:where(
+  a,
+  button,
+  [role="button"],
+  .button,
+  .visit-pill,
+  .menu-toggle,
+  .menu-category-trigger,
+  .menu-item-button,
+  .menu-preview,
+  .menu-modal-close,
+  .socials a,
+  .pf-socials a
+):focus {
+  outline: none;
+}
+
+:where(
+  a,
+  button,
+  [role="button"],
+  .button,
+  .visit-pill,
+  .menu-toggle,
+  .menu-category-trigger,
+  .menu-item-button,
+  .menu-preview,
+  .menu-modal-close,
+  .socials a,
+  .pf-socials a
+):focus-visible {
+  outline: 2px solid rgba(216, 177, 106, 0.9);
+  outline-offset: 4px;
+  box-shadow: 0 0 0 6px rgba(216, 177, 106, 0.12);
 }
 
 .site-header {
@@ -424,6 +586,16 @@ h3 {
 .button:hover,
 .button:focus-visible {
   transform: translateY(-2px);
+}
+
+.button:active,
+.visit-pill:active,
+.menu-toggle:active,
+.mobile-menu a:active,
+.nav-links a:active {
+  border-color: rgba(216, 177, 106, 0.58);
+  box-shadow: 0 12px 34px rgba(216, 177, 106, 0.14);
+  transform: translateY(0) scale(0.98);
 }
 
 .button:hover::after,
@@ -1212,6 +1384,12 @@ ul {
   transform: translateY(-6px);
 }
 
+.menu-category-card:has(.menu-category-trigger:active) {
+  border-color: rgba(212, 168, 117, 0.72);
+  box-shadow: 0 20px 62px rgba(0, 0, 0, 0.42), 0 0 26px rgba(212, 168, 117, 0.18);
+  transform: translateY(-2px) scale(0.992);
+}
+
 .menu-category-trigger {
   display: grid;
   grid-template-columns: minmax(150px, 0.82fr) minmax(0, 1.18fr);
@@ -1459,6 +1637,17 @@ ul {
   transform: translateY(-2px);
 }
 
+.menu-item-list li:has(.menu-item-button:active) {
+  border-color: rgba(216, 177, 106, 0.58);
+  background:
+    linear-gradient(135deg, rgba(216, 177, 106, 0.13), rgba(255, 249, 239, 0.055)),
+    rgba(35, 24, 18, 0.76);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 249, 239, 0.1),
+    0 0 22px rgba(216, 177, 106, 0.12);
+  transform: translateY(0) scale(0.988);
+}
+
 .menu-item-button:focus-visible {
   outline: 2px solid var(--gold);
   outline-offset: 6px;
@@ -1560,6 +1749,15 @@ ul {
     0 32px 82px rgba(0, 0, 0, 0.54),
     0 0 38px rgba(216, 177, 106, 0.2);
   outline: none;
+}
+
+.menu-preview:active {
+  border-color: rgba(216, 177, 106, 0.62);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 20px 58px rgba(0, 0, 0, 0.5),
+    0 0 28px rgba(216, 177, 106, 0.18);
+  transform: translateY(1px) scale(0.992);
 }
 
 .menu-modal-open {
@@ -1721,6 +1919,12 @@ ul {
   background: var(--gold);
   color: var(--text-dark);
   outline: none;
+}
+
+.menu-modal-close:active {
+  background: rgba(216, 177, 106, 0.16);
+  color: var(--paper);
+  transform: scale(0.96);
 }
 
 .menu-modal-media {
