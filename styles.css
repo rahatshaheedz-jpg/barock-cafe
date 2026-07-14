@@ -4566,3 +4566,65 @@ body {
       0 16px 42px rgba(0, 0, 0, 0.34) !important;
   }
 }
+
+/* Logo framing polish */
+.site-header .brand {
+  display: inline-grid;
+  width: 76px;
+  height: 56px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  padding: 5px;
+  background:
+    linear-gradient(145deg, rgba(255, 247, 232, 0.12), rgba(216, 177, 106, 0.06)),
+    rgba(8, 6, 4, 0.62);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.13),
+    0 10px 28px rgba(0, 0, 0, 0.26);
+  overflow: hidden;
+}
+
+.site-header .brand img {
+  display: block;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(216, 177, 106, 0.28);
+  border-radius: 50%;
+  background: #050403;
+  object-fit: cover;
+  object-position: center;
+  overflow: hidden;
+  aspect-ratio: 1;
+}
+
+.hero-card-logo {
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.hero-card-logo img {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none;
+  margin: 0 !important;
+  border-radius: inherit;
+  object-fit: contain;
+  object-position: center;
+  padding: 10px;
+  background: #050403 !important;
+}
+
+@media (max-width: 620px) {
+  .site-header .brand {
+    width: 64px;
+    height: 50px;
+    padding: 4px;
+  }
+
+  .site-header .brand img {
+    width: 40px;
+    height: 40px;
+  }
+}
