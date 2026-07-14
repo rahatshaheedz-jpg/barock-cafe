@@ -173,6 +173,7 @@ textarea {
   .review-stars,
   .review-stars *
 ) {
+  -webkit-tap-highlight-color: transparent;
   -webkit-user-select: none;
   -ms-user-select: none;
   user-select: none;
@@ -1592,6 +1593,7 @@ ul {
   padding: 13px 14px;
   background: rgba(255, 249, 239, 0.045);
   color: rgba(255, 249, 239, 0.86);
+  cursor: pointer;
   font-weight: 800;
   transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
 }
