@@ -366,6 +366,7 @@ let previewRafId = 0;
 let sheetDrag = null;
 let sheetDragRafId = 0;
 let sheetDismissTimer = 0;
+let lastPointerDragStart = 0;
 
 const sheetDismissDistanceRatio = 0.3;
 const sheetDismissVelocity = 0.6;
@@ -931,19 +932,38 @@ function isCloseButtonTarget(target) {
   return Boolean(target?.closest?.("[data-menu-modal-close]"));
 }
 
+function getDragClientY(event) {
+  return event.clientY ?? event.touches?.[0]?.clientY ?? event.changedTouches?.[0]?.clientY ?? 0;
+}
+
+function getDragPointerId(event) {
+  return event.pointerId ?? (event.type.startsWith("touch") ? "touch" : "mouse");
+}
+
 function startSheetDrag(event, source) {
-  if (!isModalOpen || !isMobileBottomSheet() || isCloseButtonTarget(event.target) || event.button > 0) {
+  if (
+    !isModalOpen ||
+    !isMobileBottomSheet() ||
+    isCloseButtonTarget(event.target) ||
+    event.button > 0 ||
+    (event.type === "mousedown" && window.performance.now() - lastPointerDragStart < 500)
+  ) {
     return;
   }
 
+  if (event.type === "pointerdown") {
+    lastPointerDragStart = window.performance.now();
+  }
+
+  const clientY = getDragClientY(event);
   sheetDrag = {
-    pointerId: event.pointerId,
+    pointerId: getDragPointerId(event),
     source,
-    startY: event.clientY,
-    currentY: event.clientY,
+    startY: clientY,
+    currentY: clientY,
     distance: 0,
     startTime: window.performance.now(),
-    lastY: event.clientY,
+    lastY: clientY,
     lastTime: window.performance.now(),
     velocity: 0,
     active: source === "header",
@@ -956,19 +976,20 @@ function startSheetDrag(event, source) {
   }
 
   try {
-    event.currentTarget.setPointerCapture(event.pointerId);
+    event.currentTarget.setPointerCapture?.(event.pointerId);
   } catch {
     // Pointer capture is an enhancement; dragging still works without it.
   }
 }
 
 function updateSheetDrag(event) {
-  if (!sheetDrag || event.pointerId !== sheetDrag.pointerId || !isMobileBottomSheet()) {
+  if (!sheetDrag || getDragPointerId(event) !== sheetDrag.pointerId || !isMobileBottomSheet()) {
     return;
   }
 
   const now = window.performance.now();
-  const rawDistance = event.clientY - sheetDrag.startY;
+  const clientY = getDragClientY(event);
+  const rawDistance = clientY - sheetDrag.startY;
   const movingDown = rawDistance > 0;
 
   if (!sheetDrag.active) {
@@ -982,20 +1003,20 @@ function updateSheetDrag(event) {
   }
 
   event.preventDefault();
-  sheetDrag.currentY = event.clientY;
-  sheetDrag.velocity = Math.max(0, (event.clientY - sheetDrag.lastY) / Math.max(now - sheetDrag.lastTime, 1));
-  sheetDrag.lastY = event.clientY;
+  sheetDrag.currentY = clientY;
+  sheetDrag.velocity = Math.max(0, (clientY - sheetDrag.lastY) / Math.max(now - sheetDrag.lastTime, 1));
+  sheetDrag.lastY = clientY;
   sheetDrag.lastTime = now;
   scheduleSheetDragVisual(rawDistance);
 }
 
 function finishSheetDrag(event, cancelled = false) {
-  if (!sheetDrag || event.pointerId !== sheetDrag.pointerId) {
+  if (!sheetDrag || getDragPointerId(event) !== sheetDrag.pointerId) {
     return;
   }
 
   try {
-    event.currentTarget.releasePointerCapture(event.pointerId);
+    event.currentTarget.releasePointerCapture?.(event.pointerId);
   } catch {
     // The browser may release capture automatically on cancellation.
   }
@@ -1327,6 +1348,22 @@ menuModal.body.addEventListener("pointerdown", (event) => startSheetDrag(event, 
 menuModal.body.addEventListener("pointermove", updateSheetDrag);
 menuModal.body.addEventListener("pointerup", (event) => finishSheetDrag(event));
 menuModal.body.addEventListener("pointercancel", (event) => finishSheetDrag(event, true));
+menuModal.header.addEventListener("mousedown", (event) => startSheetDrag(event, "header"));
+menuModal.header.addEventListener("mousemove", updateSheetDrag);
+menuModal.header.addEventListener("mouseup", (event) => finishSheetDrag(event));
+menuModal.header.addEventListener("mouseleave", (event) => finishSheetDrag(event, true));
+menuModal.body.addEventListener("mousedown", (event) => startSheetDrag(event, "body"));
+menuModal.body.addEventListener("mousemove", updateSheetDrag);
+menuModal.body.addEventListener("mouseup", (event) => finishSheetDrag(event));
+menuModal.body.addEventListener("mouseleave", (event) => finishSheetDrag(event, true));
+menuModal.header.addEventListener("touchstart", (event) => startSheetDrag(event, "header"), { passive: true });
+menuModal.header.addEventListener("touchmove", updateSheetDrag, { passive: false });
+menuModal.header.addEventListener("touchend", (event) => finishSheetDrag(event));
+menuModal.header.addEventListener("touchcancel", (event) => finishSheetDrag(event, true));
+menuModal.body.addEventListener("touchstart", (event) => startSheetDrag(event, "body"), { passive: true });
+menuModal.body.addEventListener("touchmove", updateSheetDrag, { passive: false });
+menuModal.body.addEventListener("touchend", (event) => finishSheetDrag(event));
+menuModal.body.addEventListener("touchcancel", (event) => finishSheetDrag(event, true));
 
 menuModal.closeButton.addEventListener("click", () => closeItemModal());
 
