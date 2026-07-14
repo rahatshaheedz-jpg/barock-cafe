@@ -356,6 +356,10 @@ let previewOpenTimer = 0;
 let previewCloseTimer = 0;
 let activePreviewItem = null;
 let isModalOpen = false;
+let modalHistoryPushed = false;
+let scrollLockY = 0;
+let previewAnchor = null;
+let previewRafId = 0;
 
 year.textContent = new Date().getFullYear();
 
@@ -504,26 +508,6 @@ function getCategoryTags(category) {
   return tagMap[category.id] || [category.title];
 }
 
-function getPlaceholderIngredients(category) {
-  const ingredientMap = {
-    classics: ["Cafe-approved espresso recipe pending", "Milk or coffee base as served"],
-    "hot-chocolate-tea": ["Cafe-approved drink recipe pending", "Served hot"],
-    "iced-coffee-chillers": ["Cafe-approved cold drink recipe pending", "Served chilled"],
-    refreshers: ["Cafe-approved refresher recipe pending", "Served chilled"],
-    sandwiches: ["Cafe-approved sandwich build pending", "Prepared fresh to order"],
-    burgers: ["Cafe-approved burger build pending", "Prepared fresh to order"],
-    "soup-starter": ["Cafe-approved starter recipe pending", "Prepared fresh to order"],
-    pizza: ["Cafe-approved pizza recipe pending", "Baked crust and house toppings"],
-    pasta: ["Cafe-approved pasta recipe pending", "Prepared fresh to order"],
-    "fast-food": ["Cafe-approved snack recipe pending", "Prepared fresh to order"],
-    desserts: ["Cafe-approved dessert details pending", "Sweet cafe serving"],
-    seafood: ["Cafe-approved seafood recipe pending", "Prepared fresh to order"],
-    "steaks-beef": ["Cafe-approved beef recipe pending", "Prepared fresh to order"],
-  };
-
-  return ingredientMap[category.id] || ["Cafe-approved recipe details pending"];
-}
-
 function createMenuDetails() {
   const details = {};
 
@@ -537,17 +521,13 @@ function createMenuDetails() {
         name: item.name,
         price: item.price || "BDT ___",
         image: getItemImage(item.name, category.id),
-        shortDescription:
-          item.description ||
-          `${item.name} from the ${category.title} collection. Cafe-approved recipe details are pending.`,
-        ingredients: getPlaceholderIngredients(category),
-        preparation:
-          item.description ||
-          "Prepared fresh by the Barock Cafe team. Exact preparation notes are pending cafe approval.",
+        shortDescription: item.description || "Prepared fresh by the Barock Cafe team.",
+        ingredients: [],
+        preparation: item.description || "",
         category: category.title,
         tags: getCategoryTags(category),
         altText: `${item.name} from BAROCK CAFE`,
-        note: "Placeholder details - final cafe-approved ingredients and preparation notes pending.",
+        note: "",
       };
     });
   });
@@ -685,10 +665,18 @@ function createMenuModal() {
   dialog.setAttribute("aria-labelledby", "menu-modal-title");
   dialog.setAttribute("tabindex", "-1");
 
+  const header = createElement("header", "menu-modal-header");
+  const handle = createElement("span", "menu-modal-handle");
+  handle.setAttribute("aria-hidden", "true");
+  const headerText = createElement("div", "menu-modal-header-text");
+  const headerCategory = createElement("span");
+  const headerTitle = createElement("strong");
+  headerText.append(headerCategory, headerTitle);
   const closeButton = createElement("button", "menu-modal-close", "Close");
   closeButton.type = "button";
-  closeButton.setAttribute("aria-label", "Close menu item details");
+  closeButton.setAttribute("aria-label", "Close item details");
   closeButton.dataset.menuModalClose = "true";
+  header.append(handle, headerText, closeButton);
 
   const imageWrap = createElement("div", "menu-modal-media");
   const image = document.createElement("img");
@@ -716,7 +704,7 @@ function createMenuModal() {
   const note = createElement("p", "menu-modal-note");
 
   body.append(category, title, price, description, tags, ingredientsBlock, preparationBlock, note);
-  dialog.append(closeButton, imageWrap, body);
+  dialog.append(header, imageWrap, body);
   overlay.append(dialog);
   document.body.append(overlay);
 
@@ -725,6 +713,8 @@ function createMenuModal() {
     dialog,
     closeButton,
     image,
+    headerCategory,
+    headerTitle,
     category,
     title,
     price,
@@ -747,12 +737,14 @@ function createMenuPreview() {
   image.decoding = "async";
   image.width = 96;
   image.height = 96;
+  image.addEventListener("load", schedulePreviewPlacement);
 
   const content = createElement("div", "menu-preview-content");
   const title = createElement("h3");
   const price = createElement("strong");
   const description = createElement("p");
-  content.append(title, price, description);
+  const hint = createElement("span", "menu-preview-hint", "Click for full details");
+  content.append(title, price, description, hint);
   preview.append(image, content);
   document.body.append(preview);
 
@@ -761,6 +753,10 @@ function createMenuPreview() {
 
 const menuModal = createMenuModal();
 const menuPreview = createMenuPreview();
+
+function canShowHoverPreview() {
+  return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+}
 
 function setImageWithFallback(image, src, altText) {
   image.dataset.fallbackApplied = "false";
@@ -793,6 +789,8 @@ function populateIngredients(list, ingredients) {
 
 function populateModal(details) {
   setImageWithFallback(menuModal.image, details.image, details.altText);
+  menuModal.headerCategory.textContent = details.category;
+  menuModal.headerTitle.textContent = details.name;
   menuModal.category.textContent = details.category;
   menuModal.title.textContent = details.name;
   menuModal.price.textContent = details.price;
@@ -801,6 +799,9 @@ function populateModal(details) {
   populateIngredients(menuModal.ingredientsList, details.ingredients);
   menuModal.preparation.textContent = details.preparation;
   menuModal.note.textContent = details.note || "";
+  menuModal.ingredientsList.closest(".menu-modal-block").hidden = details.ingredients.length === 0;
+  menuModal.preparation.closest(".menu-modal-block").hidden = !details.preparation;
+  menuModal.note.hidden = !details.note;
 }
 
 function getFocusableModalElements() {
@@ -809,6 +810,30 @@ function getFocusableModalElements() {
       'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
     ),
   );
+}
+
+function lockBodyScroll() {
+  scrollLockY = window.scrollY || document.documentElement.scrollTop || 0;
+  const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+  document.body.style.position = "fixed";
+  document.body.style.top = `-${scrollLockY}px`;
+  document.body.style.left = "0";
+  document.body.style.right = "0";
+  document.body.style.width = "100%";
+  document.body.style.paddingRight = scrollbarWidth > 0 ? `${scrollbarWidth}px` : "";
+  document.body.classList.add("menu-modal-open");
+}
+
+function unlockBodyScroll() {
+  document.body.classList.remove("menu-modal-open");
+  document.body.style.position = "";
+  document.body.style.top = "";
+  document.body.style.left = "";
+  document.body.style.right = "";
+  document.body.style.width = "";
+  document.body.style.paddingRight = "";
+  window.scrollTo(0, scrollLockY);
 }
 
 function openItemModal(itemId, trigger) {
@@ -822,7 +847,7 @@ function openItemModal(itemId, trigger) {
   hidePreview(true);
   populateModal(details);
   menuModal.overlay.hidden = false;
-  document.body.classList.add("menu-modal-open");
+  lockBodyScroll();
   menuModal.closeButton.focus({ preventScroll: true });
   window.setTimeout(() => {
     menuModal.overlay.classList.add("is-open");
@@ -834,6 +859,7 @@ function openItemModal(itemId, trigger) {
 
   if (window.history && !window.history.state?.menuModal) {
     window.history.pushState({ menuModal: true }, "");
+    modalHistoryPushed = true;
   }
 }
 
@@ -843,7 +869,7 @@ function closeItemModal({ restoreFocus = true, fromPopState = false } = {}) {
   }
 
   menuModal.overlay.classList.remove("is-open");
-  document.body.classList.remove("menu-modal-open");
+  unlockBodyScroll();
   window.setTimeout(() => {
     menuModal.overlay.hidden = true;
   }, 220);
@@ -853,40 +879,117 @@ function closeItemModal({ restoreFocus = true, fromPopState = false } = {}) {
     lastFocusedMenuItem.focus({ preventScroll: true });
   }
 
-  if (!fromPopState && window.history.state?.menuModal) {
+  if (!fromPopState && modalHistoryPushed && window.history.state?.menuModal) {
+    modalHistoryPushed = false;
     window.history.back();
+  } else if (fromPopState) {
+    modalHistoryPushed = false;
   }
+}
+
+function getNavigationSafeTop() {
+  const header = document.querySelector(".site-header");
+
+  if (!header) {
+    return 12;
+  }
+
+  const rect = header.getBoundingClientRect();
+  return Math.max(12, rect.bottom + 12);
+}
+
+function placePreview(anchor) {
+  if (!anchor || menuPreview.preview.hidden) {
+    return;
+  }
+
+  const anchorRect = anchor.getBoundingClientRect();
+  const previewRect = menuPreview.preview.getBoundingClientRect();
+  const margin = 12;
+  const gap = 14;
+  const navSafeTop = getNavigationSafeTop();
+  const placements = [
+    {
+      left: anchorRect.right + gap,
+      top: anchorRect.top + (anchorRect.height - previewRect.height) / 2,
+    },
+    {
+      left: anchorRect.left - previewRect.width - gap,
+      top: anchorRect.top + (anchorRect.height - previewRect.height) / 2,
+    },
+    {
+      left: anchorRect.left,
+      top: anchorRect.bottom + gap,
+    },
+    {
+      left: anchorRect.left,
+      top: anchorRect.top - previewRect.height - gap,
+    },
+  ];
+  const preferred = placements.find((placement) => (
+    placement.left >= margin &&
+    placement.left + previewRect.width <= window.innerWidth - margin &&
+    placement.top >= navSafeTop &&
+    placement.top + previewRect.height <= window.innerHeight - margin
+  )) || placements[0];
+  const left = Math.max(
+    margin,
+    Math.min(preferred.left, window.innerWidth - previewRect.width - margin),
+  );
+  const top = Math.max(
+    navSafeTop,
+    Math.min(preferred.top, window.innerHeight - previewRect.height - margin),
+  );
+
+  menuPreview.preview.style.left = `${left}px`;
+  menuPreview.preview.style.top = `${top}px`;
+
+  const placedRect = menuPreview.preview.getBoundingClientRect();
+
+  if (
+    placedRect.left < margin ||
+    placedRect.right > window.innerWidth - margin ||
+    placedRect.top < navSafeTop ||
+    placedRect.bottom > window.innerHeight - margin
+  ) {
+    menuPreview.preview.style.left = `${Math.max(
+      margin,
+      Math.min(placedRect.left, window.innerWidth - placedRect.width - margin),
+    )}px`;
+    menuPreview.preview.style.top = `${Math.max(
+      navSafeTop,
+      Math.min(placedRect.top, window.innerHeight - placedRect.height - margin),
+    )}px`;
+  }
+}
+
+function schedulePreviewPlacement() {
+  if (previewRafId) {
+    return;
+  }
+
+  previewRafId = window.requestAnimationFrame(() => {
+    previewRafId = 0;
+    placePreview(previewAnchor);
+  });
 }
 
 function showPreview(itemId, trigger) {
   const details = menuDetailsById[itemId];
 
-  if (!details || window.matchMedia("(hover: none), (pointer: coarse)").matches) {
+  if (!details || !canShowHoverPreview()) {
     return;
   }
 
   activePreviewItem = itemId;
+  previewAnchor = trigger;
   setImageWithFallback(menuPreview.image, details.image, details.altText);
   menuPreview.title.textContent = details.name;
   menuPreview.price.textContent = details.price;
   menuPreview.description.textContent = details.shortDescription;
   menuPreview.preview.hidden = false;
   menuPreview.preview.classList.add("is-visible");
-
-  const triggerRect = trigger.getBoundingClientRect();
-  const previewRect = menuPreview.preview.getBoundingClientRect();
-  const margin = 14;
-  const top = Math.min(
-    window.innerHeight - previewRect.height - margin,
-    Math.max(margin, triggerRect.top + window.scrollY - 18),
-  );
-  const rightSpace = window.innerWidth - triggerRect.right;
-  const left = rightSpace > previewRect.width + margin * 2
-    ? triggerRect.right + margin
-    : Math.max(margin, triggerRect.left - previewRect.width - margin);
-
-  menuPreview.preview.style.top = `${top}px`;
-  menuPreview.preview.style.left = `${Math.min(left, window.innerWidth - previewRect.width - margin)}px`;
+  placePreview(trigger);
 }
 
 function queuePreview(itemId, trigger) {
@@ -907,8 +1010,11 @@ function hidePreview(immediate = false) {
 
   const close = () => {
     activePreviewItem = null;
+    previewAnchor = null;
     menuPreview.preview.classList.remove("is-visible");
     menuPreview.preview.hidden = true;
+    menuPreview.preview.style.left = "";
+    menuPreview.preview.style.top = "";
   };
 
   if (immediate) {
@@ -1018,6 +1124,10 @@ menuModal.overlay.addEventListener("click", (event) => {
 });
 
 document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && activePreviewItem) {
+    hidePreview(true);
+  }
+
   if (!isModalOpen) {
     return;
   }
@@ -1060,9 +1170,19 @@ window.addEventListener("popstate", () => {
 
 window.addEventListener("resize", () => {
   if (activePreviewItem) {
-    hidePreview(true);
+    schedulePreviewPlacement();
   }
 });
+
+window.addEventListener(
+  "scroll",
+  () => {
+    if (activePreviewItem) {
+      schedulePreviewPlacement();
+    }
+  },
+  { passive: true },
+);
 
 let searchDebounceId = 0;
 
