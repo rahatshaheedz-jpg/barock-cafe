@@ -359,6 +359,7 @@ let previewOpenTimer = 0;
 let previewCloseTimer = 0;
 let activePreviewItem = null;
 let isModalOpen = false;
+let isModalClosing = false;
 let modalHistoryPushed = false;
 let scrollLockY = 0;
 let previewAnchor = null;
@@ -366,6 +367,7 @@ let previewRafId = 0;
 let sheetDrag = null;
 let sheetDragRafId = 0;
 let sheetDismissTimer = 0;
+let modalCloseTimer = 0;
 let lastPointerDragStart = 0;
 
 const sheetDismissDistanceRatio = 0.3;
@@ -892,6 +894,7 @@ function clearSheetDragFrame() {
 
 function resetSheetDragState({ keepClosingStyles = false } = {}) {
   window.clearTimeout(sheetDismissTimer);
+  sheetDismissTimer = 0;
   clearSheetDragFrame();
   sheetDrag = null;
   menuModal.dialog.classList.remove("is-dragging", "is-snapping-back", "is-dismissing");
@@ -944,6 +947,7 @@ function getDragPointerId(event) {
 function startSheetDrag(event, source) {
   if (
     !isModalOpen ||
+    isModalClosing ||
     !isMobileBottomSheet() ||
     isCloseButtonTarget(event.target) ||
     event.button > 0 ||
@@ -1036,15 +1040,7 @@ function finishSheetDrag(event, cancelled = false) {
   menuModal.overlay.classList.remove("is-dragging");
 
   if (shouldDismiss) {
-    menuModal.dialog.classList.add("is-dismissing");
-    menuModal.overlay.classList.add("is-dismissing");
-    menuModal.dialog.style.transform = "translate3d(0, 100%, 0)";
-    menuModal.overlay.style.opacity = "0";
-    sheetDrag = null;
-    sheetDismissTimer = window.setTimeout(() => {
-      resetSheetDragState({ keepClosingStyles: true });
-      closeItemModal({ closeFromDrag: true });
-    }, window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 220);
+    closeItemModal({ closeFromDrag: true });
     return;
   }
 
@@ -1062,13 +1058,19 @@ function finishSheetDrag(event, cancelled = false) {
 function openItemModal(itemId, trigger) {
   const details = menuDetailsById[itemId];
 
-  if (!details) {
+  if (!details || isModalClosing) {
     return;
   }
 
+  window.clearTimeout(modalCloseTimer);
+  modalCloseTimer = 0;
   lastFocusedMenuItem = trigger || document.activeElement;
   hidePreview(true);
   resetSheetDragState();
+  menuModal.overlay.classList.remove("is-closing");
+  menuModal.dialog.classList.remove("is-closing");
+  menuModal.dialog.style.transform = "";
+  menuModal.overlay.style.opacity = "";
   populateModal(details);
   menuModal.overlay.hidden = false;
   lockBodyScroll();
@@ -1080,6 +1082,7 @@ function openItemModal(itemId, trigger) {
   window.setTimeout(() => menuModal.closeButton.focus({ preventScroll: true }), 240);
   window.requestAnimationFrame(() => menuModal.closeButton.focus({ preventScroll: true }));
   isModalOpen = true;
+  isModalClosing = false;
 
   if (window.history && !window.history.state?.menuModal) {
     window.history.pushState({ menuModal: true }, "");
@@ -1087,23 +1090,47 @@ function openItemModal(itemId, trigger) {
   }
 }
 
-function closeItemModal({ restoreFocus = true, fromPopState = false, closeFromDrag = false } = {}) {
-  if (!isModalOpen) {
-    return;
-  }
-
-  resetSheetDragState({ keepClosingStyles: closeFromDrag });
-  menuModal.overlay.classList.remove("is-open");
-  unlockBodyScroll();
-  window.setTimeout(() => {
-    menuModal.overlay.hidden = true;
-    resetSheetDragState();
-  }, 220);
-  isModalOpen = false;
+function finishItemModalClose({ restoreFocus = true } = {}) {
+  window.clearTimeout(modalCloseTimer);
+  modalCloseTimer = 0;
+  menuModal.overlay.hidden = true;
+  menuModal.overlay.classList.remove("is-open", "is-closing", "is-dragging", "is-dismissing", "is-snapping-back");
+  menuModal.dialog.classList.remove("is-closing", "is-dragging", "is-dismissing", "is-snapping-back");
+  resetSheetDragState();
+  isModalClosing = false;
 
   if (restoreFocus && lastFocusedMenuItem && document.contains(lastFocusedMenuItem)) {
     lastFocusedMenuItem.focus({ preventScroll: true });
   }
+}
+
+function closeItemModal({ restoreFocus = true, fromPopState = false, closeFromDrag = false } = {}) {
+  if (!isModalOpen || isModalClosing) {
+    return;
+  }
+
+  isModalClosing = true;
+  window.clearTimeout(modalCloseTimer);
+  resetSheetDragState({ keepClosingStyles: closeFromDrag });
+  menuModal.overlay.classList.add("is-closing");
+  menuModal.dialog.classList.add("is-closing");
+
+  if (closeFromDrag) {
+    menuModal.dialog.classList.add("is-dismissing");
+    menuModal.overlay.classList.add("is-dismissing");
+    menuModal.dialog.style.transform = "translate3d(0, 100%, 0)";
+    menuModal.overlay.style.opacity = "0";
+  }
+
+  window.requestAnimationFrame(() => {
+    menuModal.overlay.classList.remove("is-open");
+  });
+  unlockBodyScroll();
+  modalCloseTimer = window.setTimeout(
+    () => finishItemModalClose({ restoreFocus }),
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 240,
+  );
+  isModalOpen = false;
 
   if (!fromPopState && modalHistoryPushed && window.history.state?.menuModal) {
     modalHistoryPushed = false;
@@ -1272,14 +1299,24 @@ function toggleCategory(categoryId) {
 
 menuToggle.addEventListener("click", () => {
   const isOpen = mobileMenu.classList.toggle("is-open");
+  menuToggle.setAttribute("aria-expanded", String(isOpen));
   menuToggle.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
 });
 
 mobileMenu.querySelectorAll("a").forEach((link) => {
   link.addEventListener("click", () => {
     mobileMenu.classList.remove("is-open");
+    menuToggle.setAttribute("aria-expanded", "false");
     menuToggle.setAttribute("aria-label", "Open navigation");
   });
+});
+
+window.addEventListener("resize", () => {
+  if (window.innerWidth > 960) {
+    mobileMenu.classList.remove("is-open");
+    menuToggle.setAttribute("aria-expanded", "false");
+    menuToggle.setAttribute("aria-label", "Open navigation");
+  }
 });
 
 menuList.addEventListener("click", (event) => {
