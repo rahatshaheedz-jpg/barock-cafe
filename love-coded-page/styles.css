@@ -1498,8 +1498,9 @@ ul {
   backdrop-filter: blur(24px) saturate(1.42);
   opacity: 0;
   pointer-events: none;
+  cursor: pointer;
   transform: translateY(6px);
-  transition: opacity 180ms ease, transform 180ms ease;
+  transition: opacity 180ms ease, transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
 
 .menu-preview.is-visible {
@@ -1538,8 +1539,9 @@ ul {
 .menu-preview p {
   display: -webkit-box;
   overflow: hidden;
-  color: var(--text-secondary);
+  color: #D8C3A5;
   font-size: 0.82rem;
+  font-weight: 650;
   line-height: 1.45;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -1549,39 +1551,15 @@ ul {
   position: fixed !important;
 }
 
-.menu-preview-hint {
-  display: inline-flex;
-  width: fit-content;
-  max-width: 100%;
-  align-items: center;
-  gap: 0.4rem;
-  margin-top: 2px;
-  border: 0;
-  padding: 0;
-  background: transparent;
-  color: var(--gold);
-  font-size: 0.72rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  line-height: 1.2;
-  text-transform: uppercase;
-  transition: color 180ms ease, text-shadow 180ms ease;
-}
-
-.menu-preview-hint::after {
-  content: "->";
-  transition: transform 180ms ease;
-}
-
-.menu-preview:hover .menu-preview-hint,
-.menu-preview:focus-within .menu-preview-hint {
-  color: var(--gold-light);
-  text-shadow: 0 0 16px rgba(216, 177, 106, 0.28);
-}
-
-.menu-preview:hover .menu-preview-hint::after,
-.menu-preview:focus-within .menu-preview-hint::after {
-  transform: translateX(3px);
+.menu-preview:hover,
+.menu-preview:focus-visible {
+  border-color: rgba(216, 177, 106, 0.48);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(216, 177, 106, 0.13),
+    0 32px 82px rgba(0, 0, 0, 0.54),
+    0 0 38px rgba(216, 177, 106, 0.2);
+  outline: none;
 }
 
 .menu-modal-open {

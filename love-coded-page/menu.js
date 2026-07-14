@@ -770,6 +770,8 @@ function createMenuPreview() {
   preview.dataset.menuPreview = "true";
   preview.hidden = true;
   preview.setAttribute("aria-hidden", "true");
+  preview.setAttribute("role", "button");
+  preview.setAttribute("tabindex", "-1");
 
   const image = document.createElement("img");
   image.loading = "lazy";
@@ -782,8 +784,7 @@ function createMenuPreview() {
   const title = createElement("h3");
   const price = createElement("strong");
   const description = createElement("p");
-  const hint = createElement("span", "menu-preview-hint", "Click for full details");
-  content.append(title, price, description, hint);
+  content.append(title, price, description);
   preview.append(image, content);
   document.body.append(preview);
 
@@ -1212,6 +1213,9 @@ function showPreview(itemId, trigger) {
   menuPreview.title.textContent = details.name;
   menuPreview.price.textContent = details.price;
   menuPreview.description.textContent = details.shortDescription;
+  menuPreview.preview.setAttribute("aria-hidden", "false");
+  menuPreview.preview.setAttribute("tabindex", "0");
+  menuPreview.preview.setAttribute("aria-label", `Open full details for ${details.name}`);
   menuPreview.preview.hidden = false;
   menuPreview.preview.classList.add("is-visible");
   placePreview(trigger);
@@ -1238,6 +1242,9 @@ function hidePreview(immediate = false) {
     previewAnchor = null;
     menuPreview.preview.classList.remove("is-visible");
     menuPreview.preview.hidden = true;
+    menuPreview.preview.setAttribute("aria-hidden", "true");
+    menuPreview.preview.setAttribute("tabindex", "-1");
+    menuPreview.preview.removeAttribute("aria-label");
     menuPreview.preview.style.left = "";
     menuPreview.preview.style.top = "";
   };
@@ -1338,6 +1345,19 @@ menuPreview.preview.addEventListener("mouseenter", () => {
 
 menuPreview.preview.addEventListener("mouseleave", () => {
   hidePreview();
+});
+
+menuPreview.preview.addEventListener("click", () => {
+  if (activePreviewItem) {
+    openItemModal(activePreviewItem, previewAnchor || menuPreview.preview);
+  }
+});
+
+menuPreview.preview.addEventListener("keydown", (event) => {
+  if ((event.key === "Enter" || event.key === " ") && activePreviewItem) {
+    event.preventDefault();
+    openItemModal(activePreviewItem, previewAnchor || menuPreview.preview);
+  }
 });
 
 menuModal.header.addEventListener("pointerdown", (event) => startSheetDrag(event, "header"));
