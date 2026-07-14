@@ -363,6 +363,12 @@ let modalHistoryPushed = false;
 let scrollLockY = 0;
 let previewAnchor = null;
 let previewRafId = 0;
+let sheetDrag = null;
+let sheetDragRafId = 0;
+let sheetDismissTimer = 0;
+
+const sheetDismissDistanceRatio = 0.3;
+const sheetDismissVelocity = 0.6;
 
 year.textContent = new Date().getFullYear();
 
@@ -740,6 +746,9 @@ function createMenuModal() {
   return {
     overlay,
     dialog,
+    header,
+    handle,
+    body,
     closeButton,
     image,
     headerCategory,
@@ -868,6 +877,166 @@ function unlockBodyScroll() {
   window.scrollTo(0, scrollLockY);
 }
 
+function isMobileBottomSheet() {
+  return window.matchMedia("(hover: none), (pointer: coarse), (max-width: 700px)").matches;
+}
+
+function clearSheetDragFrame() {
+  if (sheetDragRafId) {
+    window.cancelAnimationFrame(sheetDragRafId);
+    sheetDragRafId = 0;
+  }
+}
+
+function resetSheetDragState({ keepClosingStyles = false } = {}) {
+  window.clearTimeout(sheetDismissTimer);
+  clearSheetDragFrame();
+  sheetDrag = null;
+  menuModal.dialog.classList.remove("is-dragging", "is-snapping-back", "is-dismissing");
+  menuModal.overlay.classList.remove("is-dragging", "is-snapping-back", "is-dismissing");
+
+  if (!keepClosingStyles) {
+    menuModal.dialog.style.transform = "";
+    menuModal.overlay.style.opacity = "";
+  }
+}
+
+function setSheetDragVisual(distance) {
+  const safeDistance = Math.max(0, distance);
+  const sheetHeight = sheetDrag?.sheetHeight || menuModal.dialog.getBoundingClientRect().height || 1;
+  const progress = Math.min(safeDistance / (sheetHeight * 0.75), 1);
+
+  menuModal.dialog.style.transform = `translate3d(0, ${safeDistance}px, 0)`;
+  menuModal.overlay.style.opacity = String(Math.max(0, 1 - progress));
+}
+
+function scheduleSheetDragVisual(distance) {
+  if (!sheetDrag) {
+    return;
+  }
+
+  sheetDrag.distance = Math.max(0, distance);
+
+  if (sheetDragRafId) {
+    return;
+  }
+
+  sheetDragRafId = window.requestAnimationFrame(() => {
+    sheetDragRafId = 0;
+    setSheetDragVisual(sheetDrag?.distance || 0);
+  });
+}
+
+function isCloseButtonTarget(target) {
+  return Boolean(target?.closest?.("[data-menu-modal-close]"));
+}
+
+function startSheetDrag(event, source) {
+  if (!isModalOpen || !isMobileBottomSheet() || isCloseButtonTarget(event.target) || event.button > 0) {
+    return;
+  }
+
+  sheetDrag = {
+    pointerId: event.pointerId,
+    source,
+    startY: event.clientY,
+    currentY: event.clientY,
+    distance: 0,
+    startTime: window.performance.now(),
+    lastY: event.clientY,
+    lastTime: window.performance.now(),
+    velocity: 0,
+    active: source === "header",
+    sheetHeight: menuModal.dialog.getBoundingClientRect().height || 1,
+  };
+
+  if (source === "header") {
+    menuModal.dialog.classList.add("is-dragging");
+    menuModal.overlay.classList.add("is-dragging");
+  }
+
+  try {
+    event.currentTarget.setPointerCapture(event.pointerId);
+  } catch {
+    // Pointer capture is an enhancement; dragging still works without it.
+  }
+}
+
+function updateSheetDrag(event) {
+  if (!sheetDrag || event.pointerId !== sheetDrag.pointerId || !isMobileBottomSheet()) {
+    return;
+  }
+
+  const now = window.performance.now();
+  const rawDistance = event.clientY - sheetDrag.startY;
+  const movingDown = rawDistance > 0;
+
+  if (!sheetDrag.active) {
+    if (sheetDrag.source !== "body" || menuModal.body.scrollTop > 0 || !movingDown) {
+      return;
+    }
+
+    sheetDrag.active = true;
+    menuModal.dialog.classList.add("is-dragging");
+    menuModal.overlay.classList.add("is-dragging");
+  }
+
+  event.preventDefault();
+  sheetDrag.currentY = event.clientY;
+  sheetDrag.velocity = Math.max(0, (event.clientY - sheetDrag.lastY) / Math.max(now - sheetDrag.lastTime, 1));
+  sheetDrag.lastY = event.clientY;
+  sheetDrag.lastTime = now;
+  scheduleSheetDragVisual(rawDistance);
+}
+
+function finishSheetDrag(event, cancelled = false) {
+  if (!sheetDrag || event.pointerId !== sheetDrag.pointerId) {
+    return;
+  }
+
+  try {
+    event.currentTarget.releasePointerCapture(event.pointerId);
+  } catch {
+    // The browser may release capture automatically on cancellation.
+  }
+
+  clearSheetDragFrame();
+
+  const distance = Math.max(0, sheetDrag.distance);
+  const totalVelocity = Math.max(
+    sheetDrag.velocity,
+    distance / Math.max(window.performance.now() - sheetDrag.startTime, 1),
+  );
+  const threshold = sheetDrag.sheetHeight * sheetDismissDistanceRatio;
+  const shouldDismiss = !cancelled && (distance >= threshold || totalVelocity > sheetDismissVelocity);
+
+  menuModal.dialog.classList.remove("is-dragging");
+  menuModal.overlay.classList.remove("is-dragging");
+
+  if (shouldDismiss) {
+    menuModal.dialog.classList.add("is-dismissing");
+    menuModal.overlay.classList.add("is-dismissing");
+    menuModal.dialog.style.transform = "translate3d(0, 100%, 0)";
+    menuModal.overlay.style.opacity = "0";
+    sheetDrag = null;
+    sheetDismissTimer = window.setTimeout(() => {
+      resetSheetDragState({ keepClosingStyles: true });
+      closeItemModal({ closeFromDrag: true });
+    }, window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 220);
+    return;
+  }
+
+  menuModal.dialog.classList.add("is-snapping-back");
+  menuModal.overlay.classList.add("is-snapping-back");
+  menuModal.dialog.style.transform = "";
+  menuModal.overlay.style.opacity = "";
+  sheetDrag = null;
+  window.setTimeout(() => {
+    menuModal.dialog.classList.remove("is-snapping-back");
+    menuModal.overlay.classList.remove("is-snapping-back");
+  }, window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 220);
+}
+
 function openItemModal(itemId, trigger) {
   const details = menuDetailsById[itemId];
 
@@ -877,6 +1046,7 @@ function openItemModal(itemId, trigger) {
 
   lastFocusedMenuItem = trigger || document.activeElement;
   hidePreview(true);
+  resetSheetDragState();
   populateModal(details);
   menuModal.overlay.hidden = false;
   lockBodyScroll();
@@ -895,15 +1065,17 @@ function openItemModal(itemId, trigger) {
   }
 }
 
-function closeItemModal({ restoreFocus = true, fromPopState = false } = {}) {
+function closeItemModal({ restoreFocus = true, fromPopState = false, closeFromDrag = false } = {}) {
   if (!isModalOpen) {
     return;
   }
 
+  resetSheetDragState({ keepClosingStyles: closeFromDrag });
   menuModal.overlay.classList.remove("is-open");
   unlockBodyScroll();
   window.setTimeout(() => {
     menuModal.overlay.hidden = true;
+    resetSheetDragState();
   }, 220);
   isModalOpen = false;
 
@@ -1146,6 +1318,15 @@ menuPreview.preview.addEventListener("mouseenter", () => {
 menuPreview.preview.addEventListener("mouseleave", () => {
   hidePreview();
 });
+
+menuModal.header.addEventListener("pointerdown", (event) => startSheetDrag(event, "header"));
+menuModal.header.addEventListener("pointermove", updateSheetDrag);
+menuModal.header.addEventListener("pointerup", (event) => finishSheetDrag(event));
+menuModal.header.addEventListener("pointercancel", (event) => finishSheetDrag(event, true));
+menuModal.body.addEventListener("pointerdown", (event) => startSheetDrag(event, "body"));
+menuModal.body.addEventListener("pointermove", updateSheetDrag);
+menuModal.body.addEventListener("pointerup", (event) => finishSheetDrag(event));
+menuModal.body.addEventListener("pointercancel", (event) => finishSheetDrag(event, true));
 
 menuModal.closeButton.addEventListener("click", () => closeItemModal());
 

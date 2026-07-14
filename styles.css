@@ -1665,6 +1665,32 @@ ul {
   backdrop-filter: blur(18px) saturate(1.28);
 }
 
+.menu-modal.is-dragging,
+.menu-modal-overlay.is-dragging {
+  user-select: none;
+}
+
+.menu-modal.is-dragging {
+  cursor: grabbing;
+  transition: none !important;
+  will-change: transform;
+}
+
+.menu-modal-overlay.is-dragging {
+  transition: none !important;
+}
+
+.menu-modal.is-snapping-back,
+.menu-modal.is-dismissing {
+  will-change: transform;
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms ease !important;
+}
+
+.menu-modal-overlay.is-snapping-back,
+.menu-modal-overlay.is-dismissing {
+  transition: opacity 220ms ease, visibility 220ms ease !important;
+}
+
 .menu-modal-handle {
   display: none;
 }
@@ -4548,6 +4574,8 @@ body {
     padding: 10px 16px 12px;
     -webkit-backdrop-filter: blur(14px) saturate(1.18);
     backdrop-filter: blur(14px) saturate(1.18);
+    cursor: grab;
+    touch-action: none;
   }
 
   .menu-modal-handle {
@@ -4559,6 +4587,7 @@ body {
     margin: 0 0 4px;
     border-radius: 999px;
     background: rgba(255, 247, 232, 0.36);
+    touch-action: none;
   }
 
   .menu-modal-header-text strong {
@@ -4583,6 +4612,7 @@ body {
     min-height: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
+    touch-action: pan-y;
     padding: 22px 18px max(22px, env(safe-area-inset-bottom));
   }
 
@@ -4603,6 +4633,15 @@ body {
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.12),
       0 16px 42px rgba(0, 0, 0, 0.34) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-modal.is-snapping-back,
+  .menu-modal.is-dismissing,
+  .menu-modal-overlay.is-snapping-back,
+  .menu-modal-overlay.is-dismissing {
+    transition-duration: 1ms !important;
   }
 }
 
