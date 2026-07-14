@@ -4670,9 +4670,9 @@ body {
 
 /* Baroque-inspired background atmosphere */
 :root {
-  --baroque-art-opacity: 0.56;
-  --baroque-art-strong: 0.38;
-  --baroque-art-soft: 0.24;
+  --baroque-art-opacity: 0.44;
+  --baroque-art-strong: 0.26;
+  --baroque-art-soft: 0.18;
 }
 
 body {
@@ -4689,14 +4689,13 @@ body {
 body::before {
   z-index: -3;
   background:
-    url("./assets/site/baroque-ornament.svg") left -120px top 120px / min(760px, 72vw) auto no-repeat,
-    url("./assets/site/baroque-vault.svg") right -160px top 760px / min(920px, 82vw) auto no-repeat,
-    radial-gradient(circle at 14% 18%, rgba(216, 177, 106, 0.18), transparent 30%),
-    radial-gradient(circle at 86% 52%, rgba(139, 90, 43, 0.18), transparent 34%),
+    url("./assets/site/baroque-ornament.svg") left -180px top 180px / min(620px, 62vw) auto no-repeat,
+    radial-gradient(circle at 14% 18%, rgba(216, 177, 106, 0.14), transparent 31%),
+    radial-gradient(circle at 86% 52%, rgba(139, 90, 43, 0.12), transparent 36%),
     linear-gradient(rgba(216, 177, 106, 0.08) 1px, transparent 1px),
     linear-gradient(90deg, rgba(216, 177, 106, 0.08) 1px, transparent 1px),
     #0B0705 !important;
-  background-size: min(760px, 72vw) auto, min(920px, 82vw) auto, auto, auto, 44px 44px, 44px 44px, auto;
+  background-size: min(620px, 62vw) auto, auto, auto, 44px 44px, 44px 44px, auto;
   opacity: var(--baroque-art-opacity);
   filter: saturate(0.96) contrast(1.04);
 }
@@ -4730,26 +4729,26 @@ body::after {
   inset: 0;
   z-index: -2;
   background:
-    url("./assets/site/baroque-vault.svg") right -90px center / min(860px, 72vw) auto no-repeat,
-    radial-gradient(circle at 76% 26%, rgba(216, 177, 106, 0.18), transparent 34%);
+    radial-gradient(circle at 78% 32%, rgba(216, 177, 106, 0.14), transparent 26%),
+    radial-gradient(circle at 90% 72%, rgba(139, 90, 43, 0.12), transparent 34%);
   content: "";
   opacity: var(--baroque-art-strong);
   pointer-events: none;
-  mix-blend-mode: screen;
-  mask-image: linear-gradient(90deg, transparent, #000 36%, #000 82%, transparent);
+  mix-blend-mode: normal;
+  mask-image: linear-gradient(90deg, transparent, #000 48%, #000 86%, transparent);
 }
 
 .hero::after,
 .menu-page-hero::after,
 .pf-hero::after {
   position: absolute;
-  right: max(12px, calc((100vw - 1240px) / 2));
-  bottom: 5%;
+  right: max(22px, calc((100vw - 1240px) / 2 + 32px));
+  bottom: -2%;
   z-index: -1;
-  color: rgba(216, 177, 106, 0.085);
+  color: rgba(216, 177, 106, 0.055);
   content: "BAROCK";
   font-family: var(--font-display);
-  font-size: clamp(5rem, 18vw, 18rem);
+  font-size: clamp(4.8rem, 15vw, 15rem);
   font-weight: 700;
   letter-spacing: 0.04em;
   line-height: 0.8;
@@ -4779,9 +4778,8 @@ body::after {
 }
 
 .home-page .signature-section::after {
-  opacity: 0.3;
+  opacity: 0.18;
   background:
-    url("./assets/site/baroque-vault.svg") right -140px top 4% / min(900px, 72vw) auto no-repeat,
     url("./assets/site/baroque-ornament.svg") left -160px bottom -120px / min(700px, 70vw) auto no-repeat;
 }
 
@@ -4822,30 +4820,35 @@ body::after {
 
 @media (max-width: 760px) {
   :root {
-    --baroque-art-opacity: 0.42;
-    --baroque-art-strong: 0.25;
-    --baroque-art-soft: 0.16;
+    --baroque-art-opacity: 0.26;
+    --baroque-art-strong: 0.14;
+    --baroque-art-soft: 0.1;
   }
 
   body::before {
-    background-position: left -190px top 160px, right -240px top 760px, 14% 18%, 86% 52%, 0 0, 0 0, 0 0;
+    background:
+      radial-gradient(circle at 18% 20%, rgba(216, 177, 106, 0.12), transparent 32%),
+      linear-gradient(rgba(216, 177, 106, 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(216, 177, 106, 0.055) 1px, transparent 1px),
+      #0B0705 !important;
+    background-size: auto, 44px 44px, 44px 44px, auto;
   }
 
   .hero::before,
   .menu-page-hero::before,
   .pf-hero::before {
-    background-position: right -220px center, 76% 26%;
-    background-size: 720px auto, auto;
-    mask-image: linear-gradient(180deg, #000, transparent 88%);
+    background:
+      radial-gradient(circle at 82% 28%, rgba(216, 177, 106, 0.1), transparent 34%);
+    mask-image: linear-gradient(180deg, #000, transparent 80%);
   }
 
   .hero::after,
   .menu-page-hero::after,
   .pf-hero::after {
-    right: -32px;
-    bottom: 10%;
-    font-size: clamp(4.4rem, 28vw, 8.4rem);
-    opacity: 0.62;
+    right: -20px;
+    bottom: 7%;
+    font-size: clamp(3.4rem, 22vw, 6.5rem);
+    opacity: 0.48;
   }
 
   .home-page .signature-section::after,
@@ -4856,6 +4859,6 @@ body::after {
   .contact::after,
   .footer::after {
     background-size: 520px auto, 460px auto;
-    opacity: 0.14;
+    opacity: 0.08;
   }
 }
