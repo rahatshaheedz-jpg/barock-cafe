@@ -349,6 +349,9 @@ const menuCount = document.querySelector("[data-menu-count]");
 const emptyState = document.querySelector("[data-empty-state]");
 const revealItems = document.querySelectorAll(".reveal");
 
+const fallbackIngredients = "Prepared using the cafe's standard ingredients for this item.";
+const fallbackPreparation = "Prepared fresh by the Barock Cafe team.";
+
 let openCategoryId = "";
 let searchTerm = "";
 let lastFocusedMenuItem = null;
@@ -508,6 +511,27 @@ function getCategoryTags(category) {
   return tagMap[category.id] || [category.title];
 }
 
+function normalizeIngredients(value) {
+  if (Array.isArray(value)) {
+    const ingredients = value.map((ingredient) => String(ingredient).trim()).filter(Boolean);
+    return ingredients.length ? ingredients : [fallbackIngredients];
+  }
+
+  if (typeof value === "string" && value.trim()) {
+    return [value.trim()];
+  }
+
+  return [fallbackIngredients];
+}
+
+function normalizePreparation(value) {
+  if (typeof value === "string" && value.trim()) {
+    return value.trim();
+  }
+
+  return fallbackPreparation;
+}
+
 function createMenuDetails() {
   const details = {};
 
@@ -515,19 +539,24 @@ function createMenuDetails() {
     category.items.forEach((item) => {
       const id = `${category.id}-${slugify(item.name)}`;
       item.id = id;
-      item.detailsIncomplete = true;
+      item.category = category.title;
+      item.image = getItemImage(item.name, category.id);
+      item.shortDescription = item.description || fallbackPreparation;
+      item.ingredients = normalizeIngredients(item.ingredients || item.mainIngredients || item.ingredientList);
+      item.preparation = normalizePreparation(item.preparation || item.preparationMethod || item.method);
+      item.tags = getCategoryTags(category);
       details[id] = {
         id,
         name: item.name,
         price: item.price || "BDT ___",
-        image: getItemImage(item.name, category.id),
-        shortDescription: item.description || "Prepared fresh by the Barock Cafe team.",
-        ingredients: [],
-        preparation: item.description || "",
-        category: category.title,
-        tags: getCategoryTags(category),
+        image: item.image,
+        shortDescription: item.shortDescription,
+        ingredients: item.ingredients,
+        preparation: item.preparation,
+        category: item.category,
+        tags: item.tags,
         altText: `${item.name} from BAROCK CAFE`,
-        note: "",
+        note: item.note || "",
       };
     });
   });
@@ -774,20 +803,23 @@ function setImageWithFallback(image, src, altText) {
 
 function populateTags(container, tags) {
   container.replaceChildren();
-  tags.forEach((tag) => {
+  (Array.isArray(tags) ? tags : []).filter(Boolean).forEach((tag) => {
     container.append(createElement("span", "", tag));
   });
 }
 
 function populateIngredients(list, ingredients) {
   list.replaceChildren();
-  ingredients.forEach((ingredient) => {
+  normalizeIngredients(ingredients).forEach((ingredient) => {
     const item = createElement("li", "", ingredient);
     list.append(item);
   });
 }
 
 function populateModal(details) {
+  const ingredients = normalizeIngredients(details.ingredients);
+  const preparation = normalizePreparation(details.preparation);
+
   setImageWithFallback(menuModal.image, details.image, details.altText);
   menuModal.headerCategory.textContent = details.category;
   menuModal.headerTitle.textContent = details.name;
@@ -796,11 +828,11 @@ function populateModal(details) {
   menuModal.price.textContent = details.price;
   menuModal.description.textContent = details.shortDescription;
   populateTags(menuModal.tags, details.tags);
-  populateIngredients(menuModal.ingredientsList, details.ingredients);
-  menuModal.preparation.textContent = details.preparation;
+  populateIngredients(menuModal.ingredientsList, ingredients);
+  menuModal.preparation.textContent = preparation;
   menuModal.note.textContent = details.note || "";
-  menuModal.ingredientsList.closest(".menu-modal-block").hidden = details.ingredients.length === 0;
-  menuModal.preparation.closest(".menu-modal-block").hidden = !details.preparation;
+  menuModal.ingredientsList.closest(".menu-modal-block").hidden = ingredients.length === 0;
+  menuModal.preparation.closest(".menu-modal-block").hidden = !preparation;
   menuModal.note.hidden = !details.note;
 }
 
