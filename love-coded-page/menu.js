@@ -486,76 +486,104 @@ const classicProductImages = {
     {
       src: "/assets/menu/classics/chocolate-macadamia-latte-1.webp",
       alt: "Chocolate Macadamia Latte served at BAROCK CAFE",
+      desktopPosition: "50% 49%",
+      mobilePosition: "50% 48%",
     },
   ],
   cappuccino: [
     {
       src: "/assets/menu/classics/cappuccino-1.webp",
       alt: "Cappuccino served in a ceramic cup at BAROCK CAFE",
+      desktopPosition: "50% 51%",
+      mobilePosition: "50% 50%",
     },
     {
       src: "/assets/menu/classics/cappuccino-2.webp",
       alt: "Second view of BAROCK CAFE Cappuccino foam and cup",
+      desktopPosition: "50% 52%",
+      mobilePosition: "50% 50%",
     },
   ],
   "cafe-latte": [
     {
       src: "/assets/menu/classics/cafe-latte-1.webp",
       alt: "Cafe Latte served at BAROCK CAFE",
+      desktopPosition: "50% 51%",
+      mobilePosition: "50% 50%",
     },
   ],
   espresso: [
     {
       src: "/assets/menu/classics/espresso-1.webp",
       alt: "Espresso served at BAROCK CAFE",
+      desktopPosition: "50% 53%",
+      mobilePosition: "50% 51%",
     },
   ],
   macchiato: [
     {
       src: "/assets/menu/classics/macchiato-1.webp",
       alt: "Macchiato served at BAROCK CAFE",
+      desktopPosition: "50% 51%",
+      mobilePosition: "50% 50%",
     },
   ],
   "caffe-mocha": [
     {
       src: "/assets/menu/classics/caffe-mocha-1.webp",
       alt: "Caffe Mocha served at BAROCK CAFE",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 49%",
     },
   ],
   "caffe-americano": [
     {
       src: "/assets/menu/classics/caffe-americano-1.webp",
       alt: "Caffe Americano served at BAROCK CAFE",
+      desktopPosition: "50% 52%",
+      mobilePosition: "50% 50%",
     },
   ],
   "caramel-latte": [
     {
       src: "/assets/menu/classics/caramel-latte-1.webp",
       alt: "Caramel Latte served at BAROCK CAFE",
+      desktopPosition: "50% 51%",
+      mobilePosition: "50% 49%",
     },
     {
       src: "/assets/menu/classics/caramel-latte-2.webp",
       alt: "Second view of BAROCK CAFE Caramel Latte",
+      desktopPosition: "50% 51%",
+      mobilePosition: "50% 50%",
     },
   ],
   "vanilla-latte": [
     {
       src: "/assets/menu/classics/vanilla-latte-1.webp",
       alt: "Vanilla Latte served at BAROCK CAFE",
+      desktopPosition: "50% 51%",
+      mobilePosition: "50% 49%",
     },
     {
       src: "/assets/menu/classics/vanilla-latte-2.webp",
       alt: "Second view of BAROCK CAFE Vanilla Latte",
+      desktopPosition: "50% 52%",
+      mobilePosition: "50% 50%",
     },
     {
       src: "/assets/menu/classics/vanilla-latte-3.webp",
       alt: "Third view of BAROCK CAFE Vanilla Latte",
+      desktopPosition: "50% 51%",
+      mobilePosition: "50% 50%",
     },
   ],
   "toffee-nut-latte": [
     {
       src: "/assets/menu/classics/toffee-nut-latte-1.webp",
       alt: "Toffee Nut Latte served at BAROCK CAFE",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 48%",
     },
   ],
 };
@@ -834,6 +862,7 @@ function createMenuModal() {
   image.decoding = "async";
   image.width = 1200;
   image.height = 1200;
+  image.sizes = "(max-width: 700px) 100vw, min(44vw, 410px)";
   const prevButton = createElement("button", "menu-gallery-control menu-gallery-control--prev");
   prevButton.type = "button";
   prevButton.setAttribute("aria-label", "Previous image");
@@ -988,8 +1017,19 @@ function renderGalleryImage({ announce = false } = {}) {
     src: defaultCafeImage,
     alt: "BAROCK CAFE menu item",
   };
+  const imageFit = imageData.fit === "contain" ? "contain" : "cover";
+  const desktopPosition = imageData.desktopPosition || imageData.position || "50% 50%";
+  const mobilePosition = imageData.mobilePosition || imageData.position || desktopPosition;
 
   menuModal.image.classList.add("is-switching");
+  menuModal.imageWrap.classList.toggle("is-contain-image", imageFit === "contain");
+  menuModal.imageWrap.style.setProperty(
+    "--gallery-backdrop-image",
+    imageFit === "contain" ? `url("${imageData.src.replace(/"/g, "%22")}")` : "none",
+  );
+  menuModal.image.style.setProperty("--image-fit", imageFit);
+  menuModal.image.style.setProperty("--image-position-desktop", desktopPosition);
+  menuModal.image.style.setProperty("--image-position-mobile", mobilePosition);
   window.requestAnimationFrame(() => {
     setImageWithFallback(menuModal.image, imageData.src, imageData.alt);
     menuModal.image.style.transform = "";
