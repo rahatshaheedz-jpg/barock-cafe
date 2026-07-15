@@ -383,23 +383,35 @@ function initScrollProgress() {
   bar.className = "scroll-progress__bar";
   progress.appendChild(bar);
   document.body.prepend(progress);
+  let progressFrame = 0;
 
   const updateProgress = () => {
+    progressFrame = 0;
     const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-    const percentage = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
-    bar.style.width = `${Math.min(100, Math.max(0, percentage))}%`;
+    const percentage = scrollable > 0 ? window.scrollY / scrollable : 0;
+    bar.style.transform = `scaleX(${Math.min(1, Math.max(0, percentage))})`;
     document.querySelector(".site-header")?.classList.toggle("is-scrolled", window.scrollY > 18);
+  };
+  const queueProgressUpdate = () => {
+    if (!progressFrame) {
+      progressFrame = window.requestAnimationFrame(updateProgress);
+    }
   };
 
   updateProgress();
-  window.addEventListener("scroll", updateProgress, { passive: true });
-  window.addEventListener("resize", updateProgress);
+  window.addEventListener("scroll", queueProgressUpdate, { passive: true });
+  window.addEventListener("resize", queueProgressUpdate);
 }
 
 initScrollProgress();
 
 function initImageFallbacks() {
   document.querySelectorAll("img").forEach((image) => {
+    if (image.dataset.fallbackListener === "true") {
+      return;
+    }
+
+    image.dataset.fallbackListener = "true";
     image.addEventListener(
       "error",
       () => {
@@ -437,20 +449,6 @@ const revealObserver = new IntersectionObserver(
 );
 
 revealItems.forEach((item) => revealObserver.observe(item));
-
-function escapeHtml(value) {
-  return String(value).replace(/[&<>"']/g, (character) => {
-    const entities = {
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      "\"": "&quot;",
-      "'": "&#039;",
-    };
-
-    return entities[character];
-  });
-}
 
 function slugify(value) {
   return String(value)
@@ -619,63 +617,92 @@ function renderMenu() {
     openCategoryId = visibleCategories[0].id;
   }
 
-  menuList.innerHTML = visibleCategories
-    .map((category, index) => {
-      const isOpen = category.id === openCategoryId;
-      const itemList = category.visibleItems
-        .map(
-          (item) => `
-            <li class="${item.description ? "has-description" : ""}">
-              <button class="menu-item-button" type="button" data-item-id="${escapeHtml(item.id)}">
-                <span>
-                  ${escapeHtml(item.name)}
-                  ${item.description ? `<small>${escapeHtml(item.description)}</small>` : ""}
-                </span>
-                <strong>${escapeHtml(item.price || "BDT ___")}</strong>
-              </button>
-            </li>
-          `,
-        )
-        .join("");
+  const fragment = document.createDocumentFragment();
 
-      return `
-        <article class="menu-category-card glass-card reveal is-visible${isOpen ? " is-open" : ""}" style="--delay: ${index * 80}ms">
-          <button
-            class="menu-category-trigger"
-            type="button"
-            data-category-id="${category.id}"
-            aria-expanded="${isOpen}"
-            aria-controls="${category.id}-panel"
-          >
-            <span class="menu-category-media">
-              <img src="${category.image}" alt="${escapeHtml(category.title)}" loading="lazy" decoding="async" />
-            </span>
-            <span class="menu-category-content">
-              <span class="menu-category-kicker">${String(category.visibleItems.length).padStart(2, "0")} items</span>
-              <span class="menu-category-title">${escapeHtml(category.title)}</span>
-              <span class="menu-category-subtitle">${escapeHtml(category.subtitle)}</span>
-              <span class="menu-category-action glass-button">
-                View Items
-                <span class="menu-category-icon" aria-hidden="true"></span>
-              </span>
-            </span>
-          </button>
-          <div class="menu-category-panel" id="${category.id}-panel" aria-hidden="${!isOpen}">
-            <div class="menu-category-panel-inner">
-              ${category.note ? `<p class="menu-category-note">${escapeHtml(category.note)}</p>` : ""}
-              <ul class="menu-item-list">
-                ${itemList}
-              </ul>
-            </div>
-          </div>
-        </article>
-      `;
-    })
-    .join("");
+  visibleCategories.forEach((category, index) => {
+    fragment.append(createCategoryCard(category, index, category.id === openCategoryId));
+  });
+
+  menuList.replaceChildren(fragment);
 
   menuCount.textContent = String(getTotalVisibleItems(visibleCategories));
   emptyState.hidden = visibleCategories.length > 0;
   initImageFallbacks();
+}
+
+function createCategoryCard(category, index, isOpen) {
+  const card = createElement("article", `menu-category-card glass-card reveal is-visible${isOpen ? " is-open" : ""}`);
+  card.style.setProperty("--delay", `${index * 80}ms`);
+
+  const trigger = createElement("button", "menu-category-trigger");
+  trigger.type = "button";
+  trigger.dataset.categoryId = category.id;
+  trigger.setAttribute("aria-expanded", String(isOpen));
+  trigger.setAttribute("aria-controls", `${category.id}-panel`);
+
+  const media = createElement("span", "menu-category-media");
+  const image = document.createElement("img");
+  image.src = category.image;
+  image.alt = category.title;
+  image.loading = "lazy";
+  image.decoding = "async";
+  media.append(image);
+
+  const content = createElement("span", "menu-category-content");
+  content.append(
+    createElement("span", "menu-category-kicker", `${String(category.visibleItems.length).padStart(2, "0")} items`),
+    createElement("span", "menu-category-title", category.title),
+    createElement("span", "menu-category-subtitle", category.subtitle),
+    createCategoryAction(),
+  );
+
+  trigger.append(media, content);
+
+  const panel = createElement("div", "menu-category-panel");
+  panel.id = `${category.id}-panel`;
+  panel.setAttribute("aria-hidden", String(!isOpen));
+
+  const panelInner = createElement("div", "menu-category-panel-inner");
+
+  if (category.note) {
+    panelInner.append(createElement("p", "menu-category-note", category.note));
+  }
+
+  const itemList = createElement("ul", "menu-item-list");
+  category.visibleItems.forEach((item) => itemList.append(createMenuItem(item)));
+  panelInner.append(itemList);
+  panel.append(panelInner);
+  card.append(trigger, panel);
+
+  return card;
+}
+
+function createCategoryAction() {
+  const action = createElement("span", "menu-category-action glass-button", "View Items");
+  const icon = createElement("span", "menu-category-icon");
+  icon.setAttribute("aria-hidden", "true");
+  action.append(icon);
+  return action;
+}
+
+function createMenuItem(item) {
+  const listItem = createElement("li", item.description ? "has-description" : "");
+  const button = createElement("button", "menu-item-button");
+  button.type = "button";
+  button.dataset.itemId = item.id;
+  button.setAttribute("aria-label", `Open full details for ${item.name}`);
+
+  const text = createElement("span");
+  text.append(createElement("span", "", item.name));
+
+  if (item.description) {
+    text.append(createElement("small", "", item.description));
+  }
+
+  button.append(text, createElement("strong", "", item.price || "BDT ___"));
+  listItem.append(button);
+
+  return listItem;
 }
 
 function createElement(tagName, className, text) {
@@ -1058,7 +1085,7 @@ function finishSheetDrag(event, cancelled = false) {
 function openItemModal(itemId, trigger) {
   const details = menuDetailsById[itemId];
 
-  if (!details || isModalClosing) {
+  if (!details || isModalClosing || isModalOpen) {
     return;
   }
 
@@ -1074,13 +1101,10 @@ function openItemModal(itemId, trigger) {
   populateModal(details);
   menuModal.overlay.hidden = false;
   lockBodyScroll();
-  menuModal.closeButton.focus({ preventScroll: true });
-  window.setTimeout(() => {
+  window.requestAnimationFrame(() => {
     menuModal.overlay.classList.add("is-open");
     menuModal.closeButton.focus({ preventScroll: true });
-  }, 10);
-  window.setTimeout(() => menuModal.closeButton.focus({ preventScroll: true }), 240);
-  window.requestAnimationFrame(() => menuModal.closeButton.focus({ preventScroll: true }));
+  });
   isModalOpen = true;
   isModalClosing = false;
 
@@ -1097,6 +1121,7 @@ function finishItemModalClose({ restoreFocus = true } = {}) {
   menuModal.overlay.classList.remove("is-open", "is-closing", "is-dragging", "is-dismissing", "is-snapping-back");
   menuModal.dialog.classList.remove("is-closing", "is-dragging", "is-dismissing", "is-snapping-back");
   resetSheetDragState();
+  unlockBodyScroll();
   isModalClosing = false;
 
   if (restoreFocus && lastFocusedMenuItem && document.contains(lastFocusedMenuItem)) {
@@ -1125,7 +1150,6 @@ function closeItemModal({ restoreFocus = true, fromPopState = false, closeFromDr
   window.requestAnimationFrame(() => {
     menuModal.overlay.classList.remove("is-open");
   });
-  unlockBodyScroll();
   modalCloseTimer = window.setTimeout(
     () => finishItemModalClose({ restoreFocus }),
     window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 240,
@@ -1297,25 +1321,27 @@ function toggleCategory(categoryId) {
   }
 }
 
+function closeMobileMenu() {
+  mobileMenu.classList.remove("is-open");
+  document.body.classList.remove("mobile-menu-open");
+  menuToggle.setAttribute("aria-expanded", "false");
+  menuToggle.setAttribute("aria-label", "Open navigation");
+}
+
 menuToggle.addEventListener("click", () => {
   const isOpen = mobileMenu.classList.toggle("is-open");
+  document.body.classList.toggle("mobile-menu-open", isOpen);
   menuToggle.setAttribute("aria-expanded", String(isOpen));
   menuToggle.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
 });
 
 mobileMenu.querySelectorAll("a").forEach((link) => {
-  link.addEventListener("click", () => {
-    mobileMenu.classList.remove("is-open");
-    menuToggle.setAttribute("aria-expanded", "false");
-    menuToggle.setAttribute("aria-label", "Open navigation");
-  });
+  link.addEventListener("click", closeMobileMenu);
 });
 
 window.addEventListener("resize", () => {
   if (window.innerWidth > 960) {
-    mobileMenu.classList.remove("is-open");
-    menuToggle.setAttribute("aria-expanded", "false");
-    menuToggle.setAttribute("aria-label", "Open navigation");
+    closeMobileMenu();
   }
 });
 
@@ -1397,30 +1423,27 @@ menuPreview.preview.addEventListener("keydown", (event) => {
   }
 });
 
-menuModal.header.addEventListener("pointerdown", (event) => startSheetDrag(event, "header"));
-menuModal.header.addEventListener("pointermove", updateSheetDrag);
-menuModal.header.addEventListener("pointerup", (event) => finishSheetDrag(event));
-menuModal.header.addEventListener("pointercancel", (event) => finishSheetDrag(event, true));
-menuModal.body.addEventListener("pointerdown", (event) => startSheetDrag(event, "body"));
-menuModal.body.addEventListener("pointermove", updateSheetDrag);
-menuModal.body.addEventListener("pointerup", (event) => finishSheetDrag(event));
-menuModal.body.addEventListener("pointercancel", (event) => finishSheetDrag(event, true));
-menuModal.header.addEventListener("mousedown", (event) => startSheetDrag(event, "header"));
-menuModal.header.addEventListener("mousemove", updateSheetDrag);
-menuModal.header.addEventListener("mouseup", (event) => finishSheetDrag(event));
-menuModal.header.addEventListener("mouseleave", (event) => finishSheetDrag(event, true));
-menuModal.body.addEventListener("mousedown", (event) => startSheetDrag(event, "body"));
-menuModal.body.addEventListener("mousemove", updateSheetDrag);
-menuModal.body.addEventListener("mouseup", (event) => finishSheetDrag(event));
-menuModal.body.addEventListener("mouseleave", (event) => finishSheetDrag(event, true));
-menuModal.header.addEventListener("touchstart", (event) => startSheetDrag(event, "header"), { passive: true });
-menuModal.header.addEventListener("touchmove", updateSheetDrag, { passive: false });
-menuModal.header.addEventListener("touchend", (event) => finishSheetDrag(event));
-menuModal.header.addEventListener("touchcancel", (event) => finishSheetDrag(event, true));
-menuModal.body.addEventListener("touchstart", (event) => startSheetDrag(event, "body"), { passive: true });
-menuModal.body.addEventListener("touchmove", updateSheetDrag, { passive: false });
-menuModal.body.addEventListener("touchend", (event) => finishSheetDrag(event));
-menuModal.body.addEventListener("touchcancel", (event) => finishSheetDrag(event, true));
+function addSheetDragListeners(target, source) {
+  if (window.PointerEvent) {
+    target.addEventListener("pointerdown", (event) => startSheetDrag(event, source));
+    target.addEventListener("pointermove", updateSheetDrag);
+    target.addEventListener("pointerup", (event) => finishSheetDrag(event));
+    target.addEventListener("pointercancel", (event) => finishSheetDrag(event, true));
+    return;
+  }
+
+  target.addEventListener("mousedown", (event) => startSheetDrag(event, source));
+  target.addEventListener("mousemove", updateSheetDrag);
+  target.addEventListener("mouseup", (event) => finishSheetDrag(event));
+  target.addEventListener("mouseleave", (event) => finishSheetDrag(event, true));
+  target.addEventListener("touchstart", (event) => startSheetDrag(event, source), { passive: true });
+  target.addEventListener("touchmove", updateSheetDrag, { passive: false });
+  target.addEventListener("touchend", (event) => finishSheetDrag(event));
+  target.addEventListener("touchcancel", (event) => finishSheetDrag(event, true));
+}
+
+addSheetDragListeners(menuModal.header, "header");
+addSheetDragListeners(menuModal.body, "body");
 
 menuModal.closeButton.addEventListener("click", () => closeItemModal());
 

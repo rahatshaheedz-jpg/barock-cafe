@@ -386,23 +386,35 @@ function initScrollProgress() {
   bar.className = "scroll-progress__bar";
   progress.appendChild(bar);
   document.body.prepend(progress);
+  let progressFrame = 0;
 
   const updateProgress = () => {
+    progressFrame = 0;
     const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-    const percentage = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
-    bar.style.width = `${Math.min(100, Math.max(0, percentage))}%`;
+    const percentage = scrollable > 0 ? window.scrollY / scrollable : 0;
+    bar.style.transform = `scaleX(${Math.min(1, Math.max(0, percentage))})`;
     document.querySelector(".site-header")?.classList.toggle("is-scrolled", window.scrollY > 18);
+  };
+  const queueProgressUpdate = () => {
+    if (!progressFrame) {
+      progressFrame = window.requestAnimationFrame(updateProgress);
+    }
   };
 
   updateProgress();
-  window.addEventListener("scroll", updateProgress, { passive: true });
-  window.addEventListener("resize", updateProgress);
+  window.addEventListener("scroll", queueProgressUpdate, { passive: true });
+  window.addEventListener("resize", queueProgressUpdate);
 }
 
 initScrollProgress();
 
 function initImageFallbacks() {
   document.querySelectorAll("img").forEach((image) => {
+    if (image.dataset.fallbackListener === "true") {
+      return;
+    }
+
+    image.dataset.fallbackListener = "true";
     image.addEventListener(
       "error",
       () => {
