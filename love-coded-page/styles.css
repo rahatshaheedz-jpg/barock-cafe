@@ -1801,10 +1801,10 @@ ul {
   position: relative;
   display: grid;
   z-index: var(--z-modal);
-  grid-template-columns: minmax(300px, 0.46fr) minmax(0, 0.54fr);
+  grid-template-columns: minmax(360px, 0.52fr) minmax(0, 0.48fr);
   grid-template-rows: auto minmax(0, 1fr);
-  width: min(940px, 100%);
-  max-height: min(86dvh, 780px);
+  width: min(94vw, 1440px);
+  max-height: min(90dvh, 860px);
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 28px;
@@ -1947,12 +1947,12 @@ ul {
   grid-column: 1;
   grid-row: 1 / span 2;
   position: relative;
-  align-self: center;
+  align-self: stretch;
   justify-self: stretch;
   width: 100%;
   min-height: 0;
-  height: auto;
-  aspect-ratio: 4 / 5;
+  height: 100%;
+  aspect-ratio: auto;
   overflow: hidden;
   background:
     radial-gradient(circle at 50% 18%, rgba(216, 177, 106, 0.18), transparent 42%),
