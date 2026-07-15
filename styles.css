@@ -1946,8 +1946,11 @@ ul {
 .menu-modal-media {
   grid-column: 1;
   grid-row: 1 / span 2;
+  position: relative;
   min-height: 100%;
+  overflow: hidden;
   background: rgba(11, 7, 5, 0.52);
+  touch-action: pan-y;
 }
 
 .menu-modal-media img {
@@ -1956,6 +1959,114 @@ ul {
   height: 100%;
   min-height: 420px;
   object-fit: cover;
+  object-position: center;
+  transition: opacity 180ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.menu-modal-media img.is-switching {
+  opacity: 0.72;
+}
+
+.menu-modal-media img.is-dragging {
+  transition: none;
+  will-change: transform;
+}
+
+.menu-modal-media:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: -6px;
+}
+
+.menu-gallery-control {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid rgba(255, 247, 232, 0.2);
+  border-radius: 999px;
+  background:
+    linear-gradient(145deg, rgba(255, 247, 232, 0.18), rgba(255, 247, 232, 0.05)),
+    rgba(11, 7, 5, 0.58);
+  color: var(--paper);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 14px 34px rgba(0, 0, 0, 0.3);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  line-height: 1;
+  opacity: 0;
+  transform: translate3d(0, -50%, 0) scale(0.94);
+  transition: opacity 180ms ease, transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.menu-gallery-control[hidden],
+.menu-gallery-dots[hidden] {
+  display: none;
+}
+
+.menu-gallery-control--prev {
+  left: 14px;
+}
+
+.menu-gallery-control--next {
+  right: 14px;
+}
+
+.menu-modal-media.has-multiple-images:hover .menu-gallery-control,
+.menu-modal-media.has-multiple-images:focus-within .menu-gallery-control {
+  opacity: 1;
+  transform: translate3d(0, -50%, 0) scale(1);
+}
+
+.menu-gallery-control:hover,
+.menu-gallery-control:focus-visible {
+  border-color: rgba(216, 177, 106, 0.72);
+  background: var(--gold);
+  color: var(--text-dark);
+  outline: none;
+}
+
+.menu-gallery-dots {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  left: 18px;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.menu-gallery-dots span {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(255, 247, 232, 0.42);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.22);
+  transition: transform 180ms ease, background 180ms ease;
+}
+
+.menu-gallery-dots span.is-active {
+  background: var(--gold);
+  transform: scale(1.28);
+}
+
+.menu-gallery-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
 }
 
 .menu-modal-body {
@@ -4812,6 +4923,14 @@ body {
     height: clamp(180px, 34dvh, 260px);
     min-height: 180px;
     object-fit: cover;
+  }
+
+  .menu-gallery-control {
+    display: none;
+  }
+
+  .menu-gallery-dots {
+    bottom: 12px;
   }
 
   .menu-modal-body {

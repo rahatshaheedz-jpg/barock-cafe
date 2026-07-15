@@ -369,9 +369,12 @@ let sheetDragRafId = 0;
 let sheetDismissTimer = 0;
 let modalCloseTimer = 0;
 let lastPointerDragStart = 0;
+let galleryDrag = null;
 
 const sheetDismissDistanceRatio = 0.3;
 const sheetDismissVelocity = 0.6;
+const gallerySwipeDistance = 48;
+const gallerySwipeVelocity = 0.42;
 
 year.textContent = new Date().getFullYear();
 
@@ -478,24 +481,104 @@ function getCategoryImage(categoryId) {
   return categoryImages[categoryId] || defaultCafeImage;
 }
 
-function getItemImage(itemName, categoryId) {
+const classicProductImages = {
+  "chocolate-macadamia-latte": [
+    {
+      src: "/assets/menu/classics/chocolate-macadamia-latte-1.webp",
+      alt: "Chocolate Macadamia Latte served at BAROCK CAFE",
+    },
+  ],
+  cappuccino: [
+    {
+      src: "/assets/menu/classics/cappuccino-1.webp",
+      alt: "Cappuccino served in a ceramic cup at BAROCK CAFE",
+    },
+    {
+      src: "/assets/menu/classics/cappuccino-2.webp",
+      alt: "Second view of BAROCK CAFE Cappuccino foam and cup",
+    },
+  ],
+  "cafe-latte": [
+    {
+      src: "/assets/menu/classics/cafe-latte-1.webp",
+      alt: "Cafe Latte served at BAROCK CAFE",
+    },
+  ],
+  espresso: [
+    {
+      src: "/assets/menu/classics/espresso-1.webp",
+      alt: "Espresso served at BAROCK CAFE",
+    },
+  ],
+  macchiato: [
+    {
+      src: "/assets/menu/classics/macchiato-1.webp",
+      alt: "Macchiato served at BAROCK CAFE",
+    },
+  ],
+  "caffe-mocha": [
+    {
+      src: "/assets/menu/classics/caffe-mocha-1.webp",
+      alt: "Caffe Mocha served at BAROCK CAFE",
+    },
+  ],
+  "caffe-americano": [
+    {
+      src: "/assets/menu/classics/caffe-americano-1.webp",
+      alt: "Caffe Americano served at BAROCK CAFE",
+    },
+  ],
+  "caramel-latte": [
+    {
+      src: "/assets/menu/classics/caramel-latte-1.webp",
+      alt: "Caramel Latte served at BAROCK CAFE",
+    },
+    {
+      src: "/assets/menu/classics/caramel-latte-2.webp",
+      alt: "Second view of BAROCK CAFE Caramel Latte",
+    },
+  ],
+  "vanilla-latte": [
+    {
+      src: "/assets/menu/classics/vanilla-latte-1.webp",
+      alt: "Vanilla Latte served at BAROCK CAFE",
+    },
+    {
+      src: "/assets/menu/classics/vanilla-latte-2.webp",
+      alt: "Second view of BAROCK CAFE Vanilla Latte",
+    },
+    {
+      src: "/assets/menu/classics/vanilla-latte-3.webp",
+      alt: "Third view of BAROCK CAFE Vanilla Latte",
+    },
+  ],
+  "toffee-nut-latte": [
+    {
+      src: "/assets/menu/classics/toffee-nut-latte-1.webp",
+      alt: "Toffee Nut Latte served at BAROCK CAFE",
+    },
+  ],
+};
+
+function getItemImages(itemName, categoryId) {
   const normalized = slugify(itemName);
   const imageMap = {
-    cappuccino: "./assets/site/coffee-cup.svg",
-    espresso: "./assets/site/coffee-cup.svg",
-    "cafe-latte": "./assets/site/coffee-cup.svg",
-    "caramel-latte": "./assets/site/coffee-cup.svg",
-    "iced-latte": "./assets/site/iced-coffee.svg",
-    "iced-caramel-latte": "./assets/site/iced-coffee.svg",
-    "iced-americano": "./assets/site/iced-coffee.svg",
-    "chocolate-cake": "./assets/site/dessert.svg",
-    "salted-caramel-cheesecake": "./assets/site/dessert.svg",
-    "blueberry-cheesecake": "./assets/site/dessert.svg",
-    "club-sandwich": "./assets/site/sandwich.svg",
-    "smoked-chicken-sandwich": "./assets/site/sandwich.svg",
+    ...classicProductImages,
+    "iced-latte": [{ src: "./assets/site/iced-coffee.svg", alt: "Iced Latte illustration" }],
+    "iced-caramel-latte": [{ src: "./assets/site/iced-coffee.svg", alt: "Iced Caramel Latte illustration" }],
+    "iced-americano": [{ src: "./assets/site/iced-coffee.svg", alt: "Iced Americano illustration" }],
+    "chocolate-cake": [{ src: "./assets/site/dessert.svg", alt: "Chocolate Cake illustration" }],
+    "salted-caramel-cheesecake": [{ src: "./assets/site/dessert.svg", alt: "Salted Caramel Cheesecake illustration" }],
+    "blueberry-cheesecake": [{ src: "./assets/site/dessert.svg", alt: "Blueberry Cheesecake illustration" }],
+    "club-sandwich": [{ src: "./assets/site/sandwich.svg", alt: "Club Sandwich illustration" }],
+    "smoked-chicken-sandwich": [{ src: "./assets/site/sandwich.svg", alt: "Smoked Chicken Sandwich illustration" }],
   };
 
-  return imageMap[normalized] || getCategoryImage(categoryId);
+  return imageMap[normalized] || [{ src: getCategoryImage(categoryId), alt: `${itemName} from BAROCK CAFE` }];
+}
+
+function getPrimaryImage(details) {
+  return details.images?.[0] || { src: defaultCafeImage, alt: details.altText || "BAROCK CAFE menu item" };
 }
 
 function getCategoryTags(category) {
@@ -547,7 +630,7 @@ function createMenuDetails() {
       const id = `${category.id}-${slugify(item.name)}`;
       item.id = id;
       item.category = category.title;
-      item.image = getItemImage(item.name, category.id);
+      item.images = getItemImages(item.name, category.id);
       item.shortDescription = item.description || fallbackPreparation;
       item.ingredients = normalizeIngredients(item.ingredients || item.mainIngredients || item.ingredientList);
       item.preparation = normalizePreparation(item.preparation || item.preparationMethod || item.method);
@@ -556,7 +639,7 @@ function createMenuDetails() {
         id,
         name: item.name,
         price: item.price || "BDT ___",
-        image: item.image,
+        images: item.images,
         shortDescription: item.shortDescription,
         ingredients: item.ingredients,
         preparation: item.preparation,
@@ -744,12 +827,26 @@ function createMenuModal() {
   header.append(handle, headerText, closeButton);
 
   const imageWrap = createElement("div", "menu-modal-media");
+  imageWrap.setAttribute("tabindex", "0");
+  imageWrap.setAttribute("aria-label", "Product image gallery");
   const image = document.createElement("img");
   image.loading = "lazy";
   image.decoding = "async";
-  image.width = 420;
-  image.height = 420;
-  imageWrap.append(image);
+  image.width = 1200;
+  image.height = 1200;
+  const prevButton = createElement("button", "menu-gallery-control menu-gallery-control--prev");
+  prevButton.type = "button";
+  prevButton.setAttribute("aria-label", "Previous image");
+  prevButton.textContent = "‹";
+  const nextButton = createElement("button", "menu-gallery-control menu-gallery-control--next");
+  nextButton.type = "button";
+  nextButton.setAttribute("aria-label", "Next image");
+  nextButton.textContent = "›";
+  const dots = createElement("div", "menu-gallery-dots");
+  dots.setAttribute("aria-hidden", "true");
+  const status = createElement("p", "menu-gallery-status");
+  status.setAttribute("aria-live", "polite");
+  imageWrap.append(image, prevButton, nextButton, dots, status);
 
   const body = createElement("div", "menu-modal-body");
   const category = createElement("p", "menu-modal-category");
@@ -780,7 +877,12 @@ function createMenuModal() {
     handle,
     body,
     closeButton,
+    imageWrap,
     image,
+    prevButton,
+    nextButton,
+    dots,
+    status,
     headerCategory,
     headerTitle,
     category,
@@ -822,6 +924,11 @@ function createMenuPreview() {
 
 const menuModal = createMenuModal();
 const menuPreview = createMenuPreview();
+const menuGallery = {
+  images: [],
+  activeIndex: 0,
+  preload: new Set(),
+};
 
 function canShowHoverPreview() {
   return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -839,6 +946,220 @@ function setImageWithFallback(image, src, altText) {
     image.src = defaultCafeImage;
   };
   image.src = src || defaultCafeImage;
+}
+
+function preloadGalleryImage(index) {
+  const imageData = menuGallery.images[index];
+
+  if (!imageData || menuGallery.preload.has(imageData.src)) {
+    return;
+  }
+
+  menuGallery.preload.add(imageData.src);
+  const image = new Image();
+  image.decoding = "async";
+  image.src = imageData.src;
+}
+
+function updateGalleryControls() {
+  const isMultiImage = menuGallery.images.length > 1;
+  menuModal.imageWrap.classList.toggle("has-multiple-images", isMultiImage);
+  menuModal.prevButton.hidden = !isMultiImage;
+  menuModal.nextButton.hidden = !isMultiImage;
+  menuModal.dots.hidden = !isMultiImage;
+  menuModal.status.textContent = isMultiImage
+    ? `Image ${menuGallery.activeIndex + 1} of ${menuGallery.images.length}`
+    : "";
+
+  menuModal.dots.replaceChildren();
+
+  if (!isMultiImage) {
+    return;
+  }
+
+  menuGallery.images.forEach((_, index) => {
+    const dot = createElement("span", index === menuGallery.activeIndex ? "is-active" : "");
+    menuModal.dots.append(dot);
+  });
+}
+
+function renderGalleryImage({ announce = false } = {}) {
+  const imageData = menuGallery.images[menuGallery.activeIndex] || {
+    src: defaultCafeImage,
+    alt: "BAROCK CAFE menu item",
+  };
+
+  menuModal.image.classList.add("is-switching");
+  window.requestAnimationFrame(() => {
+    setImageWithFallback(menuModal.image, imageData.src, imageData.alt);
+    menuModal.image.style.transform = "";
+    menuModal.image.classList.remove("is-dragging");
+    window.setTimeout(() => menuModal.image.classList.remove("is-switching"), 120);
+  });
+
+  updateGalleryControls();
+
+  if (!announce) {
+    menuModal.status.textContent = "";
+    window.requestAnimationFrame(updateGalleryControls);
+  }
+
+  if (menuGallery.images.length > 1) {
+    preloadGalleryImage((menuGallery.activeIndex + 1) % menuGallery.images.length);
+  }
+}
+
+function setModalGallery(images) {
+  menuGallery.images = Array.isArray(images) && images.length
+    ? images
+    : [{ src: defaultCafeImage, alt: "BAROCK CAFE menu item" }];
+  menuGallery.activeIndex = 0;
+  menuGallery.preload.clear();
+  galleryDrag = null;
+  menuModal.image.style.transform = "";
+  menuModal.image.classList.remove("is-dragging", "is-switching");
+  renderGalleryImage();
+}
+
+function showGalleryImage(index) {
+  if (menuGallery.images.length <= 1) {
+    return;
+  }
+
+  const count = menuGallery.images.length;
+  menuGallery.activeIndex = (index + count) % count;
+  renderGalleryImage({ announce: true });
+  preloadGalleryImage((menuGallery.activeIndex + 1) % count);
+  preloadGalleryImage((menuGallery.activeIndex - 1 + count) % count);
+}
+
+function showNextGalleryImage() {
+  showGalleryImage(menuGallery.activeIndex + 1);
+}
+
+function showPreviousGalleryImage() {
+  showGalleryImage(menuGallery.activeIndex - 1);
+}
+
+function resetModalGallery() {
+  galleryDrag = null;
+  menuGallery.images = [];
+  menuGallery.activeIndex = 0;
+  menuGallery.preload.clear();
+  menuModal.image.style.transform = "";
+  menuModal.image.classList.remove("is-dragging", "is-switching");
+  menuModal.imageWrap.classList.remove("has-multiple-images");
+  menuModal.prevButton.hidden = true;
+  menuModal.nextButton.hidden = true;
+  menuModal.dots.hidden = true;
+  menuModal.dots.replaceChildren();
+  menuModal.status.textContent = "";
+}
+
+function resetGalleryDrag() {
+  if (!galleryDrag) {
+    return;
+  }
+
+  menuModal.image.style.transform = "";
+  menuModal.image.classList.remove("is-dragging");
+  galleryDrag = null;
+}
+
+function getGalleryClientPoint(event) {
+  return {
+    x: event.clientX ?? 0,
+    y: event.clientY ?? 0,
+  };
+}
+
+function startGalleryDrag(event) {
+  if (
+    menuGallery.images.length <= 1 ||
+    event.button > 0 ||
+    event.target.closest(".menu-gallery-control")
+  ) {
+    return;
+  }
+
+  const point = getGalleryClientPoint(event);
+  galleryDrag = {
+    pointerId: event.pointerId,
+    startX: point.x,
+    startY: point.y,
+    lastX: point.x,
+    lastTime: window.performance.now(),
+    startTime: window.performance.now(),
+    mode: "",
+    velocity: 0,
+  };
+
+  try {
+    menuModal.imageWrap.setPointerCapture?.(event.pointerId);
+  } catch {
+    // Pointer capture is an enhancement; swipe still works without it.
+  }
+}
+
+function updateGalleryDrag(event) {
+  if (!galleryDrag || event.pointerId !== galleryDrag.pointerId) {
+    return;
+  }
+
+  const point = getGalleryClientPoint(event);
+  const deltaX = point.x - galleryDrag.startX;
+  const deltaY = point.y - galleryDrag.startY;
+  const absX = Math.abs(deltaX);
+  const absY = Math.abs(deltaY);
+
+  if (!galleryDrag.mode && (absX > 8 || absY > 8)) {
+    galleryDrag.mode = absX > absY * 1.15 ? "horizontal" : "vertical";
+  }
+
+  if (galleryDrag.mode !== "horizontal") {
+    return;
+  }
+
+  event.preventDefault();
+  event.stopPropagation();
+  const now = window.performance.now();
+  galleryDrag.velocity = (point.x - galleryDrag.lastX) / Math.max(now - galleryDrag.lastTime, 1);
+  galleryDrag.lastX = point.x;
+  galleryDrag.lastTime = now;
+  menuModal.image.classList.add("is-dragging");
+  menuModal.image.style.transform = `translate3d(${deltaX * 0.28}px, 0, 0)`;
+}
+
+function finishGalleryDrag(event, cancelled = false) {
+  if (!galleryDrag || event.pointerId !== galleryDrag.pointerId) {
+    return;
+  }
+
+  try {
+    menuModal.imageWrap.releasePointerCapture?.(event.pointerId);
+  } catch {
+    // The browser may release capture automatically on cancellation.
+  }
+
+  const point = getGalleryClientPoint(event);
+  const deltaX = point.x - galleryDrag.startX;
+  const velocity = galleryDrag.velocity;
+  const shouldChange =
+    !cancelled &&
+    galleryDrag.mode === "horizontal" &&
+    (Math.abs(deltaX) >= gallerySwipeDistance || Math.abs(velocity) >= gallerySwipeVelocity);
+
+  resetGalleryDrag();
+
+  if (!shouldChange) {
+    return;
+  }
+
+  if (deltaX < 0 || velocity < -gallerySwipeVelocity) {
+    showNextGalleryImage();
+  } else {
+    showPreviousGalleryImage();
+  }
 }
 
 function populateTags(container, tags) {
@@ -860,7 +1181,7 @@ function populateModal(details) {
   const ingredients = normalizeIngredients(details.ingredients);
   const preparation = normalizePreparation(details.preparation);
 
-  setImageWithFallback(menuModal.image, details.image, details.altText);
+  setModalGallery(details.images);
   menuModal.headerCategory.textContent = details.category;
   menuModal.headerTitle.textContent = details.name;
   menuModal.category.textContent = details.category;
@@ -879,7 +1200,7 @@ function populateModal(details) {
 function getFocusableModalElements() {
   return Array.from(
     menuModal.dialog.querySelectorAll(
-      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
+      'a[href]:not([hidden]), button:not([disabled]):not([hidden]), textarea:not([hidden]), input:not([hidden]), select:not([hidden]), [tabindex]:not([tabindex="-1"]):not([hidden])',
     ),
   );
 }
@@ -1121,6 +1442,7 @@ function finishItemModalClose({ restoreFocus = true } = {}) {
   menuModal.overlay.classList.remove("is-open", "is-closing", "is-dragging", "is-dismissing", "is-snapping-back");
   menuModal.dialog.classList.remove("is-closing", "is-dragging", "is-dismissing", "is-snapping-back");
   resetSheetDragState();
+  resetModalGallery();
   unlockBodyScroll();
   isModalClosing = false;
 
@@ -1260,7 +1582,8 @@ function showPreview(itemId, trigger) {
 
   activePreviewItem = itemId;
   previewAnchor = trigger;
-  setImageWithFallback(menuPreview.image, details.image, details.altText);
+  const primaryImage = getPrimaryImage(details);
+  setImageWithFallback(menuPreview.image, primaryImage.src, primaryImage.alt);
   menuPreview.title.textContent = details.name;
   menuPreview.price.textContent = details.price;
   menuPreview.description.textContent = details.shortDescription;
@@ -1445,6 +1768,21 @@ function addSheetDragListeners(target, source) {
 addSheetDragListeners(menuModal.header, "header");
 addSheetDragListeners(menuModal.body, "body");
 
+menuModal.prevButton.addEventListener("click", (event) => {
+  event.stopPropagation();
+  showPreviousGalleryImage();
+});
+
+menuModal.nextButton.addEventListener("click", (event) => {
+  event.stopPropagation();
+  showNextGalleryImage();
+});
+
+menuModal.imageWrap.addEventListener("pointerdown", startGalleryDrag);
+menuModal.imageWrap.addEventListener("pointermove", updateGalleryDrag);
+menuModal.imageWrap.addEventListener("pointerup", (event) => finishGalleryDrag(event));
+menuModal.imageWrap.addEventListener("pointercancel", (event) => finishGalleryDrag(event, true));
+
 menuModal.closeButton.addEventListener("click", () => closeItemModal());
 
 menuModal.overlay.addEventListener("click", (event) => {
@@ -1465,6 +1803,18 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     event.preventDefault();
     closeItemModal();
+    return;
+  }
+
+  if (event.key === "ArrowLeft" && menuGallery.images.length > 1) {
+    event.preventDefault();
+    showPreviousGalleryImage();
+    return;
+  }
+
+  if (event.key === "ArrowRight" && menuGallery.images.length > 1) {
+    event.preventDefault();
+    showNextGalleryImage();
     return;
   }
 
