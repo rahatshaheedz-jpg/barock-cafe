@@ -360,7 +360,6 @@ let previewCloseTimer = 0;
 let activePreviewItem = null;
 let isModalOpen = false;
 let isModalClosing = false;
-let modalHistoryPushed = false;
 let scrollLockY = 0;
 let previewAnchor = null;
 let previewRafId = 0;
@@ -370,6 +369,21 @@ let sheetDismissTimer = 0;
 let modalCloseTimer = 0;
 let lastPointerDragStart = 0;
 let galleryDrag = null;
+const modalState = {
+  isOpen: false,
+  isClosing: false,
+  selectedItemId: "",
+  savedScrollY: 0,
+  triggerElement: null,
+  imageRequestToken: 0,
+  closeRequestToken: 0,
+};
+const previewState = {
+  hoveredItem: "",
+  pointerInsideItem: false,
+  pointerInsidePreview: false,
+  imageRequestToken: 0,
+};
 
 const sheetDismissDistanceRatio = 0.3;
 const sheetDismissVelocity = 0.6;
@@ -602,11 +616,24 @@ function getItemImages(itemName, categoryId) {
     "smoked-chicken-sandwich": [{ src: "./assets/site/sandwich.svg", alt: "Smoked Chicken Sandwich illustration" }],
   };
 
-  return imageMap[normalized] || [{ src: getCategoryImage(categoryId), alt: `${itemName} from BAROCK CAFE` }];
+  return (imageMap[normalized] || [{ src: getCategoryImage(categoryId), alt: `${itemName} from BAROCK CAFE` }])
+    .map(prepareImageData);
 }
 
 function getPrimaryImage(details) {
   return details.images?.[0] || { src: defaultCafeImage, alt: details.altText || "BAROCK CAFE menu item" };
+}
+
+function prepareImageData(imageData) {
+  const image = { ...imageData };
+
+  if (/^\/assets\/menu\/classics\/.+\.webp$/i.test(image.src)) {
+    const base = image.src.replace(/\.webp$/i, "");
+    image.previewSrc = image.previewSrc || `${base}-480.webp`;
+    image.srcset = image.srcset || `${base}-480.webp 480w, ${base}-900.webp 900w, ${image.src} 1200w`;
+  }
+
+  return image;
 }
 
 function getCategoryTags(category) {
@@ -963,18 +990,49 @@ function canShowHoverPreview() {
   return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 }
 
-function setImageWithFallback(image, src, altText) {
-  image.dataset.fallbackApplied = "false";
+function clearImageElement(image, altText = "") {
+  image.removeAttribute("src");
+  image.removeAttribute("srcset");
   image.alt = altText;
-  image.onerror = () => {
-    if (image.dataset.fallbackApplied === "true") {
-      return;
-    }
+}
 
-    image.dataset.fallbackApplied = "true";
-    image.src = defaultCafeImage;
-  };
+function setImageAttributes(image, imageData, { preview = false } = {}) {
+  const src = preview ? imageData.previewSrc || imageData.src : imageData.src;
+  image.alt = imageData.alt || "BAROCK CAFE menu item";
+
+  if (!preview && imageData.srcset) {
+    image.srcset = imageData.srcset;
+    image.sizes = imageData.sizes || image.sizes;
+  } else {
+    image.removeAttribute("srcset");
+  }
+
   image.src = src || defaultCafeImage;
+}
+
+async function decodeImageData(imageData, { preview = false, sizes = "" } = {}) {
+  const src = preview ? imageData.previewSrc || imageData.src : imageData.src;
+  const loader = new Image();
+  loader.decoding = "async";
+  loader.alt = imageData.alt || "";
+
+  if (!preview && imageData.srcset) {
+    loader.srcset = imageData.srcset;
+    loader.sizes = sizes || imageData.sizes || "100vw";
+  }
+
+  loader.src = src || defaultCafeImage;
+
+  if (loader.decode) {
+    await loader.decode();
+  } else if (!loader.complete) {
+    await new Promise((resolve, reject) => {
+      loader.onload = resolve;
+      loader.onerror = reject;
+    });
+  }
+
+  return imageData;
 }
 
 function preloadGalleryImage(index) {
@@ -987,6 +1045,10 @@ function preloadGalleryImage(index) {
   menuGallery.preload.add(imageData.src);
   const image = new Image();
   image.decoding = "async";
+  if (imageData.srcset) {
+    image.srcset = imageData.srcset;
+    image.sizes = menuModal.image.sizes;
+  }
   image.src = imageData.src;
 }
 
@@ -1017,11 +1079,14 @@ function renderGalleryImage({ announce = false } = {}) {
     src: defaultCafeImage,
     alt: "BAROCK CAFE menu item",
   };
+  const requestToken = ++modalState.imageRequestToken;
   const imageFit = imageData.fit === "contain" ? "contain" : "cover";
   const desktopPosition = imageData.desktopPosition || imageData.position || "50% 50%";
   const mobilePosition = imageData.mobilePosition || imageData.position || desktopPosition;
 
+  menuModal.imageWrap.classList.add("is-loading");
   menuModal.image.classList.add("is-switching");
+  clearImageElement(menuModal.image, imageData.alt || "Loading BAROCK CAFE menu item image");
   menuModal.imageWrap.classList.toggle("is-contain-image", imageFit === "contain");
   menuModal.imageWrap.style.setProperty(
     "--gallery-backdrop-image",
@@ -1030,11 +1095,34 @@ function renderGalleryImage({ announce = false } = {}) {
   menuModal.image.style.setProperty("--image-fit", imageFit);
   menuModal.image.style.setProperty("--image-position-desktop", desktopPosition);
   menuModal.image.style.setProperty("--image-position-mobile", mobilePosition);
+
+  decodeImageData(imageData, { sizes: menuModal.image.sizes })
+    .then((loadedImage) => {
+      if (requestToken !== modalState.imageRequestToken) {
+        return;
+      }
+
+      setImageAttributes(menuModal.image, loadedImage);
+    })
+    .catch(() => {
+      if (requestToken !== modalState.imageRequestToken) {
+        return;
+      }
+
+      setImageAttributes(menuModal.image, { src: defaultCafeImage, alt: "BAROCK CAFE menu item" });
+    })
+    .finally(() => {
+      if (requestToken !== modalState.imageRequestToken) {
+        return;
+      }
+
+      menuModal.imageWrap.classList.remove("is-loading");
+      window.setTimeout(() => menuModal.image.classList.remove("is-switching"), 80);
+    });
+
   window.requestAnimationFrame(() => {
-    setImageWithFallback(menuModal.image, imageData.src, imageData.alt);
     menuModal.image.style.transform = "";
     menuModal.image.classList.remove("is-dragging");
-    window.setTimeout(() => menuModal.image.classList.remove("is-switching"), 120);
   });
 
   updateGalleryControls();
@@ -1083,6 +1171,7 @@ function showPreviousGalleryImage() {
 
 function resetModalGallery() {
   galleryDrag = null;
+  modalState.imageRequestToken += 1;
   menuGallery.images = [];
   menuGallery.activeIndex = 0;
   menuGallery.preload.clear();
@@ -1094,6 +1183,8 @@ function resetModalGallery() {
   menuModal.dots.hidden = true;
   menuModal.dots.replaceChildren();
   menuModal.status.textContent = "";
+  menuModal.imageWrap.classList.remove("is-loading", "is-contain-image");
+  clearImageElement(menuModal.image, "");
 }
 
 function resetGalleryDrag() {
@@ -1247,6 +1338,7 @@ function getFocusableModalElements() {
 
 function lockBodyScroll() {
   scrollLockY = window.scrollY || document.documentElement.scrollTop || 0;
+  modalState.savedScrollY = scrollLockY;
   const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
 
   document.body.style.position = "fixed";
@@ -1259,6 +1351,7 @@ function lockBodyScroll() {
 }
 
 function unlockBodyScroll() {
+  const restoreY = modalState.savedScrollY || scrollLockY || 0;
   document.body.classList.remove("menu-modal-open");
   document.body.style.position = "";
   document.body.style.top = "";
@@ -1266,7 +1359,11 @@ function unlockBodyScroll() {
   document.body.style.right = "";
   document.body.style.width = "";
   document.body.style.paddingRight = "";
-  window.scrollTo(0, scrollLockY);
+  try {
+    window.scrollTo({ top: restoreY, left: 0, behavior: "instant" });
+  } catch {
+    window.scrollTo(0, restoreY);
+  }
 }
 
 function isMobileBottomSheet() {
@@ -1446,12 +1543,16 @@ function finishSheetDrag(event, cancelled = false) {
 function openItemModal(itemId, trigger) {
   const details = menuDetailsById[itemId];
 
-  if (!details || isModalClosing || isModalOpen) {
+  if (!details || modalState.isClosing || modalState.isOpen || isModalClosing || isModalOpen) {
     return;
   }
 
   window.clearTimeout(modalCloseTimer);
   modalCloseTimer = 0;
+  modalState.isOpen = true;
+  modalState.isClosing = false;
+  modalState.selectedItemId = itemId;
+  modalState.triggerElement = trigger || document.activeElement;
   lastFocusedMenuItem = trigger || document.activeElement;
   hidePreview(true);
   resetSheetDragState();
@@ -1468,11 +1569,6 @@ function openItemModal(itemId, trigger) {
   });
   isModalOpen = true;
   isModalClosing = false;
-
-  if (window.history && !window.history.state?.menuModal) {
-    window.history.pushState({ menuModal: true }, "");
-    modalHistoryPushed = true;
-  }
 }
 
 function finishItemModalClose({ restoreFocus = true } = {}) {
@@ -1485,19 +1581,30 @@ function finishItemModalClose({ restoreFocus = true } = {}) {
   resetModalGallery();
   unlockBodyScroll();
   isModalClosing = false;
+  isModalOpen = false;
+  modalState.isClosing = false;
+  modalState.isOpen = false;
+  modalState.selectedItemId = "";
 
-  if (restoreFocus && lastFocusedMenuItem && document.contains(lastFocusedMenuItem)) {
-    lastFocusedMenuItem.focus({ preventScroll: true });
+  const focusTarget = modalState.triggerElement || lastFocusedMenuItem;
+  modalState.triggerElement = null;
+
+  if (restoreFocus && focusTarget && document.contains(focusTarget)) {
+    focusTarget.focus({ preventScroll: true });
   }
 }
 
 function closeItemModal({ restoreFocus = true, fromPopState = false, closeFromDrag = false } = {}) {
-  if (!isModalOpen || isModalClosing) {
+  if (!modalState.isOpen || modalState.isClosing || !isModalOpen || isModalClosing) {
     return;
   }
 
+  const closeToken = ++modalState.closeRequestToken;
+  modalState.isClosing = true;
   isModalClosing = true;
   window.clearTimeout(modalCloseTimer);
+  hidePreview(true);
+  modalState.imageRequestToken += 1;
   resetSheetDragState({ keepClosingStyles: closeFromDrag });
   menuModal.overlay.classList.add("is-closing");
   menuModal.dialog.classList.add("is-closing");
@@ -1512,18 +1619,29 @@ function closeItemModal({ restoreFocus = true, fromPopState = false, closeFromDr
   window.requestAnimationFrame(() => {
     menuModal.overlay.classList.remove("is-open");
   });
+
+  const finishCloseOnce = (event) => {
+    if (
+      event?.target &&
+      event.target !== menuModal.dialog &&
+      event.target !== menuModal.overlay
+    ) {
+      return;
+    }
+
+    if (closeToken !== modalState.closeRequestToken || !modalState.isClosing) {
+      return;
+    }
+
+    finishItemModalClose({ restoreFocus });
+  };
+
+  menuModal.dialog.addEventListener("transitionend", finishCloseOnce, { once: true });
   modalCloseTimer = window.setTimeout(
-    () => finishItemModalClose({ restoreFocus }),
+    finishCloseOnce,
     window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 240,
   );
   isModalOpen = false;
-
-  if (!fromPopState && modalHistoryPushed && window.history.state?.menuModal) {
-    modalHistoryPushed = false;
-    window.history.back();
-  } else if (fromPopState) {
-    modalHistoryPushed = false;
-  }
 }
 
 function getNavigationSafeTop() {
@@ -1620,10 +1738,13 @@ function showPreview(itemId, trigger) {
     return;
   }
 
+  const requestToken = ++previewState.imageRequestToken;
   activePreviewItem = itemId;
+  previewState.hoveredItem = itemId;
   previewAnchor = trigger;
   const primaryImage = getPrimaryImage(details);
-  setImageWithFallback(menuPreview.image, primaryImage.src, primaryImage.alt);
+  menuPreview.preview.classList.add("is-loading");
+  clearImageElement(menuPreview.image, primaryImage.alt || "Loading BAROCK CAFE menu item preview");
   menuPreview.title.textContent = details.name;
   menuPreview.price.textContent = details.price;
   menuPreview.description.textContent = details.shortDescription;
@@ -1633,13 +1754,47 @@ function showPreview(itemId, trigger) {
   menuPreview.preview.hidden = false;
   menuPreview.preview.classList.add("is-visible");
   placePreview(trigger);
+
+  decodeImageData(primaryImage, { preview: true })
+    .then((loadedImage) => {
+      if (requestToken !== previewState.imageRequestToken || activePreviewItem !== itemId) {
+        return;
+      }
+
+      setImageAttributes(menuPreview.image, loadedImage, { preview: true });
+      schedulePreviewPlacement();
+    })
+    .catch(() => {
+      if (requestToken !== previewState.imageRequestToken || activePreviewItem !== itemId) {
+        return;
+      }
+
+      setImageAttributes(menuPreview.image, { src: defaultCafeImage, alt: "BAROCK CAFE menu item" }, { preview: true });
+    })
+    .finally(() => {
+      if (requestToken === previewState.imageRequestToken && activePreviewItem === itemId) {
+        menuPreview.preview.classList.remove("is-loading");
+      }
+    });
 }
 
 function queuePreview(itemId, trigger) {
   window.clearTimeout(previewCloseTimer);
   window.clearTimeout(previewOpenTimer);
+  previewState.pointerInsideItem = true;
+  previewState.hoveredItem = itemId;
+  const primaryImage = getPrimaryImage(menuDetailsById[itemId] || {});
+
+  if (primaryImage?.previewSrc || primaryImage?.src) {
+    decodeImageData(primaryImage, { preview: true }).catch(() => {});
+  }
+
   previewOpenTimer = window.setTimeout(() => {
-    if (!document.contains(trigger) || (!trigger.matches(":hover") && document.activeElement !== trigger)) {
+    if (
+      previewState.hoveredItem !== itemId ||
+      !document.contains(trigger) ||
+      (!previewState.pointerInsideItem && document.activeElement !== trigger)
+    ) {
       return;
     }
 
@@ -1652,15 +1807,20 @@ function hidePreview(immediate = false) {
   window.clearTimeout(previewCloseTimer);
 
   const close = () => {
+    previewState.imageRequestToken += 1;
+    previewState.hoveredItem = "";
+    previewState.pointerInsideItem = false;
+    previewState.pointerInsidePreview = false;
     activePreviewItem = null;
     previewAnchor = null;
-    menuPreview.preview.classList.remove("is-visible");
+    menuPreview.preview.classList.remove("is-visible", "is-loading");
     menuPreview.preview.hidden = true;
     menuPreview.preview.setAttribute("aria-hidden", "true");
     menuPreview.preview.setAttribute("tabindex", "-1");
     menuPreview.preview.removeAttribute("aria-label");
     menuPreview.preview.style.left = "";
     menuPreview.preview.style.top = "";
+    clearImageElement(menuPreview.image, "");
   };
 
   if (immediate) {
@@ -1671,17 +1831,28 @@ function hidePreview(immediate = false) {
   previewCloseTimer = window.setTimeout(close, 160);
 }
 
+function schedulePreviewClose() {
+  window.clearTimeout(previewCloseTimer);
+  previewCloseTimer = window.setTimeout(() => {
+    if (!previewState.pointerInsideItem && !previewState.pointerInsidePreview) {
+      hidePreview(true);
+    }
+  }, 150);
+}
+
 function toggleCategory(categoryId) {
+  const previousScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+
   openCategoryId = openCategoryId === categoryId ? "" : categoryId;
   renderMenu();
 
-  const openedCard = document.querySelector(`[data-category-id="${categoryId}"]`);
-  if (openedCard && openCategoryId === categoryId) {
-    openedCard.closest(".menu-category-card").scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-    });
-  }
+  window.requestAnimationFrame(() => {
+    try {
+      window.scrollTo({ top: previousScrollY, left: 0, behavior: "instant" });
+    } catch {
+      window.scrollTo(0, previousScrollY);
+    }
+  });
 }
 
 function closeMobileMenu() {
@@ -1729,6 +1900,7 @@ menuList.addEventListener("mouseover", (event) => {
   const itemButton = event.target.closest("[data-item-id]");
 
   if (itemButton) {
+    previewState.pointerInsideItem = true;
     queuePreview(itemButton.dataset.itemId, itemButton);
   }
 });
@@ -1745,7 +1917,8 @@ menuList.addEventListener("mouseout", (event) => {
   const itemButton = event.target.closest("[data-item-id]");
 
   if (itemButton && !itemButton.contains(event.relatedTarget)) {
-    hidePreview();
+    previewState.pointerInsideItem = false;
+    schedulePreviewClose();
   }
 });
 
@@ -1753,6 +1926,7 @@ menuList.addEventListener("focusin", (event) => {
   const itemButton = event.target.closest("[data-item-id]");
 
   if (itemButton) {
+    previewState.pointerInsideItem = true;
     queuePreview(itemButton.dataset.itemId, itemButton);
   }
 });
@@ -1761,16 +1935,19 @@ menuList.addEventListener("focusout", (event) => {
   const itemButton = event.target.closest("[data-item-id]");
 
   if (itemButton && !itemButton.contains(event.relatedTarget)) {
-    hidePreview();
+    previewState.pointerInsideItem = false;
+    schedulePreviewClose();
   }
 });
 
 menuPreview.preview.addEventListener("mouseenter", () => {
+  previewState.pointerInsidePreview = true;
   window.clearTimeout(previewCloseTimer);
 });
 
 menuPreview.preview.addEventListener("mouseleave", () => {
-  hidePreview();
+  previewState.pointerInsidePreview = false;
+  schedulePreviewClose();
 });
 
 menuPreview.preview.addEventListener("click", () => {
