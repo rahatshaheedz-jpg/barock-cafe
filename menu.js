@@ -862,7 +862,7 @@ function createMenuModal() {
   image.decoding = "async";
   image.width = 1200;
   image.height = 1200;
-  image.sizes = "(max-width: 700px) 100vw, min(44vw, 410px)";
+  image.sizes = "(max-width: 700px) 100vw, min(52vw, 750px)";
   const prevButton = createElement("button", "menu-gallery-control menu-gallery-control--prev");
   prevButton.type = "button";
   prevButton.setAttribute("aria-label", "Previous image");
