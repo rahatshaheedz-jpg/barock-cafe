@@ -1,340 +1,413 @@
 const defaultCafeImage = "./assets/site/hero-coffee.svg";
 
+const pizzaCrustOptions = ["Thin", "Medium", "Thick"];
+
 const menuCategories = [
   {
     id: "classics",
-    title: "Classics",
+    title: "CLASSICS",
     subtitle: "Warm espresso classics and Barock signatures",
-    image: "./assets/site/coffee-cup.svg",
+    image: getCategoryImage("classics"),
     items: [
-      { name: "Chocolate Macadamia Latte", price: "BDT 300" },
-      { name: "Cappuccino", price: "BDT 385" },
+      { name: "Cappuccino", price: "BDT 300" },
       { name: "Cafe Latte", price: "BDT 300" },
-      { name: "Espresso", price: "BDT 385" },
-      { name: "Macchiato", price: "BDT 275" },
-      { name: "Caffe Mocha", price: "BDT 275" },
-      { name: "Caffe Americano", price: "BDT 385" },
-      { name: "Caramel Latte", price: "BDT 375" },
-      { name: "Vanilla Latte", price: "BDT 255" },
+      { name: "Espresso", price: "BDT 275" },
+      { name: "Caffe Mocha", price: "BDT 375" },
+      { name: "Caffe Americano", price: "BDT 255" },
+      { name: "Caramel Latte", price: "BDT 385" },
+      { name: "Vanilla Latte", price: "BDT 385" },
+      { name: "Chocolate Macadamia Latte", price: "BDT 385" },
       { name: "Toffee Nut Latte", price: "BDT 385" },
+      { name: "Macchiato", price: "BDT 275" },
     ],
   },
   {
-    id: "hot-chocolate-tea",
-    title: "Hot Chocolate & Tea",
-    subtitle: "Cozy chocolate pours and calming teas",
-    image: "./assets/site/coffee-cup.svg",
+    id: "hot-chocolate",
+    title: "HOT CHOCOLATE",
+    subtitle: "Rich cocoa pours and warm comfort",
+    image: getCategoryImage("hot-chocolate"),
     items: [
-      { name: "Salted Caramel Hot Chocolate", price: "BDT 420" },
-      { name: "White Hot Chocolate", price: "BDT 450" },
-      { name: "Classic Hot Chocolate", price: "BDT 475" },
-      { name: "Caramel Hot Chocolate", price: "BDT 475" },
+      { name: "Classic Hot Chocolate", price: "BDT 420" },
+      { name: "Caramel Hot Chocolate", price: "BDT 450" },
+      { name: "Salted Caramel Hot Chocolate", price: "BDT 475" },
       { name: "Nutella Hot Chocolate", price: "BDT 525" },
-      { name: "Peppermint Tea", price: "BDT 150" },
-      { name: "Green Tea", price: "BDT 150" },
-      { name: "Lemon Tea", price: "BDT 150" },
-      { name: "Black Tea", price: "BDT 150" },
-      { name: "Regular Tea", price: "BDT 150" },
+      { name: "White Hot Chocolate", price: "BDT 475" },
     ],
   },
   {
-    id: "iced-coffee-chillers",
-    title: "Iced Coffee & Chillers",
-    subtitle: "Cold coffee, creamy chillers, and iced comfort",
-    image: "./assets/site/iced-coffee.svg",
+    id: "iced-coffee",
+    title: "ICED COFFEE",
+    subtitle: "Cold espresso classics and creamy iced favorites",
+    image: getCategoryImage("iced-coffee"),
     items: [
       { name: "Iced Latte", price: "BDT 350" },
-      { name: "Iced Mocha", price: "BDT 475" },
-      { name: "Iced Caramel Latte", price: "BDT 400" },
-      { name: "Iced Salted Caramel Latte", price: "BDT 385" },
-      { name: "Choco Cold Coffee", price: "BDT 435" },
-      { name: "Iced Vanilla Latte", price: "BDT 450" },
+      { name: "Iced Mocha", price: "BDT 400" },
+      { name: "Iced Caramel Latte", price: "BDT 450" },
       { name: "Iced Americano", price: "BDT 300" },
-      { name: "Chocolate Chiller", price: "BDT 400" },
+      { name: "Iced Vanilla Latte", price: "BDT 400" },
+      { name: "Iced Salted Caramel Latte", price: "BDT 475" },
+      { name: "Choco Cold Coffee", price: "BDT 385" },
+      { name: "Dark Mocha Latte", price: "BDT 435" },
+    ],
+  },
+  {
+    id: "chillers",
+    title: "CHILLERS",
+    subtitle: "Creamy blended coolers for slow afternoons",
+    image: getCategoryImage("chillers"),
+    items: [
+      { name: "Chocolate Chiller", price: "BDT 450" },
       { name: "Cookies N Cream Chiller", price: "BDT 475" },
       { name: "Vanilla Mint Chiller", price: "BDT 475" },
       { name: "Strawberry Chiller", price: "BDT 475" },
-      { name: "Dark Mocha Latte", price: "BDT 450" },
+    ],
+  },
+  {
+    id: "matcha",
+    title: "MATCHA",
+    subtitle: "Earthy green tea lattes and layered matcha sips",
+    image: getCategoryImage("matcha"),
+    items: [
+      { name: "Iced Matcha Latte", price: "BDT 350" },
+      { name: "Hot Matcha Latte", price: "BDT 350" },
+      { name: "Strawberry Iced Matcha Latte", price: "BDT 450" },
+      { name: "Dirty Matcha", price: "BDT 400" },
+      { name: "Mango Matcha", price: "BDT 400" },
+      { name: "Classic Chocolate Matcha Latte", price: "BDT 400" },
+    ],
+  },
+  {
+    id: "tea",
+    title: "TEA",
+    subtitle: "Simple, calming tea selections",
+    image: getCategoryImage("tea"),
+    items: [
+      { name: "Peppermint Tea", price: "BDT 150" },
+      { name: "Green Tea", price: "BDT 150" },
+      { name: "Regular Milk Tea", price: "BDT 150" },
+      { name: "Lemon Tea", price: "BDT 150" },
+      { name: "Black Tea", price: "BDT 150" },
     ],
   },
   {
     id: "refreshers",
-    title: "Refreshers",
-    subtitle: "Fruit-forward coolers and bright sips",
-    image: "./assets/site/iced-coffee.svg",
+    title: "REFRESHERS",
+    subtitle: "Bright fruit refreshers and cool citrus sips",
+    image: getCategoryImage("refreshers"),
     items: [
+      { name: "Mint Lemonade", price: "BDT 350" },
       { name: "Fresh Lime", price: "BDT 350" },
-      { name: "Mango Refresher", price: "BDT 355" },
-      { name: "Sweet Orange Refresher", price: "BDT 350" },
-      { name: "Watermelon Refresher", price: "BDT 350" },
-      { name: "Peach Refresher", price: "BDT 300" },
-      { name: "Mint Lemonade", price: "BDT 400" },
       { name: "Apple Refresher", price: "BDT 400" },
       { name: "Strawberry Refresher", price: "BDT 400" },
-      { name: "Lychee Refresher", price: "BDT 400" },
+      { name: "Lychee Refresher", price: "BDT 350" },
+      { name: "Mango Refresher", price: "BDT 350" },
+      { name: "Watermelon Refresher", price: "BDT 300" },
+      { name: "Peach Refresher", price: "BDT 400" },
+      { name: "Sweet Orange Refresher", price: "BDT 350" },
+    ],
+  },
+  {
+    id: "signature-mocktails",
+    title: "SIGNATURE MOCKTAILS",
+    subtitle: "Layered, sparkling, and fruit-forward signatures",
+    image: getCategoryImage("signature-mocktails"),
+    items: [
       { name: "Classic Mojito", price: "BDT 350" },
+      { name: "Blue Lagoon", price: "BDT 400" },
+      { name: "Strawberry Lemonade Fizz", price: "BDT 450" },
+      { name: "Mango-Lime Spritzer", price: "BDT 400" },
+      { name: "Pineapple Quencher", price: "BDT 400" },
     ],
   },
   {
     id: "sandwiches",
-    title: "Sandwiches",
+    title: "SANDWICHES",
     subtitle: "Stacked cafe favorites",
-    image: "./assets/site/sandwich.svg",
+    image: getCategoryImage("sandwiches"),
     items: [
       { name: "Club Sandwich", price: "BDT 550" },
-      { name: "Crispy Chicken Sandwich", price: "BDT 550" },
-      { name: "Turkish Chicken Sandwich", price: "BDT 600" },
-      { name: "Roasted Beef Sandwich", price: "BDT 580" },
+      { name: "Crispy Chicken Sandwich", price: "BDT 580" },
+      { name: "Smoked Chicken Sandwich", price: "BDT 600" },
+      { name: "Turkish Chicken Sandwich", price: "BDT 550" },
+      { name: "Roasted Beef Sandwich", price: "BDT 550" },
       { name: "Barock Special Sandwich", price: "BDT 600" },
-      { name: "Smoked Chicken Sandwich", price: "BDT 550" },
     ],
   },
   {
     id: "burgers",
-    title: "Burgers",
+    title: "BURGERS",
     subtitle: "Beef and chicken burgers made hearty",
-    image: "./assets/site/sandwich.svg",
+    image: getCategoryImage("burgers"),
     items: [
-      { name: "Beef Burger", price: "BDT 420" },
-      { name: "Beef with Cheese Burger", price: "BDT 550" },
-      { name: "Double Beef Signature Burger", price: "BDT 520" },
-      { name: "Crispy Chicken Burger", price: "BDT 380" },
-      { name: "Barock Special Burger", price: "BDT 380" },
+      { name: "Beef Burger", price: "BDT 400" },
+      { name: "Beef with Cheese Burger", price: "BDT 420" },
+      { name: "Double Beef Signature Burger", price: "BDT 550" },
+      { name: "Classic Chicken Burger", price: "BDT 380" },
       { name: "Chicken with Cheese Burger", price: "BDT 400" },
-      { name: "Double Chicken Signature Burger", price: "BDT 550" },
-      { name: "Classic Chicken Burger", price: "BDT 400" },
+      { name: "Double Chicken Signature Burger", price: "BDT 520" },
+      { name: "Crispy Chicken Burger", price: "BDT 380" },
+      { name: "Barock Special Burger", price: "BDT 550" },
     ],
   },
   {
-    id: "soup-starter",
-    title: "Soup & Starter",
-    subtitle: "Small plates, soups, dim sums, and quick bites",
-    image: "./assets/site/dessert.svg",
+    id: "starter",
+    title: "STARTER",
+    subtitle: "Small plates, dim sums, and quick bites",
+    image: getCategoryImage("starter"),
     items: [
-      { name: "Chicken Momo", price: "BDT 650" },
-      { name: "Basil Prawn Rolls", price: "BDT 450" },
-      { name: "Buffalo Wings", price: "BDT 350" },
+      { name: "Chicken Lemon Lolly", price: "BDT 350" },
+      { name: "Chicken Momo", price: "BDT 499" },
+      { name: "Buffalo Wings", price: "BDT 450" },
+      { name: "Basil Prawn Rolls", price: "BDT 650" },
+      { name: "Soy Garlic Mushroom", price: "BDT 450" },
       { name: "Assorted Dim Sums", price: "BDT 499" },
-      { name: "Corn Soup", price: "BDT 450" },
-      { name: "Thai Soup", price: "BDT 450" },
-      { name: "Chicken Dumplings", price: "BDT 299" },
+      { name: "Chicken Dumplings", price: "BDT 450" },
+    ],
+  },
+  {
+    id: "soup",
+    title: "SOUP",
+    subtitle: "Warm bowls for a quiet start",
+    image: getCategoryImage("soup"),
+    items: [
+      { name: "Corn Soup", price: "BDT 299" },
+      { name: "Thai Soup", price: "BDT 299" },
       { name: "Clear Soup", price: "BDT 299" },
       { name: "Mixed Vegetable Soup", price: "BDT 350" },
-      { name: "Barock Special Soup", price: "BDT 299" },
-      { name: "Soy Garlic Mushroom", price: "BDT 450" },
-      { name: "Chicken Lemon Lolly", price: "BDT 499" },
+      { name: "Barock Special Soup", price: "BDT 450" },
     ],
   },
   {
     id: "pizza",
-    title: "Pizza",
-    subtitle: "Thin and medium crust house pizzas",
-    image: "./assets/site/friends.svg",
-    note: "Pizza prices are shown as small / medium where listed in the menu.",
+    title: "PIZZA",
+    subtitle: "Crisp crust pizzas with signature toppings",
+    image: getCategoryImage("pizza"),
+    note: "Crust options: Thin, Medium, Thick. The PDF lists two price columns without visible size labels, so both prices are preserved as Price 1 and Price 2.",
     items: [
       {
         name: "Margherita Pizza",
-        price: "BDT 560 / 895",
-        description: "Classic tomato sauce, mozzarella cheese, fresh basil, and oregano on a crisp crust.",
+        price: "BDT 560 | BDT 895",
+        variants: [{ label: "Price 1", price: "BDT 560" }, { label: "Price 2", price: "BDT 895" }],
+        crusts: pizzaCrustOptions,
+        description: "Classic tomato sauce, mozzarella cheese, fresh basil and oregano baked on a perfectly crisp crust.",
       },
       {
         name: "BBQ Chicken Pizza",
-        price: "BDT 800 / 1400",
-        description: "Smoky BBQ sauce, grilled chicken, mozzarella, capsicum, and onion.",
+        price: "BDT 800 | BDT 1400",
+        variants: [{ label: "Price 1", price: "BDT 800" }, { label: "Price 2", price: "BDT 1400" }],
+        crusts: pizzaCrustOptions,
+        description: "Smoky BBQ sauce, grilled chicken, melted mozzarella, capsicum, onion on a perfectly crisp crust.",
       },
       {
         name: "Crispy Chicken Pizza",
-        price: "BDT 800 / 1400",
-        description: "Crispy chicken, rich pizza sauce, mozzarella, capsicum, onion, and creamy mayo drizzle.",
+        price: "BDT 800 | BDT 1400",
+        variants: [{ label: "Price 1", price: "BDT 800" }, { label: "Price 2", price: "BDT 1400" }],
+        crusts: pizzaCrustOptions,
+        description: "Crispy chicken pieces topped with rich pizza sauce, mozzarella cheese, capsicum, onion and creamy mayo drizzle.",
       },
       {
         name: "Beef Supreme Pizza",
-        price: "BDT 999 / 1799",
-        description: "Seasoned beef, beef sausage, mozzarella, capsicum, onion, mushrooms, olives, and signature sauce.",
-      },
-      {
-        name: "Meat Lover's Pizza",
-        price: "BDT 899 / 1699",
-        description: "Chicken, beef, pepperoni, beef sausage, mozzarella, capsicum, onion, and signature sauce.",
+        price: "BDT 999 | BDT 1799",
+        variants: [{ label: "Price 1", price: "BDT 999" }, { label: "Price 2", price: "BDT 1799" }],
+        crusts: pizzaCrustOptions,
+        description: "Seasoned beef, beef sausage, mozzarella, capsicum, onion, mushrooms, olives and signature pizza sauce on a crispy golden crust.",
       },
       {
         name: "Spicy Beef Pizza",
-        price: "BDT 850 / 1499",
-        description: "Spicy beef, tomato sauce, mozzarella, capsicum, onion, chili flakes, and herbs.",
+        price: "BDT 899 | BDT 1699",
+        variants: [{ label: "Price 1", price: "BDT 899" }, { label: "Price 2", price: "BDT 1699" }],
+        crusts: pizzaCrustOptions,
+        description: "Spicy beef, tomato sauce, mozzarella cheese, capsicum, onion, chili flakes and herbs made for a hot and flavorful bite.",
+      },
+      {
+        name: "Meat Lover's Pizza",
+        price: "BDT 850 | BDT 1499",
+        variants: [{ label: "Price 1", price: "BDT 850" }, { label: "Price 2", price: "BDT 1499" }],
+        crusts: pizzaCrustOptions,
+        description: "Loaded with chicken, beef, pepperoni, beef sausage, mozzarella, capsicum, onion and signature pizza sauce.",
       },
       {
         name: "Chicken Supreme Pizza",
-        price: "BDT 799 / 1399",
-        description: "Tender chicken, mozzarella, capsicum, onion, mushrooms, olives, and signature sauce.",
+        price: "BDT 799 | BDT 1399",
+        variants: [{ label: "Price 1", price: "BDT 799" }, { label: "Price 2", price: "BDT 1399" }],
+        crusts: pizzaCrustOptions,
+        description: "Chicken pizza with tender chicken, mozzarella cheese, capsicum, onion, mushrooms, olives and signature pizza sauce.",
       },
       {
         name: "Pepperoni Pizza",
-        price: "BDT 699 / 1299",
-        description: "Pepperoni slices with tomato sauce, mozzarella, oregano, and chili flakes.",
-      },
-    ],
-  },
-  {
-    id: "pasta",
-    title: "Pasta",
-    subtitle: "Creamy, spicy, baked, and loaded pasta plates",
-    image: "./assets/site/coffee-cup.svg",
-    items: [
-      {
-        name: "Chicken Alfredo Pasta",
-        price: "BDT 250",
-        description: "Creamy Alfredo sauce with grilled chicken, mushroom, cheese, and black pepper.",
-      },
-      {
-        name: "Naga Chicken Pasta",
-        price: "BDT 320",
-        description: "Spicy creamy pasta with chicken, mushroom, cheese, and Barock's special naga sauce.",
-      },
-      {
-        name: "Creamy Beef Mushroom Pasta",
-        price: "BDT 220",
-        description: "Tender beef or minced beef cooked with mushroom, cream sauce, mozzarella, and herbs.",
-      },
-      {
-        name: "Four Seasons Pasta",
-        price: "BDT 280",
-        description: "Chicken, beef, shrimp, mushroom, capsicum, cheese, and creamy tomato sauce.",
-      },
-      {
-        name: "Barock Signature Baked Pasta",
-        price: "BDT 250",
-        description: "Baked pasta with seasoned beef, mushroom, capsicum, mozzarella, and a golden cheesy crust.",
+        price: "BDT 699 | BDT 1299",
+        variants: [{ label: "Price 1", price: "BDT 699" }, { label: "Price 2", price: "BDT 1299" }],
+        crusts: pizzaCrustOptions,
+        description: "Classic pepperoni slices topped with tomato sauce, melted mozzarella cheese, oregano and chili flakes.",
       },
     ],
   },
   {
     id: "fast-food",
-    title: "Fast Food",
+    title: "FAST FOOD",
     subtitle: "Loaded fries, strips, wings, and quick snacks",
-    image: "./assets/site/sandwich.svg",
+    image: getCategoryImage("fast-food"),
     items: [
-      { name: "Signature Loaded Fries", price: "BDT 420" },
-      { name: "Chicken Strips", price: "BDT 399" },
-      { name: "Crispy Chicken Wings", price: "BDT 420" },
-      { name: "Onion Rings", price: "BDT 399" },
-      { name: "Wedges", price: "BDT 450" },
+      { name: "Signature Loaded Fries", price: "BDT 220" },
+      { name: "Chicken Strips", price: "BDT 280" },
+      { name: "Wedges", price: "BDT 250" },
+      { name: "Onion Rings", price: "BDT 250" },
+      { name: "Crispy Chicken Wings", price: "BDT 320" },
       { name: "Spring Roll", price: "BDT 250" },
     ],
   },
   {
-    id: "desserts",
-    title: "Desserts & Sweet Specials",
-    subtitle: "Cakes, pastries, ice cream, and sweet endings",
-    image: "./assets/site/dessert.svg",
+    id: "pasta",
+    title: "PASTA",
+    subtitle: "Creamy, spicy, baked, and loaded pasta plates",
+    image: getCategoryImage("pasta"),
     items: [
-      { name: "Red Velvet", price: "BDT 250" },
-      { name: "Salted Caramel Cheesecake", price: "BDT 250" },
-      { name: "Strawberry Cake", price: "BDT 170" },
-      { name: "Chocolate Cake", price: "BDT 280" },
-      { name: "Vanilla Cake", price: "BDT 320" },
-      { name: "Pudding", price: "BDT 320" },
-      { name: "Brownie", price: "BDT 450" },
-      { name: "Chocolate Chip", price: "BDT 200" },
-      { name: "Blueberry Cheesecake", price: "BDT 199" },
-      { name: "Plain Bagel", price: "BDT 180" },
-      { name: "Croissant", price: "BDT 150" },
-      { name: "Ice Cream Bowl", price: "BDT 200" },
-      { name: "Ice Cream Scoop", price: "BDT 170" },
+      {
+        name: "Chicken Alfredo Pasta",
+        price: "BDT 399",
+        description: "Classic creamy Alfredo sauce with grilled chicken, mushroom, parmesan-style cheese, and black pepper.",
+      },
+      {
+        name: "Naga Chicken Pasta",
+        price: "BDT 399",
+        description: "Spicy creamy pasta with chicken, mushroom, cheese, and Barock's special naga sauce for a bold hot flavor.",
+      },
+      {
+        name: "Creamy Beef Mushroom Pasta",
+        price: "BDT 420",
+        description: "Tender beef slices/minced beef cooked with mushroom, cream sauce, mozzarella cheese, and herbs.",
+      },
+      {
+        name: "Four Seasons Pasta",
+        price: "BDT 420",
+        description: "A loaded pasta with chicken, beef, shrimp, mushroom, capsicum, cheese, and creamy tomato sauce.",
+      },
+      {
+        name: "Barock Signature Baked Pasta",
+        price: "BDT 450",
+        description: "Creamy baked pasta with seasoned beef, mushroom, capsicum, mozzarella, and herbs topped with a golden cheesy crust.",
+      },
     ],
   },
   {
-    id: "seafood",
-    title: "Seafood Signatures",
-    subtitle: "Fish, prawn, calamari, lobster, and premium seafood plates",
-    image: "./assets/site/friends.svg",
+    id: "desserts",
+    title: "DESSERTS",
+    subtitle: "Cakes, pastries, ice cream, and sweet endings",
+    image: getCategoryImage("desserts"),
+    items: [
+      { name: "Plain Bagel", price: "BDT 170" },
+      { name: "Red Velvet", price: "BDT 280" },
+      { name: "Salted Caramel Cheesecake", price: "BDT 320" },
+      { name: "Strawberry Cake", price: "BDT 250" },
+      { name: "Chocolate Cake", price: "BDT 250" },
+      { name: "Vanilla Cake", price: "BDT 199" },
+      { name: "Pudding", price: "BDT 180" },
+      { name: "Brownie", price: "BDT 150" },
+      { name: "Croissant", price: "BDT 200" },
+      { name: "Chocolate Chip", price: "BDT 170" },
+      { name: "Blueberry Cheesecake", price: "BDT 320" },
+      { name: "Ice Cream Bowl", price: "BDT 450", subgroup: "SWEET SPECIALS" },
+      { name: "Ice Cream Scoop", price: "BDT 200", subgroup: "SWEET SPECIALS" },
+    ],
+  },
+  {
+    id: "sea-food",
+    title: "SEA FOOD",
+    subtitle: "Fish, prawn, calamari, lobster, and premium plates",
+    image: getCategoryImage("sea-food"),
     items: [
       {
         name: "Signature Smoked Salmon",
         price: "BDT 1499",
-        description: "Smoked salmon with crispy fries, fresh green salad, and lemon butter sauce.",
+        description: "Smoked salmon served with crispy fries, fresh green salad and lemon butter sauce.",
       },
       {
         name: "King Prawn Supreme",
         price: "BDT 899",
-        description: "King prawns with sauteed vegetables, creamy mashed potato, and garlic butter sauce.",
-      },
-      {
-        name: "Signature Grilled Coral Fish",
-        price: "BDT 650",
-        description: "Grilled coral fish with sauteed vegetables, creamy mashed potato, and garlic butter sauce.",
-      },
-      {
-        name: "Signature Pomfret Grill",
-        price: "BDT 1850",
-        description: "Grilled pomfret with mashed potato, sauteed vegetables, and garlic butter sauce.",
-      },
-      {
-        name: "Seared Tuna Steak",
-        price: "BDT 1150",
-        description: "Seared tuna steak with creamy mash, sauteed vegetables, and garlic butter sauce.",
-      },
-      {
-        name: "Lemon Butter Grilled Dory",
-        price: "BDT 1465",
-        description: "Grilled dory with lemon butter sauce, creamy mash, and sauteed vegetables.",
-      },
-      {
-        name: "Fish & Chips",
-        price: "BDT 650",
-        description: "Crispy coral fish fillet with seasoned fries, salad, and tartar sauce.",
-      },
-      {
-        name: "Barock Crispy Fish Fingers",
-        price: "BDT 599",
-        description: "Crispy fish fingers with tartar dip and classic mayonnaise.",
-      },
-      {
-        name: "Barock Crispy Calamari",
-        price: "BDT 350",
-        description: "Crispy calamari rings with tartar dip and mayonnaise.",
+        description: "Juicy king prawns served with sauteed vegetables and creamy mashed potato, finished with a light garlic butter sauce.",
       },
       {
         name: "Grilled Lobster Royale",
         price: "BDT 650",
-        description: "Grilled lobster with creamy mashed potato and signature garlic butter sauce.",
+        description: "Grilled lobster served with creamy mashed potato, and our signature garlic butter sauce.",
+      },
+      {
+        name: "Signature Grilled Coral Fish",
+        price: "BDT 1850",
+        description: "Grilled coral fish served with sauteed vegetables, creamy mashed potato, and our signature garlic butter sauce.",
+      },
+      {
+        name: "Signature Pomfret Grill",
+        price: "BDT 1150",
+        description: "A tender grilled pomfret plate served with mashed potato, sauteed vegetables and garlic butter sauce.",
+      },
+      {
+        name: "Seared Tuna Steak",
+        price: "BDT 1465",
+        description: "A tender tuna steak seared to perfection, served with creamy mash, sauteed vegetables, and garlic butter sauce.",
+      },
+      {
+        name: "Lemon Butter Grilled Dory",
+        price: "BDT 650",
+        description: "Tender grilled dory fish finished with lemon butter sauce, served with creamy mash and sauteed vegetables.",
+      },
+      {
+        name: "Barock Crispy Calamari",
+        price: "BDT 599",
+        description: "Crispy golden calamari rings served with creamy tartar dip and mayonnaise.",
+      },
+      {
+        name: "Barock Crispy Fish Fingers",
+        price: "BDT 350",
+        description: "Crispy golden fish fingers served with creamy tartar dip and classic mayonnaise.",
+      },
+      {
+        name: "Fish & Chips",
+        price: "BDT 650",
+        description: "Golden crispy Coral fish fillet served with seasoned fries, fresh green salad and creamy tartar sauce.",
       },
     ],
   },
   {
-    id: "steaks-beef",
-    title: "Steaks & Beef Specials",
+    id: "barock-steak",
+    title: "BAROCK STEAK",
     subtitle: "Premium grilled beef plates and sharing platters",
-    image: "./assets/site/friends.svg",
+    image: getCategoryImage("barock-steak"),
     items: [
       {
         name: "Rib Steak",
         price: "BDT 2650",
-        description: "Flame-grilled ribeye steak with potato wedges and smoky BBQ & hot chili sauce.",
+        weight: "400gm",
+        description: "Tender ribeye steak flame-grilled to perfection, served with crispy potato wedges and smoky BBQ & Hot chili sauce.",
       },
       {
         name: "T-Bone Steak",
         price: "BDT 2550",
-        description: "T-bone steak with potato wedges or fried rice and smoky BBQ & hot chili sauce.",
+        weight: "350gm",
+        description: "Juicy T-bone steak grilled to perfection, served with potato wedges or fried rice and smoky BBQ & Hot chili sauce.",
       },
       {
         name: "Sirloin Steak",
         price: "BDT 2585",
-        description: "Flame-grilled sirloin with wedges or fried rice and smoky BBQ & hot chili sauce.",
+        weight: "300gm",
+        description: "Flame-grilled sirloin steak served with crispy potato wedges or fried rice, and smoky BBQ & Hot chili sauce.",
       },
       {
         name: "Barock Smoked Brisket",
         price: "BDT 2885",
-        description: "Slow-smoked beef brisket with wedges or fried rice and smoky BBQ & hot chili sauce.",
+        weight: "500gm",
+        description: "Slow-smoked beef brisket served with crispy potato wedges or fried rice, and smoky BBQ & Hot chili sauce.",
       },
       {
         name: "Barock Tomahawk",
         price: "BDT 3335",
-        description: "Premium tomahawk steak with wedges, fried rice, and smoky BBQ & hot chili sauce.",
+        weight: "500gm",
+        description: "Flame-grilled premium tomahawk steak served with crispy potato wedges, fried rice, and smoky BBQ & Hot chili sauce.",
       },
       {
         name: "Barock Special Beef Platter",
         price: "BDT 5499",
-        description: "Sirloin, tenderloin, skirt steak, gourmet beef sausage, beef cheese sausage, and beef bacon with BBQ sauce.",
+        description: "A premium all-beef platter featuring sirloin steak, tenderloin steak, skirt steak, gourmet beef sausage, beef cheese sausage, and beef bacon served with smoky BBQ sauce and Barock's signature grill seasoning.",
       },
     ],
   },
@@ -348,9 +421,6 @@ const menuList = document.querySelector("[data-menu-list]");
 const menuCount = document.querySelector("[data-menu-count]");
 const emptyState = document.querySelector("[data-empty-state]");
 const revealItems = document.querySelectorAll(".reveal");
-
-const fallbackIngredients = "Prepared using the cafe's standard ingredients for this item.";
-const fallbackPreparation = "Prepared fresh by the Barock Cafe team.";
 
 let openCategoryId = "";
 let searchTerm = "";
@@ -478,18 +548,23 @@ function slugify(value) {
 function getCategoryImage(categoryId) {
   const categoryImages = {
     classics: "./assets/site/coffee-cup.svg",
-    "hot-chocolate-tea": "./assets/site/coffee-cup.svg",
-    "iced-coffee-chillers": "./assets/site/iced-coffee.svg",
+    "hot-chocolate": "./assets/site/coffee-cup.svg",
+    "iced-coffee": "./assets/site/iced-coffee.svg",
+    chillers: "./assets/site/iced-coffee.svg",
+    matcha: "./assets/site/iced-coffee.svg",
+    tea: "./assets/site/coffee-cup.svg",
     refreshers: "./assets/site/iced-coffee.svg",
+    "signature-mocktails": "./assets/site/iced-coffee.svg",
     sandwiches: "./assets/site/sandwich.svg",
     burgers: "./assets/site/sandwich.svg",
-    "soup-starter": "./assets/site/dessert.svg",
+    starter: "./assets/site/dessert.svg",
+    soup: "./assets/site/coffee-cup.svg",
     pizza: "./assets/site/friends.svg",
-    pasta: "./assets/site/beans.svg",
     "fast-food": "./assets/site/sandwich.svg",
+    pasta: "./assets/site/beans.svg",
     desserts: "./assets/site/dessert.svg",
-    seafood: "./assets/site/friends.svg",
-    "steaks-beef": "./assets/site/interior.svg",
+    "sea-food": "./assets/site/friends.svg",
+    "barock-steak": "./assets/site/interior.svg",
   };
 
   return categoryImages[categoryId] || defaultCafeImage;
@@ -639,18 +714,23 @@ function prepareImageData(imageData) {
 function getCategoryTags(category) {
   const tagMap = {
     classics: ["Hot", "Coffee", "Espresso"],
-    "hot-chocolate-tea": ["Hot", "Comfort Drink"],
-    "iced-coffee-chillers": ["Cold", "Coffee", "Chiller"],
+    "hot-chocolate": ["Hot", "Chocolate"],
+    "iced-coffee": ["Cold", "Coffee"],
+    chillers: ["Cold", "Chiller"],
+    matcha: ["Matcha", "Tea"],
+    tea: ["Tea", "Hot"],
     refreshers: ["Cold", "Refreshing"],
+    "signature-mocktails": ["Mocktail", "Refreshing"],
     sandwiches: ["Savory", "Cafe Bite"],
     burgers: ["Savory", "Burger"],
-    "soup-starter": ["Starter", "Shareable"],
+    starter: ["Starter", "Shareable"],
+    soup: ["Soup", "Hot"],
     pizza: ["Pizza", "Baked"],
-    pasta: ["Pasta", "Kitchen"],
     "fast-food": ["Snack", "Quick Bite"],
+    pasta: ["Pasta", "Kitchen"],
     desserts: ["Sweet", "Dessert"],
-    seafood: ["Seafood", "Signature"],
-    "steaks-beef": ["Beef", "Signature"],
+    "sea-food": ["Seafood", "Signature"],
+    "barock-steak": ["Steak", "Signature"],
   };
 
   return tagMap[category.id] || [category.title];
@@ -659,14 +739,14 @@ function getCategoryTags(category) {
 function normalizeIngredients(value) {
   if (Array.isArray(value)) {
     const ingredients = value.map((ingredient) => String(ingredient).trim()).filter(Boolean);
-    return ingredients.length ? ingredients : [fallbackIngredients];
+    return ingredients;
   }
 
   if (typeof value === "string" && value.trim()) {
     return [value.trim()];
   }
 
-  return [fallbackIngredients];
+  return [];
 }
 
 function normalizePreparation(value) {
@@ -674,7 +754,19 @@ function normalizePreparation(value) {
     return value.trim();
   }
 
-  return fallbackPreparation;
+  return "";
+}
+
+function formatItemPrice(item) {
+  if (item.price) {
+    return item.price;
+  }
+
+  if (Array.isArray(item.variants) && item.variants.length) {
+    return item.variants.map((variant) => variant.price).filter(Boolean).join(" | ");
+  }
+
+  return "BDT ___";
 }
 
 function createMenuDetails() {
@@ -686,14 +778,19 @@ function createMenuDetails() {
       item.id = id;
       item.category = category.title;
       item.images = getItemImages(item.name, category.id);
-      item.shortDescription = item.description || fallbackPreparation;
+      item.displayPrice = formatItemPrice(item);
+      item.shortDescription = item.description || "";
       item.ingredients = normalizeIngredients(item.ingredients || item.mainIngredients || item.ingredientList);
       item.preparation = normalizePreparation(item.preparation || item.preparationMethod || item.method);
       item.tags = getCategoryTags(category);
       details[id] = {
         id,
         name: item.name,
-        price: item.price || "BDT ___",
+        price: item.displayPrice,
+        variants: Array.isArray(item.variants) ? item.variants : [],
+        crusts: Array.isArray(item.crusts) ? item.crusts : [],
+        subgroup: item.subgroup || "",
+        weight: item.weight || "",
         images: item.images,
         shortDescription: item.shortDescription,
         ingredients: item.ingredients,
@@ -711,8 +808,24 @@ function createMenuDetails() {
 
 const menuDetailsById = createMenuDetails();
 
-function getItemSearchText(item) {
-  return [item.name, item.price, item.description].filter(Boolean).join(" ").toLowerCase();
+function getItemSearchText(item, category = {}) {
+  const variants = Array.isArray(item.variants)
+    ? item.variants.flatMap((variant) => [variant.label, variant.price])
+    : [];
+  const crusts = Array.isArray(item.crusts) ? item.crusts : [];
+
+  return [
+    item.name,
+    item.category,
+    category.title,
+    category.subtitle,
+    item.subgroup,
+    formatItemPrice(item),
+    item.description,
+    item.weight,
+    ...variants,
+    ...crusts,
+  ].filter(Boolean).join(" ").toLowerCase();
 }
 
 function getVisibleCategories() {
@@ -732,7 +845,7 @@ function getVisibleCategories() {
         category.title.toLowerCase().includes(normalizedSearch) ||
         category.subtitle.toLowerCase().includes(normalizedSearch);
       const visibleItems = category.items.filter((item) =>
-        getItemSearchText(item).includes(normalizedSearch),
+        getItemSearchText(item, category).includes(normalizedSearch),
       );
 
       return {
@@ -806,13 +919,42 @@ function createCategoryCard(category, index, isOpen) {
     panelInner.append(createElement("p", "menu-category-note", category.note));
   }
 
-  const itemList = createElement("ul", "menu-item-list");
-  category.visibleItems.forEach((item) => itemList.append(createMenuItem(item)));
-  panelInner.append(itemList);
+  appendGroupedMenuItems(panelInner, category.visibleItems);
   panel.append(panelInner);
   card.append(trigger, panel);
 
   return card;
+}
+
+function appendGroupedMenuItems(container, items) {
+  const groups = items.reduce((groupedItems, item) => {
+    const groupName = item.subgroup || "";
+    if (!groupedItems.has(groupName)) {
+      groupedItems.set(groupName, []);
+    }
+
+    groupedItems.get(groupName).push(item);
+    return groupedItems;
+  }, new Map());
+
+  const regularItems = groups.get("") || [];
+
+  if (regularItems.length) {
+    const itemList = createElement("ul", "menu-item-list");
+    regularItems.forEach((item) => itemList.append(createMenuItem(item)));
+    container.append(itemList);
+  }
+
+  groups.forEach((groupItems, groupName) => {
+    if (!groupName) {
+      return;
+    }
+
+    container.append(createElement("p", "menu-subgroup-title", groupName));
+    const itemList = createElement("ul", "menu-item-list");
+    groupItems.forEach((item) => itemList.append(createMenuItem(item)));
+    container.append(itemList);
+  });
 }
 
 function createCategoryAction() {
@@ -824,7 +966,8 @@ function createCategoryAction() {
 }
 
 function createMenuItem(item) {
-  const listItem = createElement("li", item.description ? "has-description" : "");
+  const hasSupportingText = Boolean(item.description || item.weight || item.subgroup);
+  const listItem = createElement("li", hasSupportingText ? "has-description" : "");
   const button = createElement("button", "menu-item-button");
   button.type = "button";
   button.dataset.itemId = item.id;
@@ -835,9 +978,11 @@ function createMenuItem(item) {
 
   if (item.description) {
     text.append(createElement("small", "", item.description));
+  } else if (item.weight) {
+    text.append(createElement("small", "", item.weight));
   }
 
-  button.append(text, createElement("strong", "", item.price || "BDT ___"));
+  button.append(text, createElement("strong", "", formatItemPrice(item)));
   listItem.append(button);
 
   return listItem;
@@ -911,6 +1056,10 @@ function createMenuModal() {
   const price = createElement("p", "menu-modal-price");
   const description = createElement("p", "menu-modal-description");
   const tags = createElement("div", "menu-modal-tags");
+  const optionsBlock = createElement("div", "menu-modal-block menu-modal-options");
+  const optionsTitle = createElement("h3", "", "Options");
+  const optionsList = createElement("ul", "menu-modal-list");
+  optionsBlock.append(optionsTitle, optionsList);
   const ingredientsBlock = createElement("div", "menu-modal-block");
   const ingredientsTitle = createElement("h3", "", "Main ingredients");
   const ingredientsList = createElement("ul", "menu-modal-list");
@@ -921,7 +1070,7 @@ function createMenuModal() {
   preparationBlock.append(preparationTitle, preparation);
   const note = createElement("p", "menu-modal-note");
 
-  body.append(category, title, price, description, tags, ingredientsBlock, preparationBlock, note);
+  body.append(category, title, price, description, tags, optionsBlock, ingredientsBlock, preparationBlock, note);
   dialog.append(header, imageWrap, body);
   overlay.append(dialog);
   document.body.append(overlay);
@@ -946,6 +1095,7 @@ function createMenuModal() {
     price,
     description,
     tags,
+    optionsList,
     ingredientsList,
     preparation,
     note,
@@ -1308,6 +1458,35 @@ function populateIngredients(list, ingredients) {
   });
 }
 
+function populateOptions(list, details) {
+  list.replaceChildren();
+  const options = [];
+
+  if (details.weight) {
+    options.push({ label: "Weight", value: details.weight });
+  }
+
+  if (details.subgroup) {
+    options.push({ label: "Section", value: details.subgroup });
+  }
+
+  if (Array.isArray(details.crusts) && details.crusts.length) {
+    options.push({ label: "Crusts", value: details.crusts.join(", ") });
+  }
+
+  if (Array.isArray(details.variants) && details.variants.length) {
+    details.variants.forEach((variant) => {
+      options.push({ label: variant.label, value: variant.price });
+    });
+  }
+
+  options.forEach((option) => {
+    const item = createElement("li");
+    item.append(createElement("span", "", option.label), createElement("strong", "", option.value));
+    list.append(item);
+  });
+}
+
 function populateModal(details) {
   const ingredients = normalizeIngredients(details.ingredients);
   const preparation = normalizePreparation(details.preparation);
@@ -1319,10 +1498,13 @@ function populateModal(details) {
   menuModal.title.textContent = details.name;
   menuModal.price.textContent = details.price;
   menuModal.description.textContent = details.shortDescription;
+  menuModal.description.hidden = !details.shortDescription;
   populateTags(menuModal.tags, details.tags);
+  populateOptions(menuModal.optionsList, details);
   populateIngredients(menuModal.ingredientsList, ingredients);
   menuModal.preparation.textContent = preparation;
   menuModal.note.textContent = details.note || "";
+  menuModal.optionsList.closest(".menu-modal-block").hidden = menuModal.optionsList.children.length === 0;
   menuModal.ingredientsList.closest(".menu-modal-block").hidden = ingredients.length === 0;
   menuModal.preparation.closest(".menu-modal-block").hidden = !preparation;
   menuModal.note.hidden = !details.note;
@@ -1748,6 +1930,7 @@ function showPreview(itemId, trigger) {
   menuPreview.title.textContent = details.name;
   menuPreview.price.textContent = details.price;
   menuPreview.description.textContent = details.shortDescription;
+  menuPreview.description.hidden = !details.shortDescription;
   menuPreview.preview.setAttribute("aria-hidden", "false");
   menuPreview.preview.setAttribute("tabindex", "0");
   menuPreview.preview.setAttribute("aria-label", `Open full details for ${details.name}`);

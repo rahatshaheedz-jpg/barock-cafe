@@ -1577,6 +1577,26 @@ ul {
   font-weight: 900;
 }
 
+.menu-subgroup-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0 12px;
+  color: var(--caramel-soft);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.menu-subgroup-title::before,
+.menu-subgroup-title::after {
+  flex: 1;
+  height: 1px;
+  background: rgba(212, 168, 117, 0.28);
+  content: "";
+}
+
 .menu-item-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2238,6 +2258,32 @@ ul {
   display: grid;
   gap: 6px;
   padding-left: 18px;
+}
+
+.menu-modal-options .menu-modal-list {
+  padding-left: 0;
+  list-style: none;
+}
+
+.menu-modal-options .menu-modal-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border: 1px solid rgba(212, 168, 95, 0.18);
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: rgba(255, 249, 239, 0.045);
+}
+
+.menu-modal-options .menu-modal-list span {
+  color: var(--text-muted);
+  font-weight: 800;
+}
+
+.menu-modal-options .menu-modal-list strong {
+  color: var(--caramel-soft);
+  font-weight: 900;
 }
 
 .menu-modal-note {
