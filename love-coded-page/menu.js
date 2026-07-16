@@ -770,11 +770,47 @@ const icedCoffeeProductImages = {
   ],
 };
 
+const chillerProductImages = {
+  "chocolate-chiller": [
+    {
+      src: "/assets/menu/chillers/chocolate-chiller-1.webp",
+      alt: "Chocolate Chiller served in a BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+  ],
+  "cookies-n-cream-chiller": [
+    {
+      src: "/assets/menu/chillers/cookies-n-cream-chiller-1.webp",
+      alt: "Cookies N Cream Chiller served in a BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+  ],
+  "vanilla-mint-chiller": [
+    {
+      src: "/assets/menu/chillers/vanilla-mint-chiller-1.webp",
+      alt: "Vanilla Mint Chiller served in a BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+  ],
+  "strawberry-chiller": [
+    {
+      src: "/assets/menu/chillers/strawberry-chiller-1.webp",
+      alt: "Strawberry Chiller served in a BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+  ],
+};
+
 function getItemImages(itemName, categoryId) {
   const normalized = slugify(itemName);
   const imageMap = {
     ...classicProductImages,
     ...icedCoffeeProductImages,
+    ...chillerProductImages,
     "chocolate-cake": [{ src: "./assets/site/dessert.svg", alt: "Chocolate Cake illustration" }],
     "salted-caramel-cheesecake": [{ src: "./assets/site/dessert.svg", alt: "Salted Caramel Cheesecake illustration" }],
     "blueberry-cheesecake": [{ src: "./assets/site/dessert.svg", alt: "Blueberry Cheesecake illustration" }],
@@ -793,7 +829,7 @@ function getPrimaryImage(details) {
 function prepareImageData(imageData) {
   const image = { ...imageData };
 
-  if (/^\/assets\/menu\/(?:classics|iced-coffee)\/.+\.webp$/i.test(image.src)) {
+  if (/^\/assets\/menu\/(?:classics|iced-coffee|chillers)\/.+\.webp$/i.test(image.src)) {
     const base = image.src.replace(/\.webp$/i, "");
     image.previewSrc = image.previewSrc || `${base}-480.webp`;
     image.srcset = image.srcset || `${base}-480.webp 480w, ${base}-900.webp 900w, ${image.src} 1200w`;
