@@ -28,17 +28,28 @@
     <meta name="twitter:image" content="https://www.barockcafe.com/barock-social-preview.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="https://fonts.gstatic.com/s/cormorantgaramond/v21/co3bmX5slCNuHLi8bLeY9MK7whWMhyjYqXtK.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2" crossorigin />
+    <link rel="preload" as="image" href="./assets/site/hero-coffee.svg" type="image/svg+xml" fetchpriority="high" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260716-menu-interactions" />
+    <link rel="stylesheet" href="./styles.css?v=20260716-loading-audit" />
   </head>
   <body class="home-page">
     <main>
       <header class="site-header glass-navbar" id="home">
         <a class="brand" href="#home" aria-label="BAROCK CAFE home">
-          <img src="./assets/barock-logo.png" alt="BAROCK CAFE" />
+          <img
+            src="./assets/barock-logo-160.webp"
+            srcset="./assets/barock-logo-160.webp 160w, ./assets/barock-logo-320.webp 320w"
+            sizes="64px"
+            width="160"
+            height="133"
+            alt="BAROCK CAFE"
+            decoding="async"
+          />
         </a>
         <nav class="nav-links" aria-label="Primary navigation">
           <a href="#home">Home</a>
@@ -78,6 +89,10 @@
         <img
           class="hero-bg"
           src="./assets/site/hero-coffee.svg"
+          width="1600"
+          height="1000"
+          fetchpriority="high"
+          decoding="async"
           alt="Steaming latte on a rustic cafe table"
         />
         <div class="hero-overlay"></div>
@@ -111,7 +126,15 @@
 
         <div class="hero-card reveal" aria-label="Opening details">
           <div class="hero-card-logo">
-            <img src="./assets/barock-logo.png" alt="BAROCK CAFE" />
+            <img
+              src="./assets/barock-logo-320.webp"
+              srcset="./assets/barock-logo-160.webp 160w, ./assets/barock-logo-320.webp 320w, ./assets/barock-logo-640.webp 640w"
+              sizes="190px"
+              width="320"
+              height="267"
+              alt="BAROCK CAFE"
+              decoding="async"
+            />
           </div>
           <span>House : 9/B, Road : 51</span>
           <strong>Gulshan-2, Dhaka, Bangladesh, 1212</strong>
@@ -199,7 +222,7 @@
 
           <div class="menu-grid reveal-group">
             <article class="menu-card reveal" data-category="hot">
-              <img src="./assets/site/coffee-cup.svg" alt="Classic Cappuccino" />
+              <img src="./assets/site/coffee-cup.svg" width="1200" height="900" loading="lazy" decoding="async" alt="Classic Cappuccino" />
               <div>
                 <span>Hot Coffee</span>
                 <h3>Classic Cappuccino</h3>
@@ -208,7 +231,7 @@
               </div>
             </article>
             <article class="menu-card reveal" data-category="hot">
-              <img src="./assets/site/coffee-cup.svg" alt="Double Espresso" />
+              <img src="./assets/site/coffee-cup.svg" width="1200" height="900" loading="lazy" decoding="async" alt="Double Espresso" />
               <div>
                 <span>Hot Coffee</span>
                 <h3>Double Espresso</h3>
@@ -217,7 +240,7 @@
               </div>
             </article>
             <article class="menu-card reveal" data-category="cold">
-              <img src="./assets/site/iced-coffee.svg" alt="Slow Cold Brew" />
+              <img src="./assets/site/iced-coffee.svg" width="1200" height="900" loading="lazy" decoding="async" alt="Slow Cold Brew" />
               <div>
                 <span>Cold Coffee</span>
                 <h3>Slow Cold Brew</h3>
@@ -226,7 +249,7 @@
               </div>
             </article>
             <article class="menu-card reveal" data-category="refreshers">
-              <img src="./assets/site/iced-coffee.svg" alt="Berry Bloom Refresher" />
+              <img src="./assets/site/iced-coffee.svg" width="1200" height="900" loading="lazy" decoding="async" alt="Berry Bloom Refresher" />
               <div>
                 <span>Refreshers</span>
                 <h3>Berry Bloom Refresher</h3>
@@ -235,7 +258,7 @@
               </div>
             </article>
             <article class="menu-card reveal" data-category="desserts">
-              <img src="./assets/site/dessert.svg" alt="Berry Cheesecake" />
+              <img src="./assets/site/dessert.svg" width="1200" height="900" loading="lazy" decoding="async" alt="Berry Cheesecake" />
               <div>
                 <span>Desserts</span>
                 <h3>Berry Cheesecake</h3>
@@ -244,7 +267,7 @@
               </div>
             </article>
             <article class="menu-card reveal" data-category="snacks">
-              <img src="./assets/site/sandwich.svg" alt="Classic Club Sandwich" />
+              <img src="./assets/site/sandwich.svg" width="1200" height="900" loading="lazy" decoding="async" alt="Classic Club Sandwich" />
               <div>
                 <span>Snacks</span>
                 <h3>Classic Club Sandwich</h3>
@@ -283,7 +306,7 @@
               data-image="./assets/site/coffee-cup.svg"
               data-alt="Signature Latte"
             >
-              <img src="./assets/site/coffee-cup.svg" alt="Signature Latte" />
+              <img src="./assets/site/coffee-cup.svg" width="1200" height="900" loading="lazy" decoding="async" alt="Signature Latte" />
               <div>
                 <span>01 - HOUSE SPECIAL</span>
                 <h3>Signature Latte</h3>
@@ -299,7 +322,7 @@
               data-image="./assets/site/iced-coffee.svg"
               data-alt="Iced Caramel Coffee"
             >
-              <img src="./assets/site/iced-coffee.svg" alt="Iced Caramel Coffee" />
+              <img src="./assets/site/iced-coffee.svg" width="1200" height="900" loading="lazy" decoding="async" alt="Iced Caramel Coffee" />
               <div>
                 <span>02 - ICED & SWEET</span>
                 <h3>Iced Caramel Coffee</h3>
@@ -315,7 +338,7 @@
               data-image="./assets/site/dessert.svg"
               data-alt="Molten Chocolate"
             >
-              <img src="./assets/site/dessert.svg" alt="Molten Chocolate" />
+              <img src="./assets/site/dessert.svg" width="1200" height="900" loading="lazy" decoding="async" alt="Molten Chocolate" />
               <div>
                 <span>03 - DESSERT</span>
                 <h3>Molten Chocolate</h3>
@@ -334,27 +357,27 @@
           </div>
           <div class="gallery-grid reveal-group">
             <figure class="reveal">
-              <img src="./assets/site/interior.svg" alt="Warm cafe interior with pendant lights" />
+              <img src="./assets/site/interior.svg" width="1200" height="900" loading="lazy" decoding="async" alt="Warm cafe interior with pendant lights" />
               <figcaption>Warm interiors</figcaption>
             </figure>
             <figure class="reveal">
-              <img src="./assets/site/coffee-cup.svg" alt="Cappuccino with latte art top-down" />
+              <img src="./assets/site/coffee-cup.svg" width="1200" height="900" loading="lazy" decoding="async" alt="Cappuccino with latte art top-down" />
               <figcaption>Signature brews</figcaption>
             </figure>
             <figure class="reveal">
-              <img src="./assets/site/dessert.svg" alt="Fresh pastries on marble" />
+              <img src="./assets/site/dessert.svg" width="1200" height="900" loading="lazy" decoding="async" alt="Fresh pastries on marble" />
               <figcaption>Fresh desserts</figcaption>
             </figure>
             <figure class="reveal">
-              <img src="./assets/site/friends.svg" alt="Friends laughing over coffee" />
+              <img src="./assets/site/friends.svg" width="1200" height="900" loading="lazy" decoding="async" alt="Friends laughing over coffee" />
               <figcaption>Shared moments</figcaption>
             </figure>
             <figure class="reveal">
-              <img src="./assets/site/interior.svg" alt="Cozy reading corner with leather armchair" />
+              <img src="./assets/site/interior.svg" width="1200" height="900" loading="lazy" decoding="async" alt="Cozy reading corner with leather armchair" />
               <figcaption>Cozy corners</figcaption>
             </figure>
             <figure class="reveal">
-              <img src="./assets/site/beans.svg" alt="Coffee being poured over fresh beans" />
+              <img src="./assets/site/beans.svg" width="1200" height="900" loading="lazy" decoding="async" alt="Coffee being poured over fresh beans" />
               <figcaption>Arabica ritual</figcaption>
             </figure>
           </div>
@@ -507,7 +530,16 @@
       <footer class="footer">
         <div class="section-shell footer-grid">
           <div>
-            <img src="./assets/barock-logo.png" alt="BAROCK CAFE" />
+            <img
+              src="./assets/barock-logo-160.webp"
+              srcset="./assets/barock-logo-160.webp 160w, ./assets/barock-logo-320.webp 320w"
+              sizes="96px"
+              width="160"
+              height="133"
+              loading="lazy"
+              decoding="async"
+              alt="BAROCK CAFE"
+            />
             <p>
               A premium coffee experience opening soon in Gulshan-2, Dhaka.
               Slow-crafted brews, fresh desserts, and a space made to linger in.
@@ -558,6 +590,6 @@
       Thanks. Your message is ready for BAROCK CAFE.
     </div>
 
-    <script src="./script.js?v=20260716-menu-interactions"></script>
+    <script defer src="./script.js?v=20260716-loading-audit"></script>
   </body>
 </html>
