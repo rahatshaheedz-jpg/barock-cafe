@@ -883,6 +883,7 @@ function renderMenu() {
 
 function createCategoryCard(category, index, isOpen) {
   const card = createElement("article", `menu-category-card glass-card reveal is-visible${isOpen ? " is-open" : ""}`);
+  card.dataset.category = category.id;
   card.style.setProperty("--delay", `${index * 80}ms`);
 
   const trigger = createElement("button", "menu-category-trigger");
