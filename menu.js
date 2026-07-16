@@ -1127,6 +1127,8 @@ function createCategoryCard(category, index, isOpen) {
   const image = document.createElement("img");
   image.src = category.image;
   image.alt = category.title;
+  image.width = 1200;
+  image.height = 900;
   image.loading = "lazy";
   image.decoding = "async";
   media.append(image);
