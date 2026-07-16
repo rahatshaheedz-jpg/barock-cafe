@@ -1839,7 +1839,9 @@ ul {
   padding-bottom: max(24px, env(safe-area-inset-bottom));
   background:
     radial-gradient(circle at 50% 16%, rgba(216, 177, 106, 0.1), transparent 34%),
-    rgba(7, 4, 3, 0.72);
+    rgba(8, 5, 3, 0.64);
+  -webkit-backdrop-filter: blur(6px) saturate(1.1);
+  backdrop-filter: blur(6px) saturate(1.1);
   opacity: 0;
   visibility: hidden;
   transition: opacity 220ms cubic-bezier(0.22, 1, 0.36, 1), visibility 0ms linear 220ms;
@@ -2034,7 +2036,7 @@ ul {
   background:
     radial-gradient(circle at 50% 18%, rgba(216, 177, 106, 0.18), transparent 42%),
     rgba(11, 7, 5, 0.52);
-  touch-action: pan-y;
+  touch-action: pan-y pinch-zoom;
 }
 
 .menu-modal-media::before {
@@ -2085,7 +2087,40 @@ ul {
   opacity: 0.34;
 }
 
-.menu-modal-media img {
+.product-gallery__viewport {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  touch-action: pan-y pinch-zoom;
+}
+
+.product-gallery__track {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transform: translate3d(0, 0, 0);
+  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.menu-modal-media.is-dragging .product-gallery__track,
+.menu-modal-media.is-instant .product-gallery__track {
+  transition: none;
+}
+
+.product-gallery__slide {
+  position: relative;
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.product-gallery__slide img {
   position: relative;
   z-index: 1;
   display: block;
@@ -2099,17 +2134,8 @@ ul {
   -webkit-user-drag: none;
 }
 
-.menu-modal-media.is-loading img {
+.menu-modal-media.is-loading .product-gallery__track {
   opacity: 0;
-}
-
-.menu-modal-media img.is-switching {
-  opacity: 0.72;
-}
-
-.menu-modal-media img.is-dragging {
-  transition: none;
-  will-change: transform;
 }
 
 .menu-modal-media:focus-visible {
@@ -5068,6 +5094,8 @@ body {
     place-items: end center;
     padding: 0;
     padding-top: max(12px, env(safe-area-inset-top));
+    -webkit-backdrop-filter: blur(3px) saturate(1.04);
+    backdrop-filter: blur(3px) saturate(1.04);
   }
 
   .menu-modal {
@@ -5128,7 +5156,7 @@ body {
     aspect-ratio: 16 / 10;
   }
 
-  .menu-modal-media img {
+  .product-gallery__slide img {
     height: 100%;
     min-height: 0;
     object-fit: var(--image-fit, cover);
@@ -5274,7 +5302,7 @@ body.mobile-menu-open {
   .menu-modal,
   .menu-modal-overlay,
   .menu-modal-body > *,
-  .menu-modal-media img,
+  .product-gallery__track,
   .menu-modal.is-snapping-back,
   .menu-modal.is-dismissing,
   .menu-modal.is-closing,
