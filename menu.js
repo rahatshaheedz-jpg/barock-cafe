@@ -685,13 +685,96 @@ const classicProductImages = {
   ],
 };
 
+const icedCoffeeProductImages = {
+  "iced-latte": [
+    {
+      src: "/assets/menu/iced-coffee/iced-latte-1.webp",
+      alt: "Iced Latte served in a BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+  ],
+  "iced-mocha": [
+    {
+      src: "/assets/menu/iced-coffee/iced-mocha-1.webp",
+      alt: "Iced Mocha served in a BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+    {
+      src: "/assets/menu/iced-coffee/iced-mocha-2.webp",
+      alt: "Alternate view of Iced Mocha served in a BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+  ],
+  "iced-caramel-latte": [
+    {
+      src: "/assets/menu/iced-coffee/iced-caramel-latte-1.webp",
+      alt: "Iced Caramel Latte served in a BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+  ],
+  "iced-americano": [
+    {
+      src: "/assets/menu/iced-coffee/iced-americano-1.webp",
+      alt: "Iced Americano served in a BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+  ],
+  "iced-vanilla-latte": [
+    {
+      src: "/assets/menu/iced-coffee/iced-vanilla-latte-1.webp",
+      alt: "Iced Vanilla Latte served in a BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+  ],
+  "iced-salted-caramel-latte": [
+    {
+      src: "/assets/menu/iced-coffee/iced-salted-caramel-latte-1.webp",
+      alt: "Iced Salted Caramel Latte served in a BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+    {
+      src: "/assets/menu/iced-coffee/iced-salted-caramel-latte-2.webp",
+      alt: "Alternate view of Iced Salted Caramel Latte served in a BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+  ],
+  "choco-cold-coffee": [
+    {
+      src: "/assets/menu/iced-coffee/choco-cold-coffee-1.webp",
+      alt: "Choco Cold Coffee served in a BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+  ],
+  "dark-mocha-latte": [
+    {
+      src: "/assets/menu/iced-coffee/dark-mocha-latte-1.webp",
+      alt: "Dark Mocha Latte served in a BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+    {
+      src: "/assets/menu/iced-coffee/dark-mocha-latte-2.webp",
+      alt: "Alternate view of Dark Mocha Latte served in a BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+  ],
+};
+
 function getItemImages(itemName, categoryId) {
   const normalized = slugify(itemName);
   const imageMap = {
     ...classicProductImages,
-    "iced-latte": [{ src: "./assets/site/iced-coffee.svg", alt: "Iced Latte illustration" }],
-    "iced-caramel-latte": [{ src: "./assets/site/iced-coffee.svg", alt: "Iced Caramel Latte illustration" }],
-    "iced-americano": [{ src: "./assets/site/iced-coffee.svg", alt: "Iced Americano illustration" }],
+    ...icedCoffeeProductImages,
     "chocolate-cake": [{ src: "./assets/site/dessert.svg", alt: "Chocolate Cake illustration" }],
     "salted-caramel-cheesecake": [{ src: "./assets/site/dessert.svg", alt: "Salted Caramel Cheesecake illustration" }],
     "blueberry-cheesecake": [{ src: "./assets/site/dessert.svg", alt: "Blueberry Cheesecake illustration" }],
@@ -710,7 +793,7 @@ function getPrimaryImage(details) {
 function prepareImageData(imageData) {
   const image = { ...imageData };
 
-  if (/^\/assets\/menu\/classics\/.+\.webp$/i.test(image.src)) {
+  if (/^\/assets\/menu\/(?:classics|iced-coffee)\/.+\.webp$/i.test(image.src)) {
     const base = image.src.replace(/\.webp$/i, "");
     image.previewSrc = image.previewSrc || `${base}-480.webp`;
     image.srcset = image.srcset || `${base}-480.webp 480w, ${base}-900.webp 900w, ${image.src} 1200w`;
