@@ -1,7 +1,5 @@
 const menuToggle = document.querySelector("[data-menu-toggle]");
 const mobileMenu = document.querySelector("[data-mobile-menu]");
-const filterButtons = document.querySelectorAll("[data-filter]");
-const menuCards = document.querySelectorAll(".menu-card");
 const contactForm = document.querySelector("[data-contact-form]");
 const toast = document.querySelector("[data-toast]");
 const year = document.querySelector("[data-year]");
@@ -206,21 +204,6 @@ function initMobileNavigation() {
 }
 
 initMobileNavigation();
-
-filterButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const filter = button.dataset.filter;
-
-    filterButtons.forEach((item) => {
-      item.setAttribute("aria-pressed", String(item === button));
-    });
-
-    menuCards.forEach((card) => {
-      const shouldShow = filter === "all" || card.dataset.category === filter;
-      card.classList.toggle("is-hidden", !shouldShow);
-    });
-  });
-});
 
 contactForm.addEventListener("submit", async (event) => {
   event.preventDefault();
