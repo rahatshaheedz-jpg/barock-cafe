@@ -560,7 +560,7 @@ function getCategoryImage(categoryId) {
     "iced-coffee": "./assets/site/iced-coffee.svg",
     chillers: "./assets/site/iced-coffee.svg",
     matcha: "/assets/menu/matcha/iced-matcha-latte.webp",
-    tea: "./assets/site/coffee-cup.svg",
+    tea: "/assets/menu/tea/peppermint-tea.webp",
     refreshers: "./assets/site/iced-coffee.svg",
     "signature-mocktails": "./assets/site/iced-coffee.svg",
     sandwiches: "./assets/site/sandwich.svg",
@@ -856,6 +856,55 @@ const matchaProductImages = {
   ],
 };
 
+const teaProductImages = {
+  "peppermint-tea": [
+    {
+      src: "/assets/menu/tea/peppermint-tea.webp",
+      alt: "Peppermint Tea served in a turquoise BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+  ],
+  "green-tea": [
+    {
+      src: "/assets/menu/tea/green-tea.webp",
+      alt: "Green Tea served in a turquoise BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+  ],
+  "regular-milk-tea": [
+    {
+      src: "/assets/menu/tea/regular-milk-tea.webp",
+      alt: "Regular Milk Tea served in a turquoise BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+  ],
+  "lemon-tea": [
+    {
+      src: "/assets/menu/tea/lemon-tea-1.webp",
+      alt: "Lemon Tea with lemon and mint garnish in a BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+    {
+      src: "/assets/menu/tea/lemon-tea-2.webp",
+      alt: "Alternate view of Lemon Tea with lemon slice and mint",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+  ],
+  "black-tea": [
+    {
+      src: "/assets/menu/tea/black-tea.webp",
+      alt: "Black Tea served in a turquoise BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+  ],
+};
+
 function getItemImages(itemName, categoryId) {
   const normalized = slugify(itemName);
   const imageMap = {
@@ -863,6 +912,7 @@ function getItemImages(itemName, categoryId) {
     ...icedCoffeeProductImages,
     ...chillerProductImages,
     ...matchaProductImages,
+    ...teaProductImages,
     "chocolate-cake": [{ src: "./assets/site/dessert.svg", alt: "Chocolate Cake illustration" }],
     "salted-caramel-cheesecake": [{ src: "./assets/site/dessert.svg", alt: "Salted Caramel Cheesecake illustration" }],
     "blueberry-cheesecake": [{ src: "./assets/site/dessert.svg", alt: "Blueberry Cheesecake illustration" }],
@@ -881,7 +931,7 @@ function getPrimaryImage(details) {
 function prepareImageData(imageData) {
   const image = { ...imageData };
 
-  if (/^\/assets\/menu\/(?:classics|iced-coffee|chillers|matcha)\/.+\.webp$/i.test(image.src)) {
+  if (/^\/assets\/menu\/(?:classics|iced-coffee|chillers|matcha|tea)\/.+\.webp$/i.test(image.src)) {
     const base = image.src.replace(/\.webp$/i, "");
     image.previewSrc = image.previewSrc || `${base}-480.webp`;
     image.srcset = image.srcset || `${base}-480.webp 480w, ${base}-900.webp 900w, ${image.src} 1200w`;
