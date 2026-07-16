@@ -109,7 +109,7 @@ function ReviewCard({ review }) {
       React.createElement(
         "div",
         null,
-        React.createElement("h3", { className: "font-display text-3xl leading-none text-cream" }, review.name),
+        React.createElement("h3", { className: "font-display text-3xl font-semibold leading-[1.05] text-cream" }, review.name),
         React.createElement("p", { className: "mt-2 text-sm font-bold text-muted" }, formatDate(review.created_at)),
       ),
       React.createElement(Stars, { rating: review.rating }),
@@ -249,17 +249,17 @@ function ReviewsApp() {
         React.createElement(
           "div",
           { className: "animate-[fadeUp_900ms_ease_forwards]" },
-          React.createElement("p", { className: "mb-4 inline-flex items-center gap-3 text-xs font-black uppercase tracking-[0.16em] text-gold before:h-px before:w-10 before:bg-current" }, "Barock Cafe Experience"),
-          React.createElement("h1", { className: "max-w-4xl font-display text-[4rem] font-bold leading-[0.88] text-cream drop-shadow-[0_10px_30px_rgba(0,0,0,0.45)] sm:text-[6rem] lg:text-[8rem]" }, "Customer Reviews"),
+          React.createElement("p", { className: "mb-4 inline-flex items-center gap-3 text-xs font-bold uppercase tracking-[0.16em] text-gold before:h-px before:w-10 before:bg-current" }, "Barock Cafe Experience"),
+          React.createElement("h1", { className: "max-w-4xl font-display text-[4rem] font-semibold leading-[0.94] text-cream drop-shadow-[0_10px_30px_rgba(0,0,0,0.45)] sm:text-[6rem] lg:text-[8rem]" }, "Customer Reviews"),
           React.createElement("p", { className: "mt-6 max-w-2xl text-xl leading-8 text-secondary" }, "Every moment, perfectly shared by our guests."),
           React.createElement("p", { className: "mt-4 max-w-xl font-bold text-muted" }, "Every Moment, Perfectly Yours"),
         ),
         React.createElement(
           "div",
           { className: "rounded-[8px] border border-borderGold bg-cardBrown/90 p-6 shadow-cafe backdrop-blur-xl" },
-          React.createElement("p", { className: "text-xs font-black uppercase tracking-[0.14em] text-gold" }, "Guest sentiment"),
+          React.createElement("p", { className: "text-xs font-bold uppercase tracking-[0.14em] text-gold" }, "Guest sentiment"),
           React.createElement("div", { className: "mt-5 flex items-end gap-3" },
-            React.createElement("strong", { className: "font-display text-6xl leading-none text-cream" }, React.createElement(CountUp, { value: averageRating })),
+            React.createElement("strong", { className: "font-display text-6xl font-semibold leading-none text-cream" }, React.createElement(CountUp, { value: averageRating })),
             React.createElement("span", { className: "pb-2 font-bold text-secondary" }, "/ 5")
           ),
           React.createElement("div", { className: "mt-4" }, React.createElement(Stars, { rating: Math.round(averageRating) })),
@@ -288,8 +288,8 @@ function ReviewsApp() {
           { ref: cardsRef },
           React.createElement("div", { className: "mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end" },
             React.createElement("div", null,
-              React.createElement("p", { className: "mb-3 text-xs font-black uppercase tracking-[0.14em] text-gold" }, "Guest notes"),
-              React.createElement("h2", { className: "font-display text-5xl leading-none text-cream md:text-6xl" }, "Reviews Grid")
+              React.createElement("p", { className: "mb-3 text-xs font-bold uppercase tracking-[0.14em] text-gold" }, "Guest notes"),
+              React.createElement("h2", { className: "font-display text-5xl font-semibold leading-none text-cream md:text-6xl" }, "Reviews Grid")
             ),
             isLoading ? React.createElement("p", { className: "font-bold text-secondary" }, "Loading reviews...") : null
           ),
@@ -306,8 +306,8 @@ function ReviewsApp() {
             className:
               "glass-card h-fit rounded-[8px] border border-borderGold bg-cardBrown/95 p-6 shadow-cafe backdrop-blur-xl lg:sticky lg:top-28",
           },
-          React.createElement("p", { className: "mb-3 text-xs font-black uppercase tracking-[0.14em] text-gold" }, "Add Review"),
-          React.createElement("h2", { className: "mb-5 font-display text-4xl leading-none text-cream" }, "Share your moment"),
+          React.createElement("p", { className: "mb-3 text-xs font-bold uppercase tracking-[0.14em] text-gold" }, "Add Review"),
+          React.createElement("h2", { className: "mb-5 font-display text-4xl font-semibold leading-none text-cream" }, "Share your moment"),
           React.createElement("label", { className: "mb-4 grid gap-2 text-sm font-bold text-secondary" },
             "Name",
             React.createElement("input", {
@@ -342,7 +342,7 @@ function ReviewsApp() {
               type: "submit",
               disabled: isSubmitting,
               className:
-                "glass-button w-full rounded-full border border-gold bg-gold px-5 py-4 font-black text-cafeBlack shadow-[0_0_0_rgba(212,168,95,0)] transition duration-300 hover:-translate-y-0.5 hover:bg-goldHover hover:shadow-[0_0_34px_rgba(212,168,95,0.35)] disabled:cursor-not-allowed disabled:opacity-70",
+                "glass-button w-full rounded-full border border-gold bg-gold px-5 py-4 font-bold text-cafeBlack shadow-[0_0_0_rgba(212,168,95,0)] transition duration-300 hover:-translate-y-0.5 hover:bg-goldHover hover:shadow-[0_0_34px_rgba(212,168,95,0.35)] disabled:cursor-not-allowed disabled:opacity-70",
             },
             isSubmitting ? "Submitting..." : "Submit Review",
           ),
@@ -357,8 +357,8 @@ function StatCard({ label, value, suffix = "" }) {
   return React.createElement(
     "article",
     { className: "glass-card rounded-[8px] border border-borderGold bg-cardBrown/95 p-6 shadow-cafe backdrop-blur-xl" },
-    React.createElement("p", { className: "mb-3 text-xs font-black uppercase tracking-[0.14em] text-gold" }, label),
-    React.createElement("strong", { className: "font-display text-5xl leading-none text-cream" }, React.createElement(CountUp, { value, suffix })),
+    React.createElement("p", { className: "mb-3 text-xs font-bold uppercase tracking-[0.14em] text-gold" }, label),
+    React.createElement("strong", { className: "font-display text-5xl font-semibold leading-none text-cream" }, React.createElement(CountUp, { value, suffix })),
     React.createElement(
       "div",
       { className: "mt-5 grid grid-cols-5 gap-2" },
