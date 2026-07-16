@@ -436,14 +436,116 @@ function initImageFallbacks() {
 
 initImageFallbacks();
 
-menuToggle.addEventListener("click", () => {
-  const isOpen = mobileMenu.classList.toggle("is-open");
-  menuToggle.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
-});
+function initMobileNavigation() {
+  if (!menuToggle || !mobileMenu) {
+    return;
+  }
 
-mobileMenu.querySelectorAll("a").forEach((link) => {
-  link.addEventListener("click", () => {
-    mobileMenu.classList.remove("is-open");
-    menuToggle.setAttribute("aria-label", "Open navigation");
+  const links = [...mobileMenu.querySelectorAll("a")];
+  const backdrop = document.createElement("button");
+  let navState = "closed";
+  let closeTimer = 0;
+  let scrollY = 0;
+
+  backdrop.type = "button";
+  backdrop.className = "mobile-menu-backdrop";
+  backdrop.setAttribute("aria-label", "Close navigation");
+  backdrop.setAttribute("tabindex", "-1");
+  document.body.appendChild(backdrop);
+
+  links.forEach((link, index) => {
+    link.style.setProperty("--item-index", index);
+    link.style.setProperty("--reverse-index", links.length - index - 1);
   });
-});
+
+  const lockScroll = () => {
+    scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+    document.documentElement.classList.add("mobile-menu-open");
+    document.body.classList.add("mobile-menu-open");
+  };
+
+  const unlockScroll = () => {
+    document.documentElement.classList.remove("mobile-menu-open");
+    document.body.classList.remove("mobile-menu-open");
+    window.scrollTo(0, scrollY);
+  };
+
+  const setToggleState = (isOpen) => {
+    menuToggle.classList.toggle("is-active", isOpen);
+    menuToggle.setAttribute("aria-expanded", String(isOpen));
+    menuToggle.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
+  };
+
+  const openMenu = () => {
+    if (navState === "open" || navState === "opening") {
+      return;
+    }
+
+    window.clearTimeout(closeTimer);
+    navState = "opening";
+    lockScroll();
+    setToggleState(true);
+    mobileMenu.classList.remove("is-closing");
+    mobileMenu.classList.add("is-opening");
+    backdrop.classList.add("is-visible");
+    mobileMenu.classList.add("is-open");
+
+    window.setTimeout(() => {
+      navState = "open";
+      mobileMenu.classList.remove("is-opening");
+      links[0]?.focus({ preventScroll: true });
+    }, 360);
+  };
+
+  const closeMenu = ({ restoreFocus = true } = {}) => {
+    if (navState === "closed" || navState === "closing") {
+      return;
+    }
+
+    window.clearTimeout(closeTimer);
+    navState = "closing";
+    mobileMenu.classList.remove("is-opening", "is-open");
+    mobileMenu.classList.add("is-closing");
+    backdrop.classList.remove("is-visible");
+    setToggleState(false);
+
+    closeTimer = window.setTimeout(() => {
+      navState = "closed";
+      mobileMenu.classList.remove("is-closing");
+      unlockScroll();
+      if (restoreFocus) {
+        menuToggle.focus({ preventScroll: true });
+      }
+    }, 300);
+  };
+
+  menuToggle.addEventListener("click", () => {
+    if (navState === "open" || navState === "opening") {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+
+  mobileMenu.addEventListener("click", (event) => {
+    if (event.target.closest("a")) {
+      closeMenu({ restoreFocus: false });
+    }
+  });
+
+  backdrop.addEventListener("click", () => closeMenu());
+
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeMenu();
+    }
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 960) {
+      closeMenu({ restoreFocus: false });
+    }
+  });
+}
+
+initMobileNavigation();

@@ -35,7 +35,7 @@
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260716-loading-audit" />
+    <link rel="stylesheet" href="./styles.css?v=20260717-mobile-nav" />
   </head>
   <body>
     <main>
@@ -68,14 +68,21 @@
         >
           Visit Us Soon
         </a>
-        <button class="menu-toggle" type="button" data-menu-toggle aria-label="Open navigation">
+        <button
+          class="menu-toggle"
+          type="button"
+          data-menu-toggle
+          aria-label="Open navigation"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
           <span></span>
           <span></span>
           <span></span>
         </button>
       </header>
 
-      <nav class="mobile-menu" data-mobile-menu aria-label="Mobile navigation">
+      <nav class="mobile-menu" id="mobile-menu" data-mobile-menu aria-label="Mobile navigation">
         <a href="./index.html#home">Home</a>
         <a href="./index.html#about">About</a>
         <a aria-current="page" href="./menu.html">Menu</a>
@@ -194,6 +201,6 @@
       </footer>
     </main>
 
-    <script defer src="./menu.js?v=20260716-loading-audit"></script>
+    <script defer src="./menu.js?v=20260717-mobile-nav"></script>
   </body>
 </html>
