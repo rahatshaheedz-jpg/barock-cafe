@@ -421,6 +421,13 @@ const menuList = document.querySelector("[data-menu-list]");
 const menuCount = document.querySelector("[data-menu-count]");
 const emptyState = document.querySelector("[data-empty-state]");
 const revealItems = document.querySelectorAll(".reveal");
+const menuStatus = {
+  state: "loading",
+  error: "",
+};
+
+const fallbackIngredients = "Prepared using the cafe's standard ingredients for this item.";
+const fallbackPreparation = "Prepared fresh by the Barock Cafe team.";
 
 let openCategoryId = "";
 let searchTerm = "";
@@ -437,6 +444,7 @@ let sheetDrag = null;
 let sheetDragRafId = 0;
 let sheetDismissTimer = 0;
 let modalCloseTimer = 0;
+let modalOpenFrame = 0;
 let lastPointerDragStart = 0;
 let galleryDrag = null;
 const modalState = {
@@ -739,14 +747,14 @@ function getCategoryTags(category) {
 function normalizeIngredients(value) {
   if (Array.isArray(value)) {
     const ingredients = value.map((ingredient) => String(ingredient).trim()).filter(Boolean);
-    return ingredients;
+    return ingredients.length ? ingredients : [fallbackIngredients];
   }
 
   if (typeof value === "string" && value.trim()) {
     return [value.trim()];
   }
 
-  return [];
+  return [fallbackIngredients];
 }
 
 function normalizePreparation(value) {
@@ -754,7 +762,7 @@ function normalizePreparation(value) {
     return value.trim();
   }
 
-  return "";
+  return fallbackPreparation;
 }
 
 function formatItemPrice(item) {
@@ -862,6 +870,7 @@ function getTotalVisibleItems(categories) {
 }
 
 function renderMenu() {
+  menuStatus.state = "ready";
   const visibleCategories = getVisibleCategories();
 
   if (searchTerm.trim() && visibleCategories.length === 1) {
@@ -877,7 +886,7 @@ function renderMenu() {
   menuList.replaceChildren(fragment);
 
   menuCount.textContent = String(getTotalVisibleItems(visibleCategories));
-  emptyState.hidden = visibleCategories.length > 0;
+  emptyState.hidden = !(menuStatus.state === "ready" && searchTerm.trim() && visibleCategories.length === 0);
   initImageFallbacks();
 }
 
@@ -1096,8 +1105,11 @@ function createMenuModal() {
     price,
     description,
     tags,
+    optionsBlock,
     optionsList,
+    ingredientsBlock,
     ingredientsList,
+    preparationBlock,
     preparation,
     note,
   };
@@ -1467,10 +1479,6 @@ function populateOptions(list, details) {
     options.push({ label: "Weight", value: details.weight });
   }
 
-  if (details.subgroup) {
-    options.push({ label: "Section", value: details.subgroup });
-  }
-
   if (Array.isArray(details.crusts) && details.crusts.length) {
     options.push({ label: "Crusts", value: details.crusts.join(", ") });
   }
@@ -1486,6 +1494,14 @@ function populateOptions(list, details) {
     item.append(createElement("span", "", option.label), createElement("strong", "", option.value));
     list.append(item);
   });
+}
+
+function setSectionVisibility(section, isVisible) {
+  if (!section) {
+    return;
+  }
+
+  section.hidden = !isVisible;
 }
 
 function populateModal(details) {
@@ -1505,9 +1521,9 @@ function populateModal(details) {
   populateIngredients(menuModal.ingredientsList, ingredients);
   menuModal.preparation.textContent = preparation;
   menuModal.note.textContent = details.note || "";
-  menuModal.optionsList.closest(".menu-modal-block").hidden = menuModal.optionsList.children.length === 0;
-  menuModal.ingredientsList.closest(".menu-modal-block").hidden = ingredients.length === 0;
-  menuModal.preparation.closest(".menu-modal-block").hidden = !preparation;
+  setSectionVisibility(menuModal.optionsBlock, menuModal.optionsList.children.length > 0);
+  setSectionVisibility(menuModal.ingredientsBlock, ingredients.length > 0);
+  setSectionVisibility(menuModal.preparationBlock, Boolean(preparation));
   menuModal.note.hidden = !details.note;
 }
 
@@ -1732,6 +1748,10 @@ function openItemModal(itemId, trigger) {
 
   window.clearTimeout(modalCloseTimer);
   modalCloseTimer = 0;
+  if (modalOpenFrame) {
+    window.cancelAnimationFrame(modalOpenFrame);
+    modalOpenFrame = 0;
+  }
   modalState.isOpen = true;
   modalState.isClosing = false;
   modalState.selectedItemId = itemId;
@@ -1739,27 +1759,43 @@ function openItemModal(itemId, trigger) {
   lastFocusedMenuItem = trigger || document.activeElement;
   hidePreview(true);
   resetSheetDragState();
-  menuModal.overlay.classList.remove("is-closing");
-  menuModal.dialog.classList.remove("is-closing");
+  menuModal.overlay.classList.remove("is-open", "is-closing", "is-dragging", "is-dismissing", "is-snapping-back");
+  menuModal.dialog.classList.remove("is-closing", "is-dragging", "is-dismissing", "is-snapping-back");
+  menuModal.overlay.classList.add("is-preparing");
+  menuModal.dialog.classList.add("is-preparing");
   menuModal.dialog.style.transform = "";
   menuModal.overlay.style.opacity = "";
   populateModal(details);
   menuModal.overlay.hidden = false;
   lockBodyScroll();
-  window.requestAnimationFrame(() => {
-    menuModal.overlay.classList.add("is-open");
-    menuModal.closeButton.focus({ preventScroll: true });
-  });
   isModalOpen = true;
   isModalClosing = false;
+
+  modalOpenFrame = window.requestAnimationFrame(() => {
+    modalOpenFrame = window.requestAnimationFrame(() => {
+      modalOpenFrame = 0;
+      if (!modalState.isOpen || modalState.isClosing || modalState.selectedItemId !== itemId) {
+        return;
+      }
+
+      menuModal.overlay.classList.remove("is-preparing");
+      menuModal.dialog.classList.remove("is-preparing");
+      menuModal.overlay.classList.add("is-open");
+    });
+    menuModal.closeButton.focus({ preventScroll: true });
+  });
 }
 
 function finishItemModalClose({ restoreFocus = true } = {}) {
   window.clearTimeout(modalCloseTimer);
   modalCloseTimer = 0;
+  if (modalOpenFrame) {
+    window.cancelAnimationFrame(modalOpenFrame);
+    modalOpenFrame = 0;
+  }
   menuModal.overlay.hidden = true;
-  menuModal.overlay.classList.remove("is-open", "is-closing", "is-dragging", "is-dismissing", "is-snapping-back");
-  menuModal.dialog.classList.remove("is-closing", "is-dragging", "is-dismissing", "is-snapping-back");
+  menuModal.overlay.classList.remove("is-open", "is-preparing", "is-closing", "is-dragging", "is-dismissing", "is-snapping-back");
+  menuModal.dialog.classList.remove("is-preparing", "is-closing", "is-dragging", "is-dismissing", "is-snapping-back");
   resetSheetDragState();
   resetModalGallery();
   unlockBodyScroll();
@@ -1786,9 +1822,15 @@ function closeItemModal({ restoreFocus = true, fromPopState = false, closeFromDr
   modalState.isClosing = true;
   isModalClosing = true;
   window.clearTimeout(modalCloseTimer);
+  if (modalOpenFrame) {
+    window.cancelAnimationFrame(modalOpenFrame);
+    modalOpenFrame = 0;
+  }
   hidePreview(true);
   modalState.imageRequestToken += 1;
   resetSheetDragState({ keepClosingStyles: closeFromDrag });
+  menuModal.overlay.classList.remove("is-preparing");
+  menuModal.dialog.classList.remove("is-preparing");
   menuModal.overlay.classList.add("is-closing");
   menuModal.dialog.classList.add("is-closing");
 
@@ -1799,9 +1841,7 @@ function closeItemModal({ restoreFocus = true, fromPopState = false, closeFromDr
     menuModal.overlay.style.opacity = "0";
   }
 
-  window.requestAnimationFrame(() => {
-    menuModal.overlay.classList.remove("is-open");
-  });
+  menuModal.overlay.classList.remove("is-open");
 
   const finishCloseOnce = (event) => {
     if (
@@ -1816,13 +1856,16 @@ function closeItemModal({ restoreFocus = true, fromPopState = false, closeFromDr
       return;
     }
 
+    menuModal.dialog.removeEventListener("transitionend", finishCloseOnce);
+    menuModal.overlay.removeEventListener("transitionend", finishCloseOnce);
     finishItemModalClose({ restoreFocus });
   };
 
-  menuModal.dialog.addEventListener("transitionend", finishCloseOnce, { once: true });
+  menuModal.dialog.addEventListener("transitionend", finishCloseOnce);
+  menuModal.overlay.addEventListener("transitionend", finishCloseOnce);
   modalCloseTimer = window.setTimeout(
     finishCloseOnce,
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 240,
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 340,
   );
   isModalOpen = false;
 }
