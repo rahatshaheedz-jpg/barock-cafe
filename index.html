@@ -31,9 +31,9 @@
     <link
       rel="preload"
       as="image"
-      href="./assets/site/barock-ceremonial-hero-1536.webp"
-      imagesrcset="./assets/site/barock-ceremonial-hero-640.webp 640w, ./assets/site/barock-ceremonial-hero-960.webp 960w, ./assets/site/barock-ceremonial-hero-1536.webp 1536w"
-      imagesizes="100vw"
+      href="./assets/site/barock-strawberry-hero-1254.webp"
+      imagesrcset="./assets/site/barock-strawberry-hero-640.webp 640w, ./assets/site/barock-strawberry-hero-960.webp 960w, ./assets/site/barock-strawberry-hero-1254.webp 1254w"
+      imagesizes="(max-width: 760px) 92vw, (max-width: 1080px) 58vw, 54vw"
       type="image/webp"
       fetchpriority="high"
     />
@@ -41,18 +41,41 @@
       href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,500;0,600;0,700;1,600&family=Instrument+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260717-bodoni-instrument-2" />
+    <link rel="stylesheet" href="./styles.css?v=20260717-signature-hero" />
+    <script>
+      try {
+        const loaderSeen = sessionStorage.getItem("barockLoaderSeen") === "true";
+        document.documentElement.classList.add(loaderSeen ? "barock-loader-seen" : "barock-loader-pending");
+      } catch (error) {
+        document.documentElement.classList.add("barock-loader-pending");
+      }
+    </script>
+    <noscript><style>.site-loader{display:none!important}html,body{overflow:auto!important}</style></noscript>
   </head>
   <body class="home-page">
+    <div class="site-loader" data-site-loader aria-hidden="true">
+      <div class="site-loader__mark">
+        <span class="site-loader__ring site-loader__ring--teal"></span>
+        <span class="site-loader__ring site-loader__ring--gold"></span>
+        <img
+          class="site-loader__logo"
+          data-loader-logo
+          src="./assets/site/barock-loader-logo-320.webp"
+          width="320"
+          height="320"
+          alt=""
+          decoding="async"
+        />
+      </div>
+      <p class="site-loader__label">Loading Barock Experience...</p>
+    </div>
     <main>
       <header class="site-header glass-navbar" id="home">
         <a class="brand" href="#home" aria-label="BAROCK CAFE home">
           <img
-            src="./assets/barock-logo-160.webp"
-            srcset="./assets/barock-logo-160.webp 160w, ./assets/barock-logo-320.webp 320w"
-            sizes="64px"
-            width="160"
-            height="133"
+            src="./assets/site/barock-loader-logo-320.webp"
+            width="320"
+            height="320"
             alt="BAROCK CAFE"
             decoding="async"
           />
@@ -89,65 +112,63 @@
         <a href="#contact">Contact</a>
       </nav>
 
-      <section class="hero barock-hero" aria-labelledby="barock-hero-title">
-        <picture class="hero-media">
-          <source
-            srcset="./assets/site/barock-ceremonial-hero-640.webp 640w, ./assets/site/barock-ceremonial-hero-960.webp 960w, ./assets/site/barock-ceremonial-hero-1536.webp 1536w"
-            sizes="100vw"
-            type="image/webp"
-          />
-          <img
-            class="hero-bg"
-            src="./assets/site/barock-ceremonial-hero-1536.webp"
-            width="1536"
-            height="1024"
-            fetchpriority="high"
-            decoding="async"
-            alt="A teal and gold coffee service in a dramatic Baroque salon"
-          />
-        </picture>
-        <div class="hero-overlay"></div>
-        <div class="ambient-grain" aria-hidden="true"></div>
-        <div class="hero-frame" aria-hidden="true">
-          <span></span><span></span><span></span><span></span>
-        </div>
-        <span class="hero-monogram" aria-hidden="true">B</span>
-        <div class="steam-wrap" aria-hidden="true">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
+      <section class="hero hero-signature" aria-labelledby="barock-hero-title">
+        <div class="hero-signature__atmosphere" aria-hidden="true">
+          <span class="hero-signature__monogram">B</span>
+          <span class="hero-signature__streak hero-signature__streak--one"></span>
+          <span class="hero-signature__streak hero-signature__streak--two"></span>
+          <span class="hero-signature__particle hero-signature__particle--one"></span>
+          <span class="hero-signature__particle hero-signature__particle--two"></span>
+          <span class="hero-signature__particle hero-signature__particle--three"></span>
         </div>
 
-        <div class="hero-content reveal">
-          <div class="hero-seal" aria-hidden="true">
-            <img
-              src="./assets/barock-logo-160.webp"
-              width="160"
-              height="133"
-              alt=""
-              decoding="async"
-            />
+        <div class="hero-signature__shell">
+          <div class="hero-signature__content">
+            <p class="hero-signature__label">Signature Collection</p>
+            <h1 id="barock-hero-title">
+              <span>Sip the Pink</span>
+              <span>Signature</span>
+            </h1>
+            <p class="hero-signature__copy">
+              Indulge in a handcrafted strawberry creation made for every perfect moment.
+            </p>
+            <div class="hero-signature__actions">
+              <a class="button hero-signature__primary" href="./menu.html">Explore Menu</a>
+              <a class="button hero-signature__secondary" href="#location">Visit Barock</a>
+            </div>
           </div>
-          <p class="hero-proclamation"><span>Gulshan-2</span> Opening Soon</p>
-          <h1 id="barock-hero-title"><span>Enter the House</span> of BAROCK</h1>
-          <p class="hero-decree">
-            Coffee, dessert, and hospitality presented with a little theatre.
-            Every moment, perfectly yours.
-          </p>
-          <a class="button primary hero-primary-action" href="./menu.html">Discover the Menu</a>
+
+          <div class="hero-signature__visual">
+            <span class="hero-signature__halo hero-signature__halo--outer" aria-hidden="true"></span>
+            <span class="hero-signature__halo hero-signature__halo--inner" aria-hidden="true"></span>
+            <picture class="hero-signature__picture">
+              <source
+                type="image/webp"
+                srcset="./assets/site/barock-strawberry-hero-640.webp 640w, ./assets/site/barock-strawberry-hero-960.webp 960w, ./assets/site/barock-strawberry-hero-1254.webp 1254w"
+                sizes="(max-width: 760px) 92vw, (max-width: 1080px) 58vw, 54vw"
+              />
+              <img
+                class="hero-signature__product"
+                data-hero-product
+                src="./assets/site/barock-strawberry-hero-1254.webp"
+                width="1254"
+                height="1254"
+                alt="BAROCK CAFE Strawberry Chiller with whipped cream and fresh strawberries"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+              />
+            </picture>
+            <div class="hero-signature__product-note" aria-label="Featured drink">
+              <span>BAROCK Signature</span>
+              <strong>Strawberry Chiller</strong>
+            </div>
+          </div>
         </div>
 
-        <a
-          class="hero-location-ribbon"
-          href="https://maps.app.goo.gl/avBMt5ym5eqpp7WZ7"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Open BAROCK CAFE location in Google Maps"
-        >
-          <span>House 9/B, Road 51</span>
-          <strong>Gulshan-2, Dhaka 1212</strong>
-          <em>Open in Maps</em>
+        <a class="hero-signature__scroll" href="#signature" aria-label="Scroll to the signature selection">
+          <span>Scroll</span>
+          <i aria-hidden="true"></i>
         </a>
       </section>
 
@@ -382,6 +403,6 @@
       Thanks. Your message is ready for BAROCK CAFE.
     </div>
 
-    <script defer src="./script.js?v=20260717-modern-baroque"></script>
+    <script defer src="./script.js?v=20260717-signature-hero"></script>
   </body>
 </html>
