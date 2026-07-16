@@ -447,6 +447,7 @@ let modalCloseTimer = 0;
 let modalOpenFrame = 0;
 let lastPointerDragStart = 0;
 let galleryDrag = null;
+let galleryDragFrame = 0;
 const modalState = {
   isOpen: false,
   isClosing: false,
@@ -1260,12 +1261,9 @@ function createMenuModal() {
   const imageWrap = createElement("div", "menu-modal-media");
   imageWrap.setAttribute("tabindex", "0");
   imageWrap.setAttribute("aria-label", "Product image gallery");
-  const image = document.createElement("img");
-  image.loading = "lazy";
-  image.decoding = "async";
-  image.width = 1200;
-  image.height = 1200;
-  image.sizes = "(max-width: 700px) 100vw, min(52vw, 750px)";
+  const imageViewport = createElement("div", "product-gallery__viewport");
+  const imageTrack = createElement("div", "product-gallery__track");
+  imageViewport.append(imageTrack);
   const prevButton = createElement("button", "menu-gallery-control menu-gallery-control--prev");
   prevButton.type = "button";
   prevButton.setAttribute("aria-label", "Previous image");
@@ -1278,7 +1276,7 @@ function createMenuModal() {
   dots.setAttribute("aria-hidden", "true");
   const status = createElement("p", "menu-gallery-status");
   status.setAttribute("aria-live", "polite");
-  imageWrap.append(image, prevButton, nextButton, dots, status);
+  imageWrap.append(imageViewport, prevButton, nextButton, dots, status);
 
   const body = createElement("div", "menu-modal-body");
   const category = createElement("p", "menu-modal-category");
@@ -1314,7 +1312,8 @@ function createMenuModal() {
     body,
     closeButton,
     imageWrap,
-    image,
+    imageViewport,
+    imageTrack,
     prevButton,
     nextButton,
     dots,
@@ -1366,8 +1365,11 @@ const menuModal = createMenuModal();
 const menuPreview = createMenuPreview();
 const menuGallery = {
   images: [],
+  slides: [],
   activeIndex: 0,
   preload: new Set(),
+  isDragging: false,
+  dragDeltaX: 0,
 };
 
 function canShowHoverPreview() {
@@ -1431,7 +1433,7 @@ function preloadGalleryImage(index) {
   image.decoding = "async";
   if (imageData.srcset) {
     image.srcset = imageData.srcset;
-    image.sizes = menuModal.image.sizes;
+    image.sizes = "(max-width: 700px) 100vw, min(52vw, 750px)";
   }
   image.src = imageData.src;
 }
@@ -1458,91 +1460,158 @@ function updateGalleryControls() {
   });
 }
 
-function renderGalleryImage({ announce = false } = {}) {
-  const imageData = menuGallery.images[menuGallery.activeIndex] || {
-    src: defaultCafeImage,
-    alt: "BAROCK CAFE menu item",
-  };
-  const requestToken = ++modalState.imageRequestToken;
+function getGalleryWidth() {
+  return menuModal.imageViewport.getBoundingClientRect().width || menuModal.imageWrap.getBoundingClientRect().width || 1;
+}
+
+function setGalleryTrackTransform(deltaX = 0) {
+  const offset = -menuGallery.activeIndex * getGalleryWidth() + deltaX;
+  menuModal.imageTrack.style.transform = `translate3d(${offset}px, 0, 0)`;
+}
+
+function scheduleGalleryTransform(deltaX = 0) {
+  menuGallery.dragDeltaX = deltaX;
+
+  if (galleryDragFrame) {
+    return;
+  }
+
+  galleryDragFrame = window.requestAnimationFrame(() => {
+    galleryDragFrame = 0;
+    setGalleryTrackTransform(menuGallery.dragDeltaX);
+  });
+}
+
+function createGallerySlide(imageData, index) {
+  const figure = createElement("figure", "product-gallery__slide");
+  const image = document.createElement("img");
   const imageFit = imageData.fit === "contain" ? "contain" : "cover";
   const desktopPosition = imageData.desktopPosition || imageData.position || "50% 50%";
   const mobilePosition = imageData.mobilePosition || imageData.position || desktopPosition;
 
-  menuModal.imageWrap.classList.add("is-loading");
-  menuModal.image.classList.add("is-switching");
-  clearImageElement(menuModal.image, imageData.alt || "Loading BAROCK CAFE menu item image");
-  menuModal.imageWrap.classList.toggle("is-contain-image", imageFit === "contain");
-  menuModal.imageWrap.style.setProperty(
-    "--gallery-backdrop-image",
-    imageFit === "contain" ? `url("${imageData.src.replace(/"/g, "%22")}")` : "none",
-  );
-  menuModal.image.style.setProperty("--image-fit", imageFit);
-  menuModal.image.style.setProperty("--image-position-desktop", desktopPosition);
-  menuModal.image.style.setProperty("--image-position-mobile", mobilePosition);
+  image.loading = index === 0 ? "eager" : "lazy";
+  image.decoding = "async";
+  image.width = 1200;
+  image.height = 1200;
+  image.sizes = "(max-width: 700px) 100vw, min(52vw, 750px)";
+  image.alt = imageData.alt || "BAROCK CAFE menu item";
+  image.style.setProperty("--image-fit", imageFit);
+  image.style.setProperty("--image-position-desktop", desktopPosition);
+  image.style.setProperty("--image-position-mobile", mobilePosition);
+  figure.append(image);
 
-  decodeImageData(imageData, { sizes: menuModal.image.sizes })
+  return { figure, image, loaded: false };
+}
+
+function setGallerySlideImage(slide, imageData) {
+  setImageAttributes(slide.image, imageData);
+  slide.loaded = true;
+}
+
+function loadGallerySlide(index, { showLoading = false } = {}) {
+  const slide = menuGallery.slides[index];
+  const imageData = menuGallery.images[index];
+
+  if (!slide || !imageData || slide.loaded) {
+    return Promise.resolve();
+  }
+
+  const requestToken = modalState.imageRequestToken;
+
+  if (showLoading) {
+    menuModal.imageWrap.classList.add("is-loading");
+  }
+
+  return decodeImageData(imageData, { sizes: slide.image.sizes })
     .then((loadedImage) => {
       if (requestToken !== modalState.imageRequestToken) {
         return;
       }
 
-      setImageAttributes(menuModal.image, loadedImage);
+      setGallerySlideImage(slide, loadedImage);
     })
     .catch(() => {
       if (requestToken !== modalState.imageRequestToken) {
         return;
       }
 
-      setImageAttributes(menuModal.image, { src: defaultCafeImage, alt: "BAROCK CAFE menu item" });
+      setGallerySlideImage(slide, { src: defaultCafeImage, alt: "BAROCK CAFE menu item" });
     })
     .finally(() => {
-      if (requestToken !== modalState.imageRequestToken) {
-        return;
+      if (showLoading && requestToken === modalState.imageRequestToken) {
+        menuModal.imageWrap.classList.remove("is-loading");
       }
-
-      menuModal.imageWrap.classList.remove("is-loading");
-      window.setTimeout(() => menuModal.image.classList.remove("is-switching"), 80);
     });
+}
 
-  window.requestAnimationFrame(() => {
-    menuModal.image.style.transform = "";
-    menuModal.image.classList.remove("is-dragging");
+function updateGalleryBackdrop() {
+  const imageData = menuGallery.images[menuGallery.activeIndex] || {};
+  const imageFit = imageData.fit === "contain" ? "contain" : "cover";
+
+  menuModal.imageWrap.classList.toggle("is-contain-image", imageFit === "contain");
+  menuModal.imageWrap.style.setProperty(
+    "--gallery-backdrop-image",
+    imageFit === "contain" && imageData.src ? `url("${imageData.src.replace(/"/g, "%22")}")` : "none",
+  );
+}
+
+function renderGalleryTrack() {
+  menuModal.imageTrack.replaceChildren();
+  menuGallery.slides = menuGallery.images.map((imageData, index) => {
+    const slide = createGallerySlide(imageData, index);
+    menuModal.imageTrack.append(slide.figure);
+    return slide;
   });
-
+  menuModal.imageTrack.style.transform = "";
+  setGalleryTrackTransform(0);
   updateGalleryControls();
-
-  if (!announce) {
-    menuModal.status.textContent = "";
-    window.requestAnimationFrame(updateGalleryControls);
-  }
-
-  if (menuGallery.images.length > 1) {
-    preloadGalleryImage((menuGallery.activeIndex + 1) % menuGallery.images.length);
-  }
+  updateGalleryBackdrop();
 }
 
 function setModalGallery(images) {
+  modalState.imageRequestToken += 1;
   menuGallery.images = Array.isArray(images) && images.length
     ? images
     : [{ src: defaultCafeImage, alt: "BAROCK CAFE menu item" }];
   menuGallery.activeIndex = 0;
   menuGallery.preload.clear();
+  menuGallery.isDragging = false;
+  menuGallery.dragDeltaX = 0;
   galleryDrag = null;
-  menuModal.image.style.transform = "";
-  menuModal.image.classList.remove("is-dragging", "is-switching");
-  renderGalleryImage();
+  menuModal.imageWrap.classList.remove("is-dragging", "is-instant");
+  menuModal.imageWrap.classList.add("is-loading");
+  renderGalleryTrack();
+  loadGallerySlide(0, { showLoading: true }).then(() => {
+    if (menuGallery.images.length > 1) {
+      preloadGalleryImage(1);
+      loadGallerySlide(1);
+    }
+  });
 }
 
-function showGalleryImage(index) {
+function showGalleryImage(index, { instant = false } = {}) {
   if (menuGallery.images.length <= 1) {
     return;
   }
 
   const count = menuGallery.images.length;
-  menuGallery.activeIndex = (index + count) % count;
-  renderGalleryImage({ announce: true });
-  preloadGalleryImage((menuGallery.activeIndex + 1) % count);
-  preloadGalleryImage((menuGallery.activeIndex - 1 + count) % count);
+  const nextIndex = Math.min(count - 1, Math.max(0, index));
+
+  if (nextIndex === menuGallery.activeIndex && !menuGallery.isDragging) {
+    setGalleryTrackTransform(0);
+    return;
+  }
+
+  menuGallery.activeIndex = nextIndex;
+  menuModal.imageWrap.classList.toggle("is-instant", instant);
+  updateGalleryBackdrop();
+  updateGalleryControls();
+  loadGallerySlide(nextIndex);
+  setGalleryTrackTransform(0);
+  window.requestAnimationFrame(() => menuModal.imageWrap.classList.remove("is-instant"));
+  preloadGalleryImage(Math.min(count - 1, nextIndex + 1));
+  preloadGalleryImage(Math.max(0, nextIndex - 1));
+  loadGallerySlide(Math.min(count - 1, nextIndex + 1));
 }
 
 function showNextGalleryImage() {
@@ -1554,21 +1623,30 @@ function showPreviousGalleryImage() {
 }
 
 function resetModalGallery() {
+  if (galleryDragFrame) {
+    window.cancelAnimationFrame(galleryDragFrame);
+    galleryDragFrame = 0;
+  }
+
   galleryDrag = null;
   modalState.imageRequestToken += 1;
   menuGallery.images = [];
+  menuGallery.slides = [];
   menuGallery.activeIndex = 0;
+  menuGallery.isDragging = false;
+  menuGallery.dragDeltaX = 0;
   menuGallery.preload.clear();
-  menuModal.image.style.transform = "";
-  menuModal.image.classList.remove("is-dragging", "is-switching");
+  menuModal.imageTrack.style.transform = "";
+  menuModal.imageTrack.replaceChildren();
   menuModal.imageWrap.classList.remove("has-multiple-images");
+  menuModal.imageWrap.classList.remove("is-dragging", "is-instant");
   menuModal.prevButton.hidden = true;
   menuModal.nextButton.hidden = true;
   menuModal.dots.hidden = true;
   menuModal.dots.replaceChildren();
   menuModal.status.textContent = "";
   menuModal.imageWrap.classList.remove("is-loading", "is-contain-image");
-  clearImageElement(menuModal.image, "");
+  menuModal.imageWrap.style.setProperty("--gallery-backdrop-image", "none");
 }
 
 function resetGalleryDrag() {
@@ -1576,8 +1654,15 @@ function resetGalleryDrag() {
     return;
   }
 
-  menuModal.image.style.transform = "";
-  menuModal.image.classList.remove("is-dragging");
+  if (galleryDragFrame) {
+    window.cancelAnimationFrame(galleryDragFrame);
+    galleryDragFrame = 0;
+  }
+
+  menuGallery.isDragging = false;
+  menuGallery.dragDeltaX = 0;
+  menuModal.imageWrap.classList.remove("is-dragging");
+  setGalleryTrackTransform(0);
   galleryDrag = null;
 }
 
@@ -1607,6 +1692,7 @@ function startGalleryDrag(event) {
     startTime: window.performance.now(),
     mode: "",
     velocity: 0,
+    deltaX: 0,
   };
 
   try {
@@ -1641,8 +1727,12 @@ function updateGalleryDrag(event) {
   galleryDrag.velocity = (point.x - galleryDrag.lastX) / Math.max(now - galleryDrag.lastTime, 1);
   galleryDrag.lastX = point.x;
   galleryDrag.lastTime = now;
-  menuModal.image.classList.add("is-dragging");
-  menuModal.image.style.transform = `translate3d(${deltaX * 0.28}px, 0, 0)`;
+  galleryDrag.deltaX = deltaX;
+  menuGallery.isDragging = true;
+  menuModal.imageWrap.classList.add("is-dragging");
+  const atStart = menuGallery.activeIndex === 0 && deltaX > 0;
+  const atEnd = menuGallery.activeIndex === menuGallery.images.length - 1 && deltaX < 0;
+  scheduleGalleryTransform(atStart || atEnd ? deltaX * 0.32 : deltaX);
 }
 
 function finishGalleryDrag(event, cancelled = false) {
@@ -1664,17 +1754,19 @@ function finishGalleryDrag(event, cancelled = false) {
     galleryDrag.mode === "horizontal" &&
     (Math.abs(deltaX) >= gallerySwipeDistance || Math.abs(velocity) >= gallerySwipeVelocity);
 
-  resetGalleryDrag();
+  const targetIndex = deltaX < 0 || velocity < -gallerySwipeVelocity
+    ? menuGallery.activeIndex + 1
+    : menuGallery.activeIndex - 1;
+  menuGallery.isDragging = false;
+  menuModal.imageWrap.classList.remove("is-dragging");
+  galleryDrag = null;
 
   if (!shouldChange) {
+    setGalleryTrackTransform(0);
     return;
   }
 
-  if (deltaX < 0 || velocity < -gallerySwipeVelocity) {
-    showNextGalleryImage();
-  } else {
-    showPreviousGalleryImage();
-  }
+  showGalleryImage(targetIndex);
 }
 
 function populateTags(container, tags) {
@@ -1993,16 +2085,14 @@ function openItemModal(itemId, trigger) {
   isModalClosing = false;
 
   modalOpenFrame = window.requestAnimationFrame(() => {
-    modalOpenFrame = window.requestAnimationFrame(() => {
-      modalOpenFrame = 0;
-      if (!modalState.isOpen || modalState.isClosing || modalState.selectedItemId !== itemId) {
-        return;
-      }
+    modalOpenFrame = 0;
+    if (!modalState.isOpen || modalState.isClosing || modalState.selectedItemId !== itemId) {
+      return;
+    }
 
-      menuModal.overlay.classList.remove("is-preparing");
-      menuModal.dialog.classList.remove("is-preparing");
-      menuModal.overlay.classList.add("is-open");
-    });
+    menuModal.overlay.classList.remove("is-preparing");
+    menuModal.dialog.classList.remove("is-preparing");
+    menuModal.overlay.classList.add("is-open");
     menuModal.closeButton.focus({ preventScroll: true });
   });
 }
