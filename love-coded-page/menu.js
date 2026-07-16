@@ -2395,29 +2395,119 @@ function toggleCategory(categoryId) {
   });
 }
 
-function closeMobileMenu() {
-  mobileMenu.classList.remove("is-open");
-  document.body.classList.remove("mobile-menu-open");
-  menuToggle.setAttribute("aria-expanded", "false");
-  menuToggle.setAttribute("aria-label", "Open navigation");
+function initMobileNavigation() {
+  if (!menuToggle || !mobileMenu) {
+    return;
+  }
+
+  const links = [...mobileMenu.querySelectorAll("a")];
+  const backdrop = document.createElement("button");
+  let navState = "closed";
+  let closeTimer = 0;
+  let navScrollY = 0;
+
+  backdrop.type = "button";
+  backdrop.className = "mobile-menu-backdrop";
+  backdrop.setAttribute("aria-label", "Close navigation");
+  backdrop.setAttribute("tabindex", "-1");
+  document.body.appendChild(backdrop);
+
+  links.forEach((link, index) => {
+    link.style.setProperty("--item-index", index);
+    link.style.setProperty("--reverse-index", links.length - index - 1);
+  });
+
+  const lockNavigationScroll = () => {
+    navScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+    document.documentElement.classList.add("mobile-menu-open");
+    document.body.classList.add("mobile-menu-open");
+  };
+
+  const unlockNavigationScroll = () => {
+    document.documentElement.classList.remove("mobile-menu-open");
+    document.body.classList.remove("mobile-menu-open");
+    window.scrollTo(0, navScrollY);
+  };
+
+  const setToggleState = (isOpen) => {
+    menuToggle.classList.toggle("is-active", isOpen);
+    menuToggle.setAttribute("aria-expanded", String(isOpen));
+    menuToggle.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
+  };
+
+  const openMenu = () => {
+    if (navState === "open" || navState === "opening") {
+      return;
+    }
+
+    window.clearTimeout(closeTimer);
+    navState = "opening";
+    lockNavigationScroll();
+    setToggleState(true);
+    mobileMenu.classList.remove("is-closing");
+    mobileMenu.classList.add("is-opening");
+    backdrop.classList.add("is-visible");
+    mobileMenu.classList.add("is-open");
+
+    window.setTimeout(() => {
+      navState = "open";
+      mobileMenu.classList.remove("is-opening");
+      links[0]?.focus({ preventScroll: true });
+    }, 360);
+  };
+
+  const closeMenu = ({ restoreFocus = true } = {}) => {
+    if (navState === "closed" || navState === "closing") {
+      return;
+    }
+
+    window.clearTimeout(closeTimer);
+    navState = "closing";
+    mobileMenu.classList.remove("is-opening", "is-open");
+    mobileMenu.classList.add("is-closing");
+    backdrop.classList.remove("is-visible");
+    setToggleState(false);
+
+    closeTimer = window.setTimeout(() => {
+      navState = "closed";
+      mobileMenu.classList.remove("is-closing");
+      unlockNavigationScroll();
+      if (restoreFocus) {
+        menuToggle.focus({ preventScroll: true });
+      }
+    }, 300);
+  };
+
+  menuToggle.addEventListener("click", () => {
+    if (navState === "open" || navState === "opening") {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+
+  mobileMenu.addEventListener("click", (event) => {
+    if (event.target.closest("a")) {
+      closeMenu({ restoreFocus: false });
+    }
+  });
+
+  backdrop.addEventListener("click", () => closeMenu());
+
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeMenu();
+    }
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 960) {
+      closeMenu({ restoreFocus: false });
+    }
+  });
 }
 
-menuToggle.addEventListener("click", () => {
-  const isOpen = mobileMenu.classList.toggle("is-open");
-  document.body.classList.toggle("mobile-menu-open", isOpen);
-  menuToggle.setAttribute("aria-expanded", String(isOpen));
-  menuToggle.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
-});
-
-mobileMenu.querySelectorAll("a").forEach((link) => {
-  link.addEventListener("click", closeMobileMenu);
-});
-
-window.addEventListener("resize", () => {
-  if (window.innerWidth > 960) {
-    closeMobileMenu();
-  }
-});
+initMobileNavigation();
 
 menuList.addEventListener("click", (event) => {
   const itemButton = event.target.closest("[data-item-id]");

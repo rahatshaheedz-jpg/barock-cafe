@@ -73,7 +73,7 @@
       };
     </script>
     <script defer src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="./styles.css?v=20260716-loading-audit" />
+    <link rel="stylesheet" href="./styles.css?v=20260717-mobile-nav" />
     <script defer src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <style>
       body {
@@ -145,14 +145,21 @@
           <a href="./index.html#contact">Contact</a>
         </nav>
         <a class="visit-pill glass-button" href="./menu.html">View Menu</a>
-        <button class="menu-toggle" type="button" data-menu-toggle aria-label="Open navigation">
+        <button
+          class="menu-toggle"
+          type="button"
+          data-menu-toggle
+          aria-label="Open navigation"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
           <span></span>
           <span></span>
           <span></span>
         </button>
       </header>
 
-      <nav class="mobile-menu" data-mobile-menu aria-label="Mobile navigation">
+      <nav class="mobile-menu" id="mobile-menu" data-mobile-menu aria-label="Mobile navigation">
         <a href="./index.html#home">Home</a>
         <a href="./index.html#about">About</a>
         <a href="./menu.html">Menu</a>
@@ -167,6 +174,6 @@
 
     <script defer src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script defer src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script defer src="./reviews.js?v=20260716-loading-audit"></script>
+    <script defer src="./reviews.js?v=20260717-mobile-nav"></script>
   </body>
 </html>
