@@ -559,7 +559,7 @@ function getCategoryImage(categoryId) {
     "hot-chocolate": "./assets/site/coffee-cup.svg",
     "iced-coffee": "./assets/site/iced-coffee.svg",
     chillers: "./assets/site/iced-coffee.svg",
-    matcha: "./assets/site/iced-coffee.svg",
+    matcha: "/assets/menu/matcha/iced-matcha-latte.webp",
     tea: "./assets/site/coffee-cup.svg",
     refreshers: "./assets/site/iced-coffee.svg",
     "signature-mocktails": "./assets/site/iced-coffee.svg",
@@ -805,12 +805,64 @@ const chillerProductImages = {
   ],
 };
 
+const matchaProductImages = {
+  "iced-matcha-latte": [
+    {
+      src: "/assets/menu/matcha/iced-matcha-latte.webp",
+      alt: "Iced Matcha Latte served in a BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+  ],
+  "hot-matcha-latte": [
+    {
+      src: "/assets/menu/matcha/hot-matcha-latte.webp",
+      alt: "Hot Matcha Latte served in a BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+  ],
+  "strawberry-iced-matcha-latte": [
+    {
+      src: "/assets/menu/matcha/strawberry-iced-matcha-latte.webp",
+      alt: "Strawberry Iced Matcha Latte served in a BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+  ],
+  "dirty-matcha": [
+    {
+      src: "/assets/menu/matcha/dirty-matcha.webp",
+      alt: "Dirty Matcha served in a BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+  ],
+  "mango-matcha": [
+    {
+      src: "/assets/menu/matcha/mango-matcha.webp",
+      alt: "Mango Matcha served in a BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+  ],
+  "classic-chocolate-matcha-latte": [
+    {
+      src: "/assets/menu/matcha/classic-chocolate-matcha-latte.webp",
+      alt: "Classic Chocolate Matcha Latte served in a BAROCK CAFE cup",
+      desktopPosition: "50% 50%",
+      mobilePosition: "50% 50%",
+    },
+  ],
+};
+
 function getItemImages(itemName, categoryId) {
   const normalized = slugify(itemName);
   const imageMap = {
     ...classicProductImages,
     ...icedCoffeeProductImages,
     ...chillerProductImages,
+    ...matchaProductImages,
     "chocolate-cake": [{ src: "./assets/site/dessert.svg", alt: "Chocolate Cake illustration" }],
     "salted-caramel-cheesecake": [{ src: "./assets/site/dessert.svg", alt: "Salted Caramel Cheesecake illustration" }],
     "blueberry-cheesecake": [{ src: "./assets/site/dessert.svg", alt: "Blueberry Cheesecake illustration" }],
@@ -829,7 +881,7 @@ function getPrimaryImage(details) {
 function prepareImageData(imageData) {
   const image = { ...imageData };
 
-  if (/^\/assets\/menu\/(?:classics|iced-coffee|chillers)\/.+\.webp$/i.test(image.src)) {
+  if (/^\/assets\/menu\/(?:classics|iced-coffee|chillers|matcha)\/.+\.webp$/i.test(image.src)) {
     const base = image.src.replace(/\.webp$/i, "");
     image.previewSrc = image.previewSrc || `${base}-480.webp`;
     image.srcset = image.srcset || `${base}-480.webp 480w, ${base}-900.webp 900w, ${image.src} 1200w`;
