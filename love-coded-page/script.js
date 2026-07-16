@@ -8,6 +8,122 @@ const web3FormsEndpoint = ["https://api.web3forms.com", "submit"].join("/");
 const web3FormsAccessKey = ["9a69aef0", "2ec6", "43c9", "b2c4", "f59c89d8107d"].join("-");
 const defaultCafeImage = "./assets/site/hero-coffee.svg";
 
+function waitForCriticalImage(image) {
+  if (!image) {
+    return Promise.resolve();
+  }
+
+  return new Promise((resolve) => {
+    let settled = false;
+
+    const finish = () => {
+      if (settled) {
+        return;
+      }
+
+      settled = true;
+      image.removeEventListener("load", handleLoad);
+      image.removeEventListener("error", finish);
+      resolve();
+    };
+
+    const decode = () => {
+      if (typeof image.decode === "function" && image.naturalWidth > 0) {
+        image.decode().catch(() => undefined).finally(finish);
+      } else {
+        finish();
+      }
+    };
+
+    const handleLoad = () => decode();
+
+    if (image.complete) {
+      decode();
+      return;
+    }
+
+    image.addEventListener("load", handleLoad, { once: true });
+    image.addEventListener("error", finish, { once: true });
+  });
+}
+
+function initHomeLoader() {
+  const loader = document.querySelector("[data-site-loader]");
+  const heroProduct = document.querySelector("[data-hero-product]");
+  const loaderLogo = document.querySelector("[data-loader-logo]");
+
+  if (!loader) {
+    document.body.classList.add("hero-ready");
+    document.documentElement.classList.remove("barock-loader-pending");
+    return;
+  }
+
+  if (document.documentElement.classList.contains("barock-loader-seen")) {
+    loader.remove();
+    document.body.classList.add("hero-ready");
+    return;
+  }
+
+  const safetyTimeoutMs = 2400;
+  let safetyTimer = 0;
+  let exitTimer = 0;
+  let finalized = false;
+
+  const safetyTimeout = new Promise((resolve) => {
+    safetyTimer = window.setTimeout(resolve, safetyTimeoutMs);
+  });
+
+  const criticalAssetsReady = Promise.all([
+    waitForCriticalImage(loaderLogo),
+    waitForCriticalImage(heroProduct),
+  ]);
+
+  const finalizeLoader = () => {
+    if (finalized) {
+      return;
+    }
+
+    finalized = true;
+    window.clearTimeout(exitTimer);
+    document.body.classList.add("hero-ready");
+    document.documentElement.classList.remove("barock-loader-pending");
+    document.documentElement.classList.add("barock-loader-seen");
+    loader.remove();
+  };
+
+  const exitLoader = () => {
+    window.clearTimeout(safetyTimer);
+    document.body.classList.add("hero-ready");
+
+    try {
+      sessionStorage.setItem("barockLoaderSeen", "true");
+    } catch (error) {
+      // The loader still exits when session storage is unavailable.
+    }
+
+    loader.addEventListener(
+      "transitionend",
+      (event) => {
+        if (event.target === loader && event.propertyName === "opacity") {
+          finalizeLoader();
+        }
+      },
+      { once: true },
+    );
+
+    window.requestAnimationFrame(() => loader.classList.add("is-exiting"));
+    exitTimer = window.setTimeout(finalizeLoader, 520);
+  };
+
+  Promise.race([criticalAssetsReady, safetyTimeout]).then(exitLoader);
+}
+
+initHomeLoader();
+
+document.addEventListener("visibilitychange", () => {
+  document.body.classList.toggle("hero-motion-paused", document.hidden);
+});
+
 year.textContent = new Date().getFullYear();
 
 function initScrollProgress() {
@@ -55,6 +171,8 @@ function initImageFallbacks() {
         }
 
         image.dataset.fallbackApplied = "true";
+        image.closest("picture")?.querySelectorAll("source").forEach((source) => source.remove());
+        image.removeAttribute("srcset");
         image.src = defaultCafeImage;
       },
       { once: true },
