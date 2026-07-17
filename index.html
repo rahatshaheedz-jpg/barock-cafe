@@ -31,9 +31,9 @@
     <link
       rel="preload"
       as="image"
-      href="./assets/site/barock-strawberry-hero-1254.webp"
-      imagesrcset="./assets/site/barock-strawberry-hero-640.webp 640w, ./assets/site/barock-strawberry-hero-960.webp 960w, ./assets/site/barock-strawberry-hero-1254.webp 1254w"
-      imagesizes="(max-width: 760px) 92vw, (max-width: 1080px) 58vw, 54vw"
+      href="./assets/hero-iced-latte/iced-latte-main-760.webp"
+      imagesrcset="./assets/hero-iced-latte/iced-latte-main-480.webp 480w, ./assets/hero-iced-latte/iced-latte-main-760.webp 760w, ./assets/hero-iced-latte/iced-latte-main-1100.webp 1100w, ./assets/hero-iced-latte/iced-latte-main.webp 1500w"
+      imagesizes="(max-width: 760px) 68vw, (max-width: 1080px) 48vw, 38vw"
       type="image/webp"
       fetchpriority="high"
     />
@@ -42,6 +42,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css?v=20260717-signature-hero" />
+    <link rel="stylesheet" href="./home-intro.css?v=20260717-iced-latte-v2" />
     <script>
       try {
         const loaderSeen = sessionStorage.getItem("barockLoaderSeen") === "true";
@@ -55,8 +56,10 @@
   <body class="home-page">
     <div class="site-loader" data-site-loader aria-hidden="true">
       <div class="site-loader__mark">
-        <span class="site-loader__ring site-loader__ring--teal"></span>
-        <span class="site-loader__ring site-loader__ring--gold"></span>
+        <svg class="site-loader__progress" viewBox="0 0 120 120" aria-hidden="true">
+          <circle class="site-loader__progress-track" cx="60" cy="60" r="55"></circle>
+          <circle class="site-loader__progress-value" data-loader-progress cx="60" cy="60" r="55" pathLength="100"></circle>
+        </svg>
         <img
           class="site-loader__logo"
           data-loader-logo
@@ -112,121 +115,194 @@
         <a href="#contact">Contact</a>
       </nav>
 
-      <section class="hero hero-signature" aria-labelledby="barock-hero-title">
-        <div class="hero-signature__atmosphere" aria-hidden="true">
-          <span class="hero-signature__monogram">B</span>
-          <span class="hero-signature__streak hero-signature__streak--one"></span>
-          <span class="hero-signature__streak hero-signature__streak--two"></span>
-          <span class="hero-signature__particle hero-signature__particle--one"></span>
-          <span class="hero-signature__particle hero-signature__particle--two"></span>
-          <span class="hero-signature__particle hero-signature__particle--three"></span>
-        </div>
+      <section class="hero-cinematic" data-cinematic-hero aria-labelledby="barock-hero-title">
+        <div class="hero-cinematic__pin" data-hero-pin>
+          <picture class="hero-cinematic__background" data-hero-background>
+            <source
+              type="image/webp"
+              srcset="./assets/hero-iced-latte/baroque-background-640.webp 640w, ./assets/hero-iced-latte/baroque-background-960.webp 960w, ./assets/hero-iced-latte/baroque-background-1254.webp 1254w"
+              sizes="100vw"
+            />
+            <img
+              data-loader-critical
+              src="./assets/hero-iced-latte/baroque-background-1254.webp"
+              width="1254"
+              height="1254"
+              alt=""
+              loading="eager"
+              decoding="async"
+            />
+          </picture>
 
-        <div class="hero-signature__shell">
-          <div class="hero-signature__content">
-            <p class="hero-signature__label">Signature Collection</p>
+          <div class="hero-cinematic__wash" aria-hidden="true"></div>
+          <div class="hero-cinematic__engraving" aria-hidden="true">
+            <span class="hero-cinematic__monogram">B</span>
+            <span class="hero-cinematic__orbit hero-cinematic__orbit--outer"></span>
+            <span class="hero-cinematic__orbit hero-cinematic__orbit--inner"></span>
+          </div>
+
+          <div class="hero-cinematic__scene" aria-hidden="true">
+            <div class="hero-cinematic__layer hero-cinematic__milk" data-hero-layer="milk">
+              <img src="./assets/hero-iced-latte/milk-ribbons-1.webp" width="560" height="516" alt="" loading="eager" decoding="async" />
+              <img src="./assets/hero-iced-latte/milk-ribbons-2.webp" width="560" height="299" alt="" loading="eager" decoding="async" />
+            </div>
+            <div class="hero-cinematic__layer hero-cinematic__espresso" data-hero-layer="espresso">
+              <img src="./assets/hero-iced-latte/espresso-splashes-1.webp" width="560" height="583" alt="" loading="eager" decoding="async" />
+              <img src="./assets/hero-iced-latte/espresso-splashes-2.webp" width="560" height="507" alt="" loading="eager" decoding="async" />
+            </div>
+            <div class="hero-cinematic__product-anchor">
+              <picture class="hero-cinematic__product" data-hero-product-wrap>
+                <source
+                  type="image/webp"
+                  srcset="./assets/hero-iced-latte/iced-latte-main-480.webp 480w, ./assets/hero-iced-latte/iced-latte-main-760.webp 760w, ./assets/hero-iced-latte/iced-latte-main-1100.webp 1100w, ./assets/hero-iced-latte/iced-latte-main.webp 1500w"
+                  sizes="(max-width: 760px) 58vw, (max-width: 1080px) 40vw, 28vw"
+                />
+                <img
+                  data-hero-product
+                  data-loader-critical
+                  src="./assets/hero-iced-latte/iced-latte-main-760.webp"
+                  width="1500"
+                  height="2122"
+                  alt="BAROCK CAFE Iced Latte"
+                  loading="eager"
+                  fetchpriority="high"
+                  decoding="async"
+                />
+              </picture>
+            </div>
+            <div class="hero-cinematic__layer hero-cinematic__ice" data-hero-layer="ice">
+              <img src="./assets/hero-iced-latte/ice-cubes-1.webp" width="396" height="390" alt="" loading="eager" decoding="async" />
+              <img src="./assets/hero-iced-latte/ice-cubes-2.webp" width="376" height="399" alt="" loading="eager" decoding="async" />
+              <img src="./assets/hero-iced-latte/ice-cubes-3.webp" width="395" height="401" alt="" loading="eager" decoding="async" />
+              <img src="./assets/hero-iced-latte/ice-cubes-4.webp" width="429" height="391" alt="" loading="eager" decoding="async" />
+              <img src="./assets/hero-iced-latte/ice-cubes-5.webp" width="400" height="402" alt="" loading="eager" decoding="async" />
+              <img src="./assets/hero-iced-latte/ice-cubes-6.webp" width="333" height="353" alt="" loading="eager" decoding="async" />
+            </div>
+            <div class="hero-cinematic__layer hero-cinematic__beans" data-hero-layer="beans">
+              <img src="./assets/hero-iced-latte/coffee-beans-1.webp" width="282" height="349" alt="" loading="eager" decoding="async" />
+              <img src="./assets/hero-iced-latte/coffee-beans-2.webp" width="253" height="341" alt="" loading="eager" decoding="async" />
+              <img src="./assets/hero-iced-latte/coffee-beans-3.webp" width="283" height="324" alt="" loading="eager" decoding="async" />
+              <img src="./assets/hero-iced-latte/coffee-beans-4.webp" width="217" height="347" alt="" loading="eager" decoding="async" />
+              <img src="./assets/hero-iced-latte/coffee-beans-5.webp" width="283" height="297" alt="" loading="eager" decoding="async" />
+              <img src="./assets/hero-iced-latte/coffee-beans-6.webp" width="301" height="257" alt="" loading="eager" decoding="async" />
+              <img src="./assets/hero-iced-latte/coffee-beans-7.webp" width="266" height="282" alt="" loading="eager" decoding="async" />
+              <img src="./assets/hero-iced-latte/coffee-beans-8.webp" width="144" height="347" alt="" loading="eager" decoding="async" />
+            </div>
+          </div>
+
+          <div class="hero-cinematic__copy" data-hero-intro-copy>
+            <p class="hero-cinematic__eyebrow">BAROCK Signature Collection</p>
             <h1 id="barock-hero-title">
-              <span>Sip the Pink</span>
-              <span>Signature</span>
+              <span>Chilled</span>
+              <span>with Ceremony</span>
             </h1>
-            <p class="hero-signature__copy">
-              Indulge in a handcrafted strawberry creation made for every perfect moment.
-            </p>
-            <div class="hero-signature__actions">
-              <a class="button hero-signature__primary" href="./menu.html">Explore Menu</a>
-              <a class="button hero-signature__secondary" href="#location">Visit Barock</a>
-            </div>
+            <p>Espresso, milk, and ice composed into one unmistakably BAROCK moment.</p>
+            <a class="button hero-cinematic__cta" href="./menu.html">Explore the Menu</a>
           </div>
 
-          <div class="hero-signature__visual">
-            <span class="hero-signature__halo hero-signature__halo--outer" aria-hidden="true"></span>
-            <span class="hero-signature__halo hero-signature__halo--inner" aria-hidden="true"></span>
-            <picture class="hero-signature__picture">
-              <source
-                type="image/webp"
-                srcset="./assets/site/barock-strawberry-hero-640.webp 640w, ./assets/site/barock-strawberry-hero-960.webp 960w, ./assets/site/barock-strawberry-hero-1254.webp 1254w"
-                sizes="(max-width: 760px) 92vw, (max-width: 1080px) 58vw, 54vw"
-              />
-              <img
-                class="hero-signature__product"
-                data-hero-product
-                src="./assets/site/barock-strawberry-hero-1254.webp"
-                width="1254"
-                height="1254"
-                alt="BAROCK CAFE Strawberry Chiller with whipped cream and fresh strawberries"
-                loading="eager"
-                fetchpriority="high"
-                decoding="async"
-              />
-            </picture>
-            <div class="hero-signature__product-note" aria-label="Featured drink">
-              <span>BAROCK Signature</span>
-              <strong>Strawberry Chiller</strong>
-            </div>
+          <div class="hero-cinematic__reveal" data-hero-reveal-copy>
+            <span>01 / The Cold Collection</span>
+            <h2>Iced Latte</h2>
+            <p>A velvet pour over crystal ice, finished in dark lacquer, teal enamel, and antique gold.</p>
           </div>
+
+          <a class="hero-cinematic__scroll" data-hero-scroll href="#signature" aria-label="Scroll to the signature selection">
+            <span>Scroll to reveal</span>
+            <i aria-hidden="true"></i>
+          </a>
         </div>
-
-        <a class="hero-signature__scroll" href="#signature" aria-label="Scroll to the signature selection">
-          <span>Scroll</span>
-          <i aria-hidden="true"></i>
-        </a>
       </section>
 
       <section class="barock-selection" id="signature" aria-labelledby="selection-title">
         <div class="barock-section-shell">
-          <header class="editorial-heading reveal">
-            <div>
-              <p class="eyebrow">The First Service</p>
-              <span class="editorial-index">I</span>
-            </div>
-            <div>
-              <h2 id="selection-title">Three Acts of Indulgence</h2>
-              <p>
-                A ceremonial opening trio: one warm, one chilled, one gloriously molten.
-              </p>
-              <a class="barock-text-link" href="./menu.html">Enter the complete menu <span aria-hidden="true">↗</span></a>
-            </div>
+          <header class="selection-fan-heading reveal">
+            <p class="eyebrow">The Barock Selection</p>
+            <h2 id="selection-title">Crafted for Every Indulgence</h2>
+            <p>Explore a curated selection of signature drinks, timeless classics, and refined caf&eacute; favourites.</p>
           </header>
 
-          <div class="selection-procession reveal-group">
-            <article class="selection-act selection-act-one reveal">
-              <figure class="selection-frame">
-                <img src="./assets/site/coffee-cup.svg" width="1200" height="900" loading="lazy" decoding="async" alt="Signature Latte" />
-                <figcaption>House Special</figcaption>
-              </figure>
-              <div class="selection-copy">
-                <span class="selection-number">01</span>
-                <p class="selection-label">Velvet &amp; espresso</p>
-                <h3>Signature Latte</h3>
-                <p>Velvet milk crowned over BAROCK espresso, finished with a hand-drawn rosetta.</p>
-              </div>
-            </article>
+          <div class="selection-fan" data-selection-fan role="region" aria-roledescription="carousel" aria-label="BAROCK CAFE featured menu selection" tabindex="0">
+            <div class="selection-fan-stage" data-selection-fan-stage>
+              <a class="selection-fan-card" href="./menu.html" aria-label="Explore Iced Latte in the complete menu">
+                <picture>
+                  <source media="(max-width: 640px)" srcset="./assets/menu/iced-coffee/iced-latte-1-480.webp" />
+                  <source media="(max-width: 1100px)" srcset="./assets/menu/iced-coffee/iced-latte-1-900.webp" />
+                  <img src="./assets/menu/iced-coffee/iced-latte-1.webp" width="1254" height="1254" loading="eager" fetchpriority="high" decoding="async" alt="Iced Latte served in a BAROCK CAFE cup" />
+                </picture>
+                <span class="selection-fan-card__veil" aria-hidden="true"></span>
+                <span class="selection-fan-card__copy"><strong>Iced Latte</strong><small>BDT 350</small></span>
+              </a>
 
-            <article class="selection-act selection-act-two reveal">
-              <figure class="selection-frame">
-                <img src="./assets/site/iced-coffee.svg" width="1200" height="900" loading="lazy" decoding="async" alt="Iced Caramel Coffee" />
-                <figcaption>Chilled Signature</figcaption>
-              </figure>
-              <div class="selection-copy">
-                <span class="selection-number">02</span>
-                <p class="selection-label">Dark &amp; amber</p>
-                <h3>Iced Caramel Coffee</h3>
-                <p>Dark espresso, cut-crystal ice and amber caramel in a chilled procession.</p>
-              </div>
-            </article>
+              <a class="selection-fan-card" href="./menu.html" aria-label="Explore Cappuccino in the complete menu">
+                <picture>
+                  <source media="(max-width: 640px)" srcset="./assets/menu/classics/cappuccino-1-480.webp" />
+                  <source media="(max-width: 1100px)" srcset="./assets/menu/classics/cappuccino-1-900.webp" />
+                  <img src="./assets/menu/classics/cappuccino-1.webp" width="1254" height="1254" loading="eager" decoding="async" alt="Cappuccino served in a ceramic cup at BAROCK CAFE" />
+                </picture>
+                <span class="selection-fan-card__veil" aria-hidden="true"></span>
+                <span class="selection-fan-card__copy"><strong>Cappuccino</strong><small>BDT 300</small></span>
+              </a>
 
-            <article class="selection-act selection-act-three reveal">
-              <figure class="selection-frame">
-                <img src="./assets/site/dessert.svg" width="1200" height="900" loading="lazy" decoding="async" alt="Molten Chocolate" />
-                <figcaption>Final Flourish</figcaption>
-              </figure>
-              <div class="selection-copy">
-                <span class="selection-number">03</span>
-                <p class="selection-label">Cocoa &amp; theatre</p>
-                <h3>Molten Chocolate</h3>
-                <p>A warm chocolate heart beneath a veil of cocoa, served as the final flourish.</p>
-              </div>
-            </article>
+              <a class="selection-fan-card" href="./menu.html" aria-label="Explore Strawberry Chiller in the complete menu">
+                <picture>
+                  <source media="(max-width: 640px)" srcset="./assets/menu/chillers/strawberry-chiller-1-480.webp" />
+                  <source media="(max-width: 1100px)" srcset="./assets/menu/chillers/strawberry-chiller-1-900.webp" />
+                  <img src="./assets/menu/chillers/strawberry-chiller-1.webp" width="1254" height="1254" loading="lazy" decoding="async" alt="Strawberry Chiller served in a BAROCK CAFE cup" />
+                </picture>
+                <span class="selection-fan-card__veil" aria-hidden="true"></span>
+                <span class="selection-fan-card__copy"><strong>Strawberry Chiller</strong><small>BDT 475</small></span>
+              </a>
+
+              <a class="selection-fan-card" href="./menu.html" aria-label="Explore Iced Matcha Latte in the complete menu">
+                <picture>
+                  <source media="(max-width: 640px)" srcset="./assets/menu/matcha/iced-matcha-latte-480.webp" />
+                  <source media="(max-width: 1100px)" srcset="./assets/menu/matcha/iced-matcha-latte-900.webp" />
+                  <img src="./assets/menu/matcha/iced-matcha-latte.webp" width="1254" height="1254" loading="lazy" decoding="async" alt="Iced Matcha Latte served in a BAROCK CAFE cup" />
+                </picture>
+                <span class="selection-fan-card__veil" aria-hidden="true"></span>
+                <span class="selection-fan-card__copy"><strong>Iced Matcha Latte</strong><small>BDT 350</small></span>
+              </a>
+
+              <a class="selection-fan-card" href="./menu.html" aria-label="Explore Peppermint Tea in the complete menu">
+                <picture>
+                  <source media="(max-width: 640px)" srcset="./assets/menu/tea/peppermint-tea-480.webp" />
+                  <source media="(max-width: 1100px)" srcset="./assets/menu/tea/peppermint-tea-900.webp" />
+                  <img src="./assets/menu/tea/peppermint-tea.webp" width="1254" height="1254" loading="lazy" decoding="async" alt="Peppermint Tea served at BAROCK CAFE" />
+                </picture>
+                <span class="selection-fan-card__veil" aria-hidden="true"></span>
+                <span class="selection-fan-card__copy"><strong>Peppermint Tea</strong><small>BDT 150</small></span>
+              </a>
+
+              <a class="selection-fan-card" href="./menu.html" aria-label="Explore Chocolate Chiller in the complete menu">
+                <picture>
+                  <source media="(max-width: 640px)" srcset="./assets/menu/chillers/chocolate-chiller-1-480.webp" />
+                  <source media="(max-width: 1100px)" srcset="./assets/menu/chillers/chocolate-chiller-1-900.webp" />
+                  <img src="./assets/menu/chillers/chocolate-chiller-1.webp" width="1254" height="1254" loading="lazy" decoding="async" alt="Chocolate Chiller served in a BAROCK CAFE cup" />
+                </picture>
+                <span class="selection-fan-card__veil" aria-hidden="true"></span>
+                <span class="selection-fan-card__copy"><strong>Chocolate Chiller</strong><small>BDT 450</small></span>
+              </a>
+
+              <a class="selection-fan-card" href="./menu.html" aria-label="Explore Chocolate Macadamia Latte in the complete menu">
+                <picture>
+                  <source media="(max-width: 640px)" srcset="./assets/menu/classics/chocolate-macadamia-latte-1-480.webp" />
+                  <source media="(max-width: 1100px)" srcset="./assets/menu/classics/chocolate-macadamia-latte-1-900.webp" />
+                  <img src="./assets/menu/classics/chocolate-macadamia-latte-1.webp" width="1254" height="1254" loading="eager" decoding="async" alt="Chocolate Macadamia Latte served at BAROCK CAFE" />
+                </picture>
+                <span class="selection-fan-card__veil" aria-hidden="true"></span>
+                <span class="selection-fan-card__copy"><strong>Chocolate Macadamia Latte</strong><small>BDT 385</small></span>
+              </a>
+            </div>
+
+            <div class="selection-fan-controls" aria-label="Featured menu controls">
+              <button type="button" data-selection-previous aria-label="Show previous featured item" title="Previous item">&#8592;</button>
+              <span data-selection-status aria-live="polite">1 / 7</span>
+              <button type="button" data-selection-next aria-label="Show next featured item" title="Next item">&#8594;</button>
+            </div>
+          </div>
+
+          <div class="selection-fan-cta reveal">
+            <a class="barock-text-link" href="./menu.html">Explore the complete menu <span aria-hidden="true">&#8599;</span></a>
           </div>
         </div>
       </section>
@@ -403,6 +479,9 @@
       Thanks. Your message is ready for BAROCK CAFE.
     </div>
 
-    <script defer src="./script.js?v=20260717-signature-hero"></script>
+    <script defer src="./assets/vendor/gsap-3.15.0.min.js"></script>
+    <script defer src="./assets/vendor/ScrollTrigger-3.15.0.min.js"></script>
+    <script defer src="./home-intro.js?v=20260717-iced-latte-v2"></script>
+    <script defer src="./script.js?v=20260717-iced-latte-v2"></script>
   </body>
 </html>

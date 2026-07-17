@@ -8,7 +8,7 @@ const web3FormsEndpoint = ["https://api.web3forms.com", "submit"].join("/");
 const web3FormsAccessKey = ["9a69aef0", "2ec6", "43c9", "b2c4", "f59c89d8107d"].join("-");
 const defaultCafeImage = "./assets/site/hero-coffee.svg";
 
-function waitForCriticalImage(image) {
+function waitForCriticalImage(image, onReady = () => {}) {
   if (!image) {
     return Promise.resolve();
   }
@@ -24,6 +24,7 @@ function waitForCriticalImage(image) {
       settled = true;
       image.removeEventListener("load", handleLoad);
       image.removeEventListener("error", finish);
+      onReady();
       resolve();
     };
 
@@ -47,36 +48,56 @@ function waitForCriticalImage(image) {
   });
 }
 
+function signalHeroReady() {
+  const wasReady = document.body.classList.contains("hero-ready");
+  document.body.classList.add("hero-ready");
+
+  if (!wasReady) {
+    window.dispatchEvent(new CustomEvent("barock:hero-ready"));
+  }
+}
+
 function initHomeLoader() {
   const loader = document.querySelector("[data-site-loader]");
-  const heroProduct = document.querySelector("[data-hero-product]");
   const loaderLogo = document.querySelector("[data-loader-logo]");
 
   if (!loader) {
-    document.body.classList.add("hero-ready");
+    signalHeroReady();
     document.documentElement.classList.remove("barock-loader-pending");
     return;
   }
 
   if (document.documentElement.classList.contains("barock-loader-seen")) {
     loader.remove();
-    document.body.classList.add("hero-ready");
+    signalHeroReady();
     return;
   }
 
-  const safetyTimeoutMs = 2400;
+  const criticalImages = [
+    loaderLogo,
+    ...document.querySelectorAll("[data-loader-critical]"),
+  ].filter(Boolean);
+  const safetyTimeoutMs = 3000;
   let safetyTimer = 0;
   let exitTimer = 0;
   let finalized = false;
+  let completedAssets = 0;
+
+  const updateProgress = () => {
+    completedAssets += 1;
+    const progress = Math.min(96, 8 + (completedAssets / Math.max(criticalImages.length, 1)) * 88);
+    loader.style.setProperty("--loader-progress", progress.toFixed(2));
+  };
+
+  loader.style.setProperty("--loader-progress", "8");
 
   const safetyTimeout = new Promise((resolve) => {
     safetyTimer = window.setTimeout(resolve, safetyTimeoutMs);
   });
 
-  const criticalAssetsReady = Promise.all([
-    waitForCriticalImage(loaderLogo),
-    waitForCriticalImage(heroProduct),
-  ]);
+  const criticalAssetsReady = Promise.all(
+    criticalImages.map((image) => waitForCriticalImage(image, updateProgress)),
+  );
 
   const finalizeLoader = () => {
     if (finalized) {
@@ -85,7 +106,7 @@ function initHomeLoader() {
 
     finalized = true;
     window.clearTimeout(exitTimer);
-    document.body.classList.add("hero-ready");
+    signalHeroReady();
     document.documentElement.classList.remove("barock-loader-pending");
     document.documentElement.classList.add("barock-loader-seen");
     loader.remove();
@@ -93,7 +114,8 @@ function initHomeLoader() {
 
   const exitLoader = () => {
     window.clearTimeout(safetyTimer);
-    document.body.classList.add("hero-ready");
+    loader.style.setProperty("--loader-progress", "100");
+    signalHeroReady();
 
     try {
       sessionStorage.setItem("barockLoaderSeen", "true");
@@ -322,6 +344,266 @@ function initMobileNavigation() {
 }
 
 initMobileNavigation();
+
+function initSelectionFan() {
+  const fan = document.querySelector("[data-selection-fan]");
+
+  if (!fan) {
+    return;
+  }
+
+  const stage = fan.querySelector("[data-selection-fan-stage]");
+  const cards = [...fan.querySelectorAll(".selection-fan-card")];
+  const previousButton = fan.querySelector("[data-selection-previous]");
+  const nextButton = fan.querySelector("[data-selection-next]");
+  const status = fan.querySelector("[data-selection-status]");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const gsapApi = window.gsap;
+  let activeIndex = 0;
+  let pointerStartX = 0;
+  let pointerStartY = 0;
+  let pointerId = null;
+  let suppressClick = false;
+  let resizeFrame = 0;
+  let hasEntered = false;
+  let cardStates = [];
+
+  const getOffset = (index) => {
+    let offset = index - activeIndex;
+    const midpoint = Math.floor(cards.length / 2);
+
+    if (offset > midpoint) {
+      offset -= cards.length;
+    } else if (offset < -midpoint) {
+      offset += cards.length;
+    }
+
+    return offset;
+  };
+
+  const getLayout = () => {
+    const width = stage.clientWidth;
+
+    if (width <= 640) {
+      return { spread: Math.min(112, width * 0.3), angle: 7, rise: 18, visible: 1 };
+    }
+
+    if (width <= 980) {
+      return { spread: Math.min(140, width * 0.17), angle: 6.2, rise: 17, visible: 2 };
+    }
+
+    return { spread: Math.min(168, width * 0.137), angle: 5.5, rise: 16, visible: 3 };
+  };
+
+  const getCardState = (card, index, layout) => {
+    const offset = getOffset(index);
+    const distance = Math.abs(offset);
+    const hidden = distance > layout.visible;
+    const scale = distance === 0 ? 1.055 : Math.max(0.79, 0.96 - distance * 0.055);
+
+    return {
+      card,
+      offset,
+      hidden,
+      x: offset * layout.spread,
+      y: distance * layout.rise + distance * distance * 4,
+      rotation: offset * layout.angle,
+      scale,
+      opacity: hidden ? 0 : Math.max(0.48, 1 - distance * 0.17),
+      zIndex: cards.length + 2 - distance,
+    };
+  };
+
+  const setCardAccessibility = (state, index) => {
+    const isActive = index === activeIndex;
+    const image = state.card.querySelector("img");
+
+    state.card.classList.toggle("is-active", isActive);
+    state.card.setAttribute("aria-hidden", String(state.hidden));
+    state.card.tabIndex = state.hidden ? -1 : 0;
+    state.card.style.pointerEvents = state.hidden ? "none" : "auto";
+
+    if (image) {
+      const shouldLoadNow = Math.abs(state.offset) <= 1;
+      image.loading = shouldLoadNow ? "eager" : "lazy";
+      image.fetchPriority = isActive ? "high" : "auto";
+    }
+  };
+
+  const applyStateWithoutGsap = (state) => {
+    state.card.style.zIndex = String(state.zIndex);
+    state.card.style.opacity = String(state.opacity);
+    state.card.style.transform = `translate3d(calc(-50% + ${state.x}px), ${state.y}px, 0) rotate(${state.rotation}deg) scale(${state.scale})`;
+  };
+
+  const render = ({ animate = true, entrance = false } = {}) => {
+    const layout = getLayout();
+    cardStates = cards.map((card, index) => getCardState(card, index, layout));
+
+    cardStates.forEach((state, index) => {
+      setCardAccessibility(state, index);
+
+      if (!gsapApi) {
+        applyStateWithoutGsap(state);
+        return;
+      }
+
+      state.card.style.zIndex = String(state.zIndex);
+      const target = {
+        xPercent: -50,
+        x: state.x,
+        y: state.y,
+        rotation: state.rotation,
+        scale: state.scale,
+        opacity: state.opacity,
+        duration: animate && !reducedMotion.matches ? 0.72 : 0,
+        ease: "power3.out",
+        overwrite: "auto",
+      };
+
+      if (entrance && !reducedMotion.matches) {
+        gsapApi.set(state.card, {
+          xPercent: -50,
+          x: state.x,
+          y: state.y + 72,
+          rotation: state.rotation * 1.55,
+          scale: state.scale * 0.9,
+          opacity: 0,
+        });
+        gsapApi.to(state.card, { ...target, delay: 0.05 + Math.abs(state.offset) * 0.055 });
+      } else {
+        gsapApi.to(state.card, target);
+      }
+    });
+
+    status.textContent = `${activeIndex + 1} / ${cards.length}`;
+  };
+
+  const selectCard = (index) => {
+    activeIndex = (index + cards.length) % cards.length;
+    render({ animate: true });
+  };
+
+  const shift = (direction) => selectCard(activeIndex + direction);
+
+  const applyHover = (isHovering) => {
+    if (!gsapApi || reducedMotion.matches) {
+      return;
+    }
+
+    cardStates.forEach((state) => {
+      const neighborPush = isHovering && state.offset !== 0
+        ? Math.sign(state.offset) * (Math.abs(state.offset) === 1 ? 13 : 7)
+        : 0;
+      const activeLift = isHovering && state.offset === 0 ? -11 : 0;
+
+      gsapApi.to(state.card, {
+        x: state.x + neighborPush,
+        y: state.y + activeLift,
+        duration: 0.34,
+        ease: "power2.out",
+        overwrite: "auto",
+      });
+    });
+  };
+
+  previousButton.addEventListener("click", () => shift(-1));
+  nextButton.addEventListener("click", () => shift(1));
+
+  fan.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+      event.preventDefault();
+      shift(event.key === "ArrowLeft" ? -1 : 1);
+    }
+  });
+
+  cards.forEach((card) => {
+    card.addEventListener("mouseenter", () => {
+      if (card.classList.contains("is-active")) {
+        applyHover(true);
+      }
+    });
+    card.addEventListener("mouseleave", () => applyHover(false));
+    card.addEventListener("focus", () => {
+      if (card.classList.contains("is-active")) {
+        applyHover(true);
+      }
+    });
+    card.addEventListener("blur", () => applyHover(false));
+    card.addEventListener("click", (event) => {
+      if (suppressClick) {
+        event.preventDefault();
+        suppressClick = false;
+      }
+    });
+  });
+
+  stage.addEventListener("pointerdown", (event) => {
+    if (event.pointerType === "mouse" && event.button !== 0) {
+      return;
+    }
+
+    pointerId = event.pointerId;
+    pointerStartX = event.clientX;
+    pointerStartY = event.clientY;
+    suppressClick = false;
+    stage.setPointerCapture?.(event.pointerId);
+  });
+
+  stage.addEventListener("pointerup", (event) => {
+    if (event.pointerId !== pointerId) {
+      return;
+    }
+
+    const deltaX = event.clientX - pointerStartX;
+    const deltaY = event.clientY - pointerStartY;
+    pointerId = null;
+
+    if (Math.abs(deltaX) > 42 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) {
+      suppressClick = true;
+      shift(deltaX < 0 ? 1 : -1);
+    }
+  });
+
+  stage.addEventListener("pointercancel", () => {
+    pointerId = null;
+    suppressClick = false;
+  });
+
+  window.addEventListener("resize", () => {
+    if (resizeFrame) {
+      return;
+    }
+
+    resizeFrame = window.requestAnimationFrame(() => {
+      resizeFrame = 0;
+      render({ animate: false });
+    });
+  });
+
+  reducedMotion.addEventListener?.("change", () => render({ animate: false }));
+
+  const entranceObserver = new IntersectionObserver(
+    (entries, observer) => {
+      if (!entries.some((entry) => entry.isIntersecting) || hasEntered) {
+        return;
+      }
+
+      hasEntered = true;
+      render({ animate: true, entrance: true });
+      observer.disconnect();
+    },
+    { rootMargin: "0px 0px -10% 0px", threshold: 0.16 },
+  );
+
+  render({ animate: false });
+  cards.forEach((card) => {
+    card.style.opacity = "0";
+  });
+  entranceObserver.observe(fan);
+}
+
+initSelectionFan();
 
 contactForm.addEventListener("submit", async (event) => {
   event.preventDefault();
