@@ -231,16 +231,101 @@ function showToast(message) {
   window.setTimeout(() => toast.classList.remove("is-visible"), 3600);
 }
 
-function initMobileNavigation() {
-  if (!menuToggle || !mobileMenu) {
+function initNavigation() {
+  const header = document.querySelector(".site-header");
+
+  if (!header) {
     return;
   }
 
-  const links = [...mobileMenu.querySelectorAll("a")];
-  const backdrop = document.createElement("button");
+  const desktopLinks = [...header.querySelectorAll(".nav-links a")];
+  const links = mobileMenu ? [...mobileMenu.querySelectorAll("a")] : [];
+  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const eventController = new AbortController();
+  const eventSignal = eventController.signal;
+  const listen = (target, type, handler, options = {}) => {
+    target?.addEventListener(type, handler, { ...options, signal: eventSignal });
+  };
   let navState = "closed";
   let closeTimer = 0;
   let scrollY = 0;
+  let linkCenters = [];
+  let pointerX = 0;
+  let magnificationFrame = 0;
+  let resizeFrame = 0;
+
+  const resetMagnification = () => {
+    window.cancelAnimationFrame(magnificationFrame);
+    magnificationFrame = 0;
+    desktopLinks.forEach((link) => link.style.removeProperty("--nav-scale"));
+  };
+
+  const measureLinks = () => {
+    linkCenters = desktopLinks.map((link) => {
+      const rect = link.getBoundingClientRect();
+      return rect.left + rect.width / 2;
+    });
+  };
+
+  const renderMagnification = () => {
+    magnificationFrame = 0;
+
+    if (!finePointer.matches || reducedMotion.matches) {
+      resetMagnification();
+      return;
+    }
+
+    const influenceRadius = 150;
+    const maximumLift = 0.1;
+
+    desktopLinks.forEach((link, index) => {
+      const distance = Math.abs(pointerX - linkCenters[index]);
+      const progress = Math.max(0, 1 - distance / influenceRadius);
+      const falloff = progress > 0 ? (1 - Math.cos(progress * Math.PI)) / 2 : 0;
+      link.style.setProperty("--nav-scale", (1 + maximumLift * falloff).toFixed(4));
+    });
+  };
+
+  listen(header, "pointermove", (event) => {
+    if (!finePointer.matches || reducedMotion.matches || event.pointerType === "touch") {
+      return;
+    }
+
+    pointerX = event.clientX;
+    if (!magnificationFrame) {
+      magnificationFrame = window.requestAnimationFrame(renderMagnification);
+    }
+  });
+
+  listen(header, "pointerleave", resetMagnification);
+  listen(header, "pointerout", (event) => {
+    if (!header.contains(event.relatedTarget)) {
+      resetMagnification();
+    }
+  });
+  listen(finePointer, "change", () => {
+    resetMagnification();
+    measureLinks();
+  });
+  listen(reducedMotion, "change", resetMagnification);
+  measureLinks();
+  document.fonts?.ready.then(measureLinks);
+
+  if (!menuToggle || !mobileMenu) {
+    listen(window, "resize", () => {
+      if (!resizeFrame) {
+        resizeFrame = window.requestAnimationFrame(() => {
+          resizeFrame = 0;
+          measureLinks();
+        });
+      }
+    });
+    listen(window, "pagehide", () => eventController.abort(), { once: true });
+    return;
+  }
+
+  const backdrop = document.createElement("button");
 
   backdrop.type = "button";
   backdrop.className = "mobile-menu-backdrop";
@@ -288,8 +373,7 @@ function initMobileNavigation() {
     window.setTimeout(() => {
       navState = "open";
       mobileMenu.classList.remove("is-opening");
-      links[0]?.focus({ preventScroll: true });
-    }, 360);
+    }, 380);
   };
 
   const closeMenu = ({ restoreFocus = true } = {}) => {
@@ -314,7 +398,7 @@ function initMobileNavigation() {
     }, 300);
   };
 
-  menuToggle.addEventListener("click", () => {
+  listen(menuToggle, "click", () => {
     if (navState === "open" || navState === "opening") {
       closeMenu();
     } else {
@@ -322,28 +406,42 @@ function initMobileNavigation() {
     }
   });
 
-  mobileMenu.addEventListener("click", (event) => {
+  listen(mobileMenu, "click", (event) => {
     if (event.target.closest("a")) {
       closeMenu({ restoreFocus: false });
     }
   });
 
-  backdrop.addEventListener("click", () => closeMenu());
+  listen(backdrop, "click", () => closeMenu());
 
-  window.addEventListener("keydown", (event) => {
+  listen(window, "keydown", (event) => {
     if (event.key === "Escape") {
       closeMenu();
     }
   });
 
-  window.addEventListener("resize", () => {
-    if (window.innerWidth > 960) {
-      closeMenu({ restoreFocus: false });
+  listen(window, "resize", () => {
+    if (!resizeFrame) {
+      resizeFrame = window.requestAnimationFrame(() => {
+        resizeFrame = 0;
+        measureLinks();
+        if (window.innerWidth > 960) {
+          closeMenu({ restoreFocus: false });
+        }
+      });
     }
   });
+
+  listen(window, "pagehide", () => {
+    window.clearTimeout(closeTimer);
+    window.cancelAnimationFrame(magnificationFrame);
+    window.cancelAnimationFrame(resizeFrame);
+    eventController.abort();
+    backdrop.remove();
+  }, { once: true });
 }
 
-initMobileNavigation();
+initNavigation();
 
 function initSelectionFan() {
   const fan = document.querySelector("[data-selection-fan]");
@@ -359,14 +457,29 @@ function initSelectionFan() {
   const status = fan.querySelector("[data-selection-status]");
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const gsapApi = window.gsap;
+  const eventController = new AbortController();
+  const eventSignal = eventController.signal;
+  const listen = (target, type, handler, options = {}) => {
+    target.addEventListener(type, handler, { ...options, signal: eventSignal });
+  };
+  const swipeThreshold = 48;
+  const fastSwipeMinimumDistance = 30;
+  const fastSwipeVelocity = 0.55;
   let activeIndex = 0;
   let pointerStartX = 0;
   let pointerStartY = 0;
+  let pointerCurrentX = 0;
+  let pointerCurrentY = 0;
+  let pointerStartTime = 0;
   let pointerId = null;
-  let suppressClick = false;
+  let gestureAxis = "idle";
+  let suppressClickUntil = 0;
+  let isTransitioning = false;
+  let transitionTimer = 0;
   let resizeFrame = 0;
   let hasEntered = false;
   let cardStates = [];
+  let entranceObserver = null;
 
   const getOffset = (index) => {
     let offset = index - activeIndex;
@@ -484,7 +597,51 @@ function initSelectionFan() {
     render({ animate: true });
   };
 
-  const shift = (direction) => selectCard(activeIndex + direction);
+  const unlockTransition = () => {
+    window.clearTimeout(transitionTimer);
+    transitionTimer = 0;
+    isTransitioning = false;
+    fan.removeAttribute("aria-busy");
+  };
+
+  const lockTransition = () => {
+    isTransitioning = true;
+    fan.setAttribute("aria-busy", "true");
+    window.clearTimeout(transitionTimer);
+    transitionTimer = window.setTimeout(unlockTransition, reducedMotion.matches ? 40 : 760);
+  };
+
+  const cycle = (direction) => {
+    if (isTransitioning) {
+      return false;
+    }
+
+    lockTransition();
+    selectCard(activeIndex + (direction === "left" ? 1 : -1));
+    return true;
+  };
+
+  const applyDragFeedback = (distance) => {
+    if (!gsapApi || reducedMotion.matches) {
+      return;
+    }
+
+    const feedback = Math.max(-90, Math.min(90, distance)) * 0.22;
+
+    cardStates.forEach((state) => {
+      gsapApi.to(state.card, {
+        x: state.x + feedback,
+        rotation: state.rotation + feedback * 0.012,
+        duration: 0.08,
+        ease: "none",
+        overwrite: "auto",
+      });
+    });
+  };
+
+  const snapBack = () => {
+    render({ animate: true });
+  };
 
   const applyHover = (isHovering) => {
     if (!gsapApi || reducedMotion.matches) {
@@ -507,70 +664,148 @@ function initSelectionFan() {
     });
   };
 
-  previousButton.addEventListener("click", () => shift(-1));
-  nextButton.addEventListener("click", () => shift(1));
+  listen(previousButton, "click", () => cycle("right"));
+  listen(nextButton, "click", () => cycle("left"));
 
-  fan.addEventListener("keydown", (event) => {
+  listen(fan, "keydown", (event) => {
     if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
       event.preventDefault();
-      shift(event.key === "ArrowLeft" ? -1 : 1);
+      cycle(event.key === "ArrowLeft" ? "right" : "left");
     }
   });
 
   cards.forEach((card) => {
-    card.addEventListener("mouseenter", () => {
+    const image = card.querySelector("img");
+
+    if (image) {
+      image.draggable = false;
+    }
+
+    listen(card, "dragstart", (event) => event.preventDefault());
+    listen(card, "mouseenter", () => {
       if (card.classList.contains("is-active")) {
         applyHover(true);
       }
     });
-    card.addEventListener("mouseleave", () => applyHover(false));
-    card.addEventListener("focus", () => {
+    listen(card, "mouseleave", () => applyHover(false));
+    listen(card, "focus", () => {
       if (card.classList.contains("is-active")) {
         applyHover(true);
       }
     });
-    card.addEventListener("blur", () => applyHover(false));
-    card.addEventListener("click", (event) => {
-      if (suppressClick) {
+    listen(card, "blur", () => applyHover(false));
+    listen(card, "click", (event) => {
+      if (Date.now() < suppressClickUntil) {
         event.preventDefault();
-        suppressClick = false;
       }
     });
   });
 
-  stage.addEventListener("pointerdown", (event) => {
-    if (event.pointerType === "mouse" && event.button !== 0) {
+  const resetGesture = ({ snap = false } = {}) => {
+    if (snap && gestureAxis === "horizontal") {
+      snapBack();
+    }
+
+    const capturedPointerId = pointerId;
+    pointerId = null;
+
+    if (capturedPointerId !== null && stage.hasPointerCapture?.(capturedPointerId)) {
+      stage.releasePointerCapture(capturedPointerId);
+    }
+
+    gestureAxis = "idle";
+    fan.classList.remove("is-dragging");
+  };
+
+  listen(stage, "pointerdown", (event) => {
+    if (isTransitioning || !event.isPrimary || (event.pointerType === "mouse" && event.button !== 0)) {
       return;
     }
 
     pointerId = event.pointerId;
     pointerStartX = event.clientX;
     pointerStartY = event.clientY;
-    suppressClick = false;
+    pointerCurrentX = event.clientX;
+    pointerCurrentY = event.clientY;
+    pointerStartTime = performance.now();
+    gestureAxis = "pending";
+    fan.classList.add("is-dragging");
     stage.setPointerCapture?.(event.pointerId);
   });
 
-  stage.addEventListener("pointerup", (event) => {
+  listen(stage, "pointermove", (event) => {
+    if (event.pointerId !== pointerId) {
+      return;
+    }
+
+    pointerCurrentX = event.clientX;
+    pointerCurrentY = event.clientY;
+    const deltaX = pointerCurrentX - pointerStartX;
+    const deltaY = pointerCurrentY - pointerStartY;
+    const horizontalDistance = Math.abs(deltaX);
+    const verticalDistance = Math.abs(deltaY);
+
+    if (gestureAxis === "pending" && Math.max(horizontalDistance, verticalDistance) >= 8) {
+      if (horizontalDistance > verticalDistance * 1.15) {
+        gestureAxis = "horizontal";
+      } else if (verticalDistance > horizontalDistance) {
+        gestureAxis = "vertical";
+        fan.classList.remove("is-dragging");
+      }
+    }
+
+    if (gestureAxis !== "horizontal") {
+      return;
+    }
+
+    event.preventDefault();
+    applyDragFeedback(deltaX);
+
+    if (horizontalDistance > 8) {
+      suppressClickUntil = Date.now() + 450;
+    }
+  }, { passive: false });
+
+  listen(stage, "pointerup", (event) => {
     if (event.pointerId !== pointerId) {
       return;
     }
 
     const deltaX = event.clientX - pointerStartX;
     const deltaY = event.clientY - pointerStartY;
-    pointerId = null;
+    const duration = Math.max(1, performance.now() - pointerStartTime);
+    const horizontalDistance = Math.abs(deltaX);
+    const velocity = horizontalDistance / duration;
+    const isHorizontal = gestureAxis === "horizontal" && horizontalDistance > Math.abs(deltaY) * 1.15;
+    const passedDistance = horizontalDistance >= swipeThreshold;
+    const passedVelocity = horizontalDistance >= fastSwipeMinimumDistance && velocity >= fastSwipeVelocity;
 
-    if (Math.abs(deltaX) > 42 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) {
-      suppressClick = true;
-      shift(deltaX < 0 ? 1 : -1);
+    if (isHorizontal && horizontalDistance > 8) {
+      suppressClickUntil = Date.now() + 450;
+    }
+
+    resetGesture();
+
+    if (isHorizontal && (passedDistance || passedVelocity)) {
+      cycle(deltaX < 0 ? "left" : "right");
+    } else if (isHorizontal) {
+      snapBack();
     }
   });
 
-  stage.addEventListener("pointercancel", () => {
-    pointerId = null;
-    suppressClick = false;
+  listen(stage, "pointercancel", (event) => {
+    if (event.pointerId === pointerId) {
+      resetGesture({ snap: true });
+    }
   });
 
-  window.addEventListener("resize", () => {
+  listen(stage, "lostpointercapture", (event) => {
+    if (event.pointerId === pointerId) {
+      resetGesture({ snap: true });
+    }
+  });
+
+  listen(window, "resize", () => {
     if (resizeFrame) {
       return;
     }
@@ -581,9 +816,13 @@ function initSelectionFan() {
     });
   });
 
-  reducedMotion.addEventListener?.("change", () => render({ animate: false }));
+  listen(reducedMotion, "change", () => {
+    unlockTransition();
+    resetGesture({ snap: true });
+    render({ animate: false });
+  });
 
-  const entranceObserver = new IntersectionObserver(
+  entranceObserver = new IntersectionObserver(
     (entries, observer) => {
       if (!entries.some((entry) => entry.isIntersecting) || hasEntered) {
         return;
@@ -601,6 +840,13 @@ function initSelectionFan() {
     card.style.opacity = "0";
   });
   entranceObserver.observe(fan);
+
+  listen(window, "pagehide", () => {
+    window.clearTimeout(transitionTimer);
+    window.cancelAnimationFrame(resizeFrame);
+    entranceObserver?.disconnect();
+    eventController.abort();
+  }, { once: true });
 }
 
 initSelectionFan();
