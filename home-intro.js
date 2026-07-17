@@ -18,6 +18,7 @@
   const ice = hero.querySelector('[data-hero-layer="ice"]');
   const beans = hero.querySelector('[data-hero-layer="beans"]');
   const layers = [milk, espresso, ice, beans].filter(Boolean);
+  const mobileView = window.matchMedia("(max-width: 760px)");
 
   if (!window.gsap || !window.ScrollTrigger) {
     revealCopy?.remove();
@@ -36,19 +37,28 @@
       defaults: { ease: "power3.out" },
     });
 
-    entrance
-      .from(background, { scale: 1.14, autoAlpha: 0, duration: 1.15 })
-      .from(monogram, { scale: 0.78, autoAlpha: 0, duration: 1.1 }, 0.08)
-      .from(product, { yPercent: 16, scale: 0.78, rotation: -3, autoAlpha: 0, duration: 1.25 }, 0.12)
-      .from(layers, {
-        xPercent: (index) => (index % 2 === 0 ? -12 : 12),
-        yPercent: (index) => (index < 2 ? -10 : 14),
-        scale: 0.82,
-        autoAlpha: 0,
-        duration: 1.05,
-        stagger: 0.08,
-      }, 0.2)
-      .from(introCopy.children, { y: 28, autoAlpha: 0, duration: 0.72, stagger: 0.08 }, 0.34);
+    if (mobileView.matches) {
+      entrance
+        .from(background, { scale: 1.04, autoAlpha: 0, duration: 0.72 })
+        .from(monogram, { scale: 0.94, autoAlpha: 0, duration: 0.62 }, 0.04)
+        .from(product, { y: 24, scale: 0.97, autoAlpha: 0, duration: 0.78 }, 0.08)
+        .from([ice, beans].filter(Boolean), { y: 14, autoAlpha: 0, duration: 0.55, stagger: 0.06 }, 0.18)
+        .from(introCopy.children, { y: 18, autoAlpha: 0, duration: 0.5, stagger: 0.06 }, 0.18);
+    } else {
+      entrance
+        .from(background, { scale: 1.14, autoAlpha: 0, duration: 1.15 })
+        .from(monogram, { scale: 0.78, autoAlpha: 0, duration: 1.1 }, 0.08)
+        .from(product, { yPercent: 16, scale: 0.78, rotation: -3, autoAlpha: 0, duration: 1.25 }, 0.12)
+        .from(layers, {
+          xPercent: (index) => (index % 2 === 0 ? -12 : 12),
+          yPercent: (index) => (index < 2 ? -10 : 14),
+          scale: 0.82,
+          autoAlpha: 0,
+          duration: 1.05,
+          stagger: 0.08,
+        }, 0.2)
+        .from(introCopy.children, { y: 28, autoAlpha: 0, duration: 0.72, stagger: 0.08 }, 0.34);
+    }
 
     const finishEntranceOnScroll = (self) => {
       if (self.progress > 0.01 && entrance.isActive()) {
@@ -111,37 +121,7 @@
     });
 
     media.add("(max-width: 760px) and (prefers-reduced-motion: no-preference)", () => {
-      const timeline = gsap.timeline({
-        defaults: { ease: "none" },
-        scrollTrigger: {
-          trigger: hero,
-          start: "top top",
-          end: "+=175%",
-          pin,
-          pinSpacing: true,
-          scrub: 0.55,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-          onUpdate: finishEntranceOnScroll,
-        },
-      });
-
-      timeline
-        .to(scrollCue, { autoAlpha: 0, duration: 0.08 }, 0)
-        .to(introCopy, { yPercent: -18, autoAlpha: 0, duration: 0.25 }, 0.08)
-        .to(background, { scale: 1.13, yPercent: 3, duration: 0.72 }, 0)
-        .to(product, { y: -72, scale: 1.06, duration: 0.62 }, 0.02)
-        .to(milk, { xPercent: -8, yPercent: -12, rotation: -5, duration: 0.68 }, 0)
-        .to(espresso, { xPercent: 8, yPercent: -8, rotation: 7, duration: 0.68 }, 0)
-        .to(ice, { xPercent: 7, yPercent: 14, rotation: -5, duration: 0.68 }, 0)
-        .to(beans, { xPercent: -7, yPercent: 15, rotation: 5, duration: 0.68 }, 0)
-        .fromTo(revealCopy, { y: 32, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.22 }, 0.43)
-        .to(revealCopy, { y: -18, autoAlpha: 0, duration: 0.18 }, 0.82)
-        .to(layers, { autoAlpha: 0, scale: 1.12, duration: 0.2 }, 0.8)
-        .to(product, { y: 86, scale: 0.72, duration: 0.2 }, 0.8)
-        .to(wash, { autoAlpha: 0.98, duration: 0.2 }, 0.8);
-
-      return () => timeline.scrollTrigger?.kill();
+      gsap.set(revealCopy, { display: "none" });
     });
 
     media.add("(prefers-reduced-motion: reduce)", () => {
@@ -151,7 +131,7 @@
   }, hero);
 
   const refreshAfterAssets = async () => {
-    const images = [...hero.querySelectorAll("img")];
+    const images = [background, product?.querySelector("img")].filter(Boolean);
     await Promise.all(images.map((image) => {
       if (image.complete) {
         return image.decode?.().catch(() => undefined);
@@ -169,5 +149,14 @@
 
   refreshAfterAssets();
 
-  window.addEventListener("pagehide", () => context.revert(), { once: true });
+  const visibilityObserver = new IntersectionObserver(
+    ([entry]) => hero.classList.toggle("is-motion-paused", !entry.isIntersecting),
+    { rootMargin: "80px 0px", threshold: 0.01 },
+  );
+  visibilityObserver.observe(hero);
+
+  window.addEventListener("pagehide", () => {
+    visibilityObserver.disconnect();
+    context.revert();
+  }, { once: true });
 })();
