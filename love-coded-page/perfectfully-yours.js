@@ -103,7 +103,7 @@ form.addEventListener("submit", async (event) => {
 
   const formData = new FormData(form);
   formData.append("access_key", web3FormsAccessKey);
-  formData.append("subject", "New opening notification request from Barock Cafe Website");
+  formData.append("subject", "New BAROCK CAFE guest-list request");
 
   submitButton.disabled = true;
   submitButton.textContent = "Sending...";
@@ -120,7 +120,7 @@ form.addEventListener("submit", async (event) => {
     }
 
     form.reset();
-    showToast("Thank you. We will notify you when Perfectfully Yours opens.");
+    showToast("Thank you. You are now connected with BAROCK CAFE.");
   } catch (error) {
     showToast("Sorry, something went wrong. Please try again.");
   } finally {
