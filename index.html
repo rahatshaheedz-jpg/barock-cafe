@@ -31,9 +31,9 @@
     <link
       rel="preload"
       as="image"
-      href="./assets/hero-iced-latte/iced-latte-main-760.webp"
-      imagesrcset="./assets/hero-iced-latte/iced-latte-main-480.webp 480w, ./assets/hero-iced-latte/iced-latte-main-760.webp 760w, ./assets/hero-iced-latte/iced-latte-main-1100.webp 1100w, ./assets/hero-iced-latte/iced-latte-main.webp 1500w"
-      imagesizes="(max-width: 760px) 68vw, (max-width: 1080px) 48vw, 38vw"
+      href="./assets/brand-photography/hero-exterior.webp"
+      imagesrcset="./assets/brand-photography/hero-exterior-640.webp 640w, ./assets/brand-photography/hero-exterior.webp 1280w"
+      imagesizes="100vw"
       type="image/webp"
       fetchpriority="high"
     />
@@ -41,8 +41,8 @@
       href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,500;0,600;0,700;1,600&family=Instrument+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260820-menu-book-v1" />
-    <link rel="stylesheet" href="./home-intro.css?v=20260718-velaris-v1" />
+    <link rel="stylesheet" href="./styles.css?v=20260820-authentic-v1" />
+    <link rel="stylesheet" href="./home-intro.css?v=20260820-authentic-v1" />
     <script>
       try {
         const loaderSeen = sessionStorage.getItem("barockLoaderSeen") === "true";
@@ -78,6 +78,8 @@
   </head>
   <body class="home-page">
     <div class="site-loader" data-site-loader aria-hidden="true">
+      <span class="site-loader__portal site-loader__portal--left" aria-hidden="true"></span>
+      <span class="site-loader__portal site-loader__portal--right" aria-hidden="true"></span>
       <div class="site-loader__mark">
         <svg class="site-loader__progress" viewBox="0 0 120 120" aria-hidden="true">
           <circle class="site-loader__progress-track" cx="60" cy="60" r="55"></circle>
@@ -93,7 +95,8 @@
           decoding="async"
         />
       </div>
-      <p class="site-loader__label">Loading Barock Experience...</p>
+      <p class="site-loader__eyebrow">House 9/B · Gulshan-02</p>
+      <p class="site-loader__label">Preparing Your Table</p>
     </div>
     <main>
       <header class="site-header glass-navbar" id="home">
@@ -138,102 +141,135 @@
         <a href="#contact">Contact</a>
       </nav>
 
-      <section class="hero-cinematic" data-cinematic-hero aria-labelledby="barock-hero-title">
-        <div class="hero-cinematic__pin" data-hero-pin>
-          <canvas class="hero-velaris" data-hero-velaris aria-hidden="true"></canvas>
-          <picture class="hero-cinematic__background" data-hero-background>
-            <source
-              type="image/webp"
-              srcset="./assets/hero-iced-latte/baroque-background-640.webp 640w, ./assets/hero-iced-latte/baroque-background-960.webp 960w, ./assets/hero-iced-latte/baroque-background-1254.webp 1254w"
-              sizes="100vw"
-            />
-            <img
-              data-loader-critical
-              src="./assets/hero-iced-latte/baroque-background-1254.webp"
-              width="1254"
-              height="1254"
-              alt=""
-              loading="eager"
-              decoding="async"
-            />
-          </picture>
-
-          <div class="hero-cinematic__wash" aria-hidden="true"></div>
-          <div class="hero-cinematic__engraving" aria-hidden="true">
-            <span class="hero-cinematic__monogram">B</span>
-            <span class="hero-cinematic__orbit hero-cinematic__orbit--outer"></span>
-            <span class="hero-cinematic__orbit hero-cinematic__orbit--inner"></span>
+      <section class="brand-hero" data-brand-hero aria-labelledby="barock-hero-title">
+        <picture class="brand-hero__media">
+          <source
+            type="image/webp"
+            media="(max-width: 760px)"
+            srcset="./assets/brand-photography/hero-exterior-640.webp"
+          />
+          <img
+            data-loader-critical
+            src="./assets/brand-photography/hero-exterior.webp"
+            width="1280"
+            height="960"
+            alt="BAROCK CAFE illuminated at night in Gulshan"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </picture>
+        <div class="brand-hero__overlay" aria-hidden="true"></div>
+        <div class="brand-hero__ornament" aria-hidden="true"><span>B</span></div>
+        <div class="brand-hero__content">
+          <p class="eyebrow">Gulshan-02 · Dhaka</p>
+          <h1 id="barock-hero-title">BAROCK <span>CAFÉ</span></h1>
+          <p class="brand-hero__motto">Every Moment, Perfectly Yours.</p>
+          <p class="brand-hero__intro">Coffee, cuisine, and evening hospitality beneath the golden lights of BAROCK.</p>
+          <div class="brand-hero__actions">
+            <a class="button primary" href="/menu.html">View Menu</a>
+            <a class="brand-hero__text-link" href="#gallery">Explore Our Space <span aria-hidden="true">↓</span></a>
           </div>
+        </div>
+        <p class="brand-hero__hours">Daily · 8:00 AM–2:00 AM</p>
+      </section>
 
-          <div class="hero-cinematic__scene" aria-hidden="true">
-            <div class="hero-cinematic__layer hero-cinematic__milk" data-hero-layer="milk">
-              <img src="./assets/hero-iced-latte/milk-ribbons-1.webp" width="560" height="516" alt="" loading="lazy" fetchpriority="low" decoding="async" />
-              <img src="./assets/hero-iced-latte/milk-ribbons-2.webp" width="560" height="299" alt="" loading="lazy" fetchpriority="low" decoding="async" />
+      <section class="brand-story" aria-labelledby="brand-story-title">
+        <div class="barock-section-shell brand-story__layout">
+          <figure class="brand-story__portrait reveal">
+            <img src="./assets/brand-photography/black-coffee.webp" width="578" height="1280" loading="lazy" decoding="async" alt="Black coffee served in a BAROCK CAFE porcelain cup" />
+          </figure>
+          <div class="brand-story__copy reveal">
+            <p class="eyebrow">The House of BAROCK</p>
+            <h2 id="brand-story-title">A little theatre.<br />A lot of warmth.</h2>
+            <p>From the first pour to the last table of the evening, BAROCK brings modern café culture to Gulshan with a distinctly ceremonial touch.</p>
+            <a class="barock-text-link" href="#location">Visit the house <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+      </section>
+
+      <section class="signature-sips" aria-labelledby="signature-sips-title">
+        <div class="barock-section-shell">
+          <header class="signature-sips__heading reveal">
+            <div>
+              <p class="eyebrow">From the BAROCK Bar</p>
+              <h2 id="signature-sips-title">Signature Sips</h2>
             </div>
-            <div class="hero-cinematic__layer hero-cinematic__espresso" data-hero-layer="espresso">
-              <img src="./assets/hero-iced-latte/espresso-splashes-1.webp" width="560" height="583" alt="" loading="lazy" fetchpriority="low" decoding="async" />
-              <img src="./assets/hero-iced-latte/espresso-splashes-2.webp" width="560" height="507" alt="" loading="lazy" fetchpriority="low" decoding="async" />
-            </div>
-            <div class="hero-cinematic__product-anchor">
-              <picture class="hero-cinematic__product" data-hero-product-wrap>
-                <source
-                  type="image/webp"
-                  srcset="./assets/hero-iced-latte/iced-latte-main-480.webp 480w, ./assets/hero-iced-latte/iced-latte-main-760.webp 760w, ./assets/hero-iced-latte/iced-latte-main-1100.webp 1100w, ./assets/hero-iced-latte/iced-latte-main.webp 1500w"
-                  sizes="(max-width: 760px) 58vw, (max-width: 1080px) 40vw, 28vw"
-                />
-                <img
-                  data-hero-product
-                  data-loader-critical
-                  src="./assets/hero-iced-latte/iced-latte-main-760.webp"
-                  width="1500"
-                  height="2122"
-                  alt="BAROCK CAFE Iced Latte"
-                  loading="eager"
-                  fetchpriority="high"
-                  decoding="async"
-                />
+            <p>Bright refreshers, sparkling pours, and coffee composed for every hour.</p>
+          </header>
+          <div class="signature-sips__grid reveal-group">
+            <figure class="signature-sip signature-sip--feature reveal">
+              <picture>
+                <source type="image/webp" srcset="./assets/brand-photography/goldie-640.webp 640w, ./assets/brand-photography/goldie.webp 720w" sizes="(max-width: 760px) 100vw, 46vw" />
+                <img src="./assets/brand-photography/goldie.webp" width="720" height="1280" loading="lazy" decoding="async" alt="Amaya's Goldie citrus signature drink at BAROCK CAFE" />
               </picture>
-            </div>
-            <div class="hero-cinematic__layer hero-cinematic__ice" data-hero-layer="ice">
-              <img src="./assets/hero-iced-latte/ice-cubes-1.webp" width="396" height="390" alt="" loading="lazy" fetchpriority="low" decoding="async" />
-              <img src="./assets/hero-iced-latte/ice-cubes-2.webp" width="376" height="399" alt="" loading="lazy" fetchpriority="low" decoding="async" />
-              <img src="./assets/hero-iced-latte/ice-cubes-3.webp" width="395" height="401" alt="" loading="lazy" fetchpriority="low" decoding="async" />
-              <img src="./assets/hero-iced-latte/ice-cubes-4.webp" width="429" height="391" alt="" loading="lazy" fetchpriority="low" decoding="async" />
-              <img src="./assets/hero-iced-latte/ice-cubes-5.webp" width="400" height="402" alt="" loading="lazy" fetchpriority="low" decoding="async" />
-              <img src="./assets/hero-iced-latte/ice-cubes-6.webp" width="333" height="353" alt="" loading="lazy" fetchpriority="low" decoding="async" />
-            </div>
-            <div class="hero-cinematic__layer hero-cinematic__beans" data-hero-layer="beans">
-              <img src="./assets/hero-iced-latte/coffee-beans-1.webp" width="282" height="349" alt="" loading="lazy" fetchpriority="low" decoding="async" />
-              <img src="./assets/hero-iced-latte/coffee-beans-2.webp" width="253" height="341" alt="" loading="lazy" fetchpriority="low" decoding="async" />
-              <img src="./assets/hero-iced-latte/coffee-beans-3.webp" width="283" height="324" alt="" loading="lazy" fetchpriority="low" decoding="async" />
-              <img src="./assets/hero-iced-latte/coffee-beans-4.webp" width="217" height="347" alt="" loading="lazy" fetchpriority="low" decoding="async" />
-              <img src="./assets/hero-iced-latte/coffee-beans-5.webp" width="283" height="297" alt="" loading="lazy" fetchpriority="low" decoding="async" />
-              <img src="./assets/hero-iced-latte/coffee-beans-6.webp" width="301" height="257" alt="" loading="lazy" fetchpriority="low" decoding="async" />
-              <img src="./assets/hero-iced-latte/coffee-beans-7.webp" width="266" height="282" alt="" loading="lazy" fetchpriority="low" decoding="async" />
-              <img src="./assets/hero-iced-latte/coffee-beans-8.webp" width="144" height="347" alt="" loading="lazy" fetchpriority="low" decoding="async" />
-            </div>
+              <figcaption><span>01</span><strong>Amaya’s Goldie</strong><small>Liquid sunshine, served over ice.</small></figcaption>
+            </figure>
+            <figure class="signature-sip reveal">
+              <picture>
+                <source type="image/webp" srcset="./assets/brand-photography/ruby-refresher-640.webp 640w, ./assets/brand-photography/ruby-refresher.webp 720w" sizes="(max-width: 760px) 82vw, 23vw" />
+                <img src="./assets/brand-photography/ruby-refresher.webp" width="720" height="1280" loading="lazy" decoding="async" alt="Ruby red sparkling refresher at the BAROCK espresso bar" />
+              </picture>
+              <figcaption><span>02</span><strong>Ruby Refresher</strong><small>Cool, sparkling, and vivid.</small></figcaption>
+            </figure>
+            <figure class="signature-sip reveal">
+              <picture>
+                <source type="image/webp" srcset="./assets/brand-photography/green-refresher-640.webp 640w, ./assets/brand-photography/green-refresher.webp 720w" sizes="(max-width: 760px) 82vw, 23vw" />
+                <img src="./assets/brand-photography/green-refresher.webp" width="720" height="1280" loading="lazy" decoding="async" alt="Green sparkling refresher served at BAROCK CAFE" />
+              </picture>
+              <figcaption><span>03</span><strong>Garden Spark</strong><small>A crisp pour with a bright finish.</small></figcaption>
+            </figure>
+            <figure class="signature-sip signature-sip--wide reveal">
+              <picture>
+                <source type="image/webp" srcset="./assets/brand-photography/cappuccino-640.webp 640w, ./assets/brand-photography/cappuccino.webp 960w" sizes="(max-width: 760px) 100vw, 48vw" />
+                <img src="./assets/brand-photography/cappuccino.webp" width="960" height="1280" loading="lazy" decoding="async" alt="Cappuccino with latte art in BAROCK CAFE porcelain" />
+              </picture>
+              <figcaption><span>04</span><strong>The Golden Cup</strong><small>Silken coffee beneath a hand-finished crown.</small></figcaption>
+            </figure>
           </div>
+        </div>
+      </section>
 
-          <div class="hero-cinematic__copy" data-hero-intro-copy>
-            <p class="hero-cinematic__eyebrow">BAROCK Signature Collection</p>
-            <h1 id="barock-hero-title">
-              <span>Chilled</span>
-              <span>with Ceremony</span>
-            </h1>
-            <p>Espresso, milk, and ice composed into one unmistakably BAROCK moment.</p>
-            <a class="button hero-cinematic__cta" href="/menu.html">Explore the Menu</a>
+      <section class="barock-salon authentic-gallery" id="gallery" aria-labelledby="salon-title">
+        <div class="barock-section-shell">
+          <header class="salon-heading authentic-gallery__heading reveal">
+            <div>
+              <p class="eyebrow">Inside the House</p>
+              <h2 id="salon-title">Where Taste Meets Ambience</h2>
+            </div>
+            <p>Teal lacquer, warm lanterns, and a bar alive from morning coffee to late-night conversation.</p>
+          </header>
+
+          <div class="authentic-gallery__grid reveal-group">
+            <figure class="authentic-gallery__scene authentic-gallery__scene--grand reveal">
+              <picture>
+                <source type="image/webp" srcset="./assets/brand-photography/entrance-sign-640.webp 640w, ./assets/brand-photography/entrance-sign.webp 1280w" sizes="(max-width: 760px) 100vw, 62vw" />
+                <img src="./assets/brand-photography/entrance-sign.webp" width="1280" height="960" loading="lazy" decoding="async" alt="Illuminated BAROCK CAFE entrance and signage at night" />
+              </picture>
+              <figcaption><span>The Entrance</span><strong>Golden after dark</strong></figcaption>
+            </figure>
+            <figure class="authentic-gallery__scene reveal">
+              <picture>
+                <source type="image/webp" srcset="./assets/brand-photography/bar-counter-640.webp 640w, ./assets/brand-photography/bar-counter.webp 1280w" sizes="(max-width: 760px) 100vw, 38vw" />
+                <img src="./assets/brand-photography/bar-counter.webp" width="1280" height="720" loading="lazy" decoding="async" alt="BAROCK CAFE teal bar shelves and espresso counter" />
+              </picture>
+              <figcaption><span>The Bar</span><strong>Colour, craft, and character</strong></figcaption>
+            </figure>
+            <figure class="authentic-gallery__scene reveal">
+              <picture>
+                <source type="image/webp" srcset="./assets/brand-photography/terrace-640.webp 640w, ./assets/brand-photography/terrace.webp 1280w" sizes="(max-width: 760px) 100vw, 38vw" />
+                <img src="./assets/brand-photography/terrace.webp" width="1280" height="960" loading="lazy" decoding="async" alt="BAROCK CAFE terrace with hanging golden lanterns" />
+              </picture>
+              <figcaption><span>The Terrace</span><strong>Gulshan beneath the trees</strong></figcaption>
+            </figure>
+            <figure class="authentic-gallery__scene authentic-gallery__scene--wide reveal">
+              <picture>
+                <source type="image/webp" srcset="./assets/brand-photography/barista-640.webp 640w, ./assets/brand-photography/barista.webp 1280w" sizes="(max-width: 760px) 100vw, 62vw" />
+                <img src="./assets/brand-photography/barista.webp" width="1280" height="720" loading="lazy" decoding="async" alt="BAROCK barista working at the espresso station" />
+              </picture>
+              <figcaption><span>The Craft</span><strong>Prepared at the BAROCK bar</strong></figcaption>
+            </figure>
           </div>
-
-          <div class="hero-cinematic__reveal" data-hero-reveal-copy>
-            <span>01 / The Cold Collection</span>
-            <h2>Iced Latte</h2>
-            <p>A velvet pour over crystal ice, finished in dark lacquer, teal enamel, and antique gold.</p>
-          </div>
-
-          <a class="hero-cinematic__scroll" data-hero-scroll href="#signature" aria-label="Scroll to the signature selection">
-            <span>Scroll to reveal</span>
-            <i aria-hidden="true"></i>
-          </a>
         </div>
       </section>
 
@@ -249,48 +285,6 @@
             <span class="menu-book-showcase__back" aria-hidden="true"></span>
             <img src="./assets/menu-book/page-01.webp" width="1427" height="2095" loading="lazy" decoding="async" alt="BAROCK CAFE official menu cover" />
           </a>
-        </div>
-      </section>
-
-      <section class="barock-salon" id="gallery" aria-labelledby="salon-title">
-        <div class="barock-section-shell">
-          <header class="salon-heading reveal">
-            <div>
-              <p class="eyebrow">Inside the House</p>
-              <h2 id="salon-title">A Salon for Appetite &amp; Occasion</h2>
-            </div>
-            <p>
-              Lacquered shadows, marble gleam, gilded detail, and a table ready for company.
-            </p>
-          </header>
-
-          <div class="salon-mosaic reveal-group">
-            <figure class="salon-scene salon-scene-grand reveal">
-              <img src="./assets/site/interior.svg" width="1200" height="900" loading="lazy" decoding="async" alt="BAROCK salon interior with warm pendant lights" />
-              <figcaption>The Salon</figcaption>
-            </figure>
-            <figure class="salon-scene salon-scene-coffee reveal">
-              <img src="./assets/site/coffee-cup.svg" width="1200" height="900" loading="lazy" decoding="async" alt="A BAROCK coffee service" />
-              <figcaption>The First Pour</figcaption>
-            </figure>
-            <figure class="salon-scene salon-scene-dessert reveal">
-              <img src="./assets/site/dessert.svg" width="1200" height="900" loading="lazy" decoding="async" alt="Dessert presented on marble" />
-              <figcaption>The Sweet Course</figcaption>
-            </figure>
-            <figure class="salon-scene salon-scene-table reveal">
-              <img src="./assets/site/friends.svg" width="1200" height="900" loading="lazy" decoding="async" alt="Guests gathered around a cafe table" />
-              <figcaption>The Company</figcaption>
-            </figure>
-
-            <aside class="salon-quote reveal" aria-label="Guest review">
-              <span aria-hidden="true">★★★★★</span>
-              <blockquote>
-                “The atmosphere feels grand without losing warmth. BAROCK already feels like an occasion.”
-              </blockquote>
-              <p>Nabila Rahman</p>
-              <a class="barock-text-link" href="./reviews.html">Read guest notes <span aria-hidden="true">↗</span></a>
-            </aside>
-          </div>
         </div>
       </section>
 
@@ -424,9 +418,6 @@
       Thanks. Your message is ready for BAROCK CAFE.
     </div>
 
-    <script defer src="./assets/vendor/gsap-3.15.0.min.js"></script>
-    <script defer src="./assets/vendor/ScrollTrigger-3.15.0.min.js"></script>
-    <script defer src="./home-intro.js?v=20260718-velaris-v1"></script>
-    <script defer src="./script.js?v=20260718-skiper17-v1"></script>
+    <script defer src="./script.js?v=20260820-authentic-v1"></script>
   </body>
 </html>
