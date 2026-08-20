@@ -1,5 +1,6 @@
 (() => {
   const pageCount = 11;
+  const transitionMs = 500;
   const pagePath = (index) => `./assets/menu-book/page-${String(index + 1).padStart(2, "0")}.webp`;
   const pageLabels = [
     "cover",
@@ -15,43 +16,57 @@
     "back cover and restaurant details",
   ];
 
-  function initBook(book) {
+  function initSlider(book) {
     const stage = book.closest("[data-book-stage]");
-    const surface = book.querySelector("[data-book-surface]");
-    const spread = book.querySelector("[data-book-spread]");
-    const cover = book.querySelector("[data-book-cover]");
-    const leftImage = book.querySelector("[data-book-left]");
-    const rightImage = book.querySelector("[data-book-right]");
-    const mobileImage = book.querySelector("[data-book-mobile]");
-    const turner = book.querySelector("[data-book-turner]");
-    const turnFront = book.querySelector("[data-turn-front]");
-    const turnBack = book.querySelector("[data-turn-back]");
+    const viewport = book.querySelector("[data-book-surface]");
+    const slider = book.querySelector("[data-book-slider]");
     const previousButton = stage?.querySelector("[data-book-previous]");
     const nextButton = stage?.querySelector("[data-book-next]");
     const status = stage?.querySelector("[data-book-status]");
     const fullscreenButton = stage?.querySelector("[data-book-fullscreen]");
     const hint = book.querySelector("[data-book-hint]");
 
-    if (!stage || !surface || !spread || !cover || !leftImage || !rightImage || !mobileImage || !turner || !turnFront || !turnBack || !previousButton || !nextButton || !status) {
-      return;
-    }
+    if (!stage || !viewport || !slider || !previousButton || !nextButton || !status) return;
 
     const mobileQuery = window.matchMedia("(max-width: 768px)");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const pageLoads = new Map();
+    const pageImages = new Map();
+    const slides = {
+      previous: createSlide("previous"),
+      current: createSlide("current"),
+      next: createSlide("next"),
+    };
+
     let currentPage = 0;
     let isAnimating = false;
     let assetsReady = false;
-    let settleTimer = 0;
+    let transitionTimer = 0;
     let pointerId = null;
     let startX = 0;
     let startY = 0;
     let startTime = 0;
     let gestureAxis = "idle";
 
+    slider.append(slides.previous, slides.current, slides.next);
+
+    function createSlide(role) {
+      const slide = document.createElement("div");
+      slide.className = `menu-book__slide menu-book__slide--${role}`;
+      slide.dataset.slideRole = role;
+      slide.setAttribute("aria-hidden", role === "current" ? "false" : "true");
+      return slide;
+    }
+
     const normalizeDesktopPage = (index) => {
       if (index <= 0) return 0;
       return index % 2 === 1 ? index : index - 1;
+    };
+
+    const adjacentPage = (index, direction) => {
+      if (mobileQuery.matches) return index + (direction === "next" ? 1 : -1);
+      if (direction === "next") return index === 0 ? 1 : index + 2;
+      return index <= 1 ? 0 : index - 2;
     };
 
     const loadPage = (index) => {
@@ -59,217 +74,183 @@
       if (pageLoads.has(index)) return pageLoads.get(index);
 
       const load = new Promise((resolve) => {
-        const preload = new Image();
+        const image = getPageImage(index);
         let settled = false;
         const complete = async () => {
           if (settled) return;
           settled = true;
           try {
-            if (preload.decode) await preload.decode();
+            if (image.decode) await image.decode();
           } catch {
-            // A decoded cache hit is ideal, but load completion is enough to continue safely.
+            // A completed load still provides a safe cached fallback when decode is unavailable.
           }
           resolve();
         };
 
-        preload.decoding = "async";
-        preload.onload = complete;
-        preload.onerror = complete;
-        preload.src = pagePath(index);
-        if (preload.complete) complete();
+        image.addEventListener("load", complete, { once: true });
+        image.addEventListener("error", complete, { once: true });
+        if (image.complete) complete();
       });
 
       pageLoads.set(index, load);
       return load;
     };
 
-    const preloadNearby = () => {
-      [-1, 0, 1, 2].forEach((offset) => loadPage(currentPage + offset));
+    function getPageImage(index) {
+      if (pageImages.has(index)) return pageImages.get(index);
+
+      const image = new Image(1427, 2095);
+      image.src = pagePath(index);
+      image.alt = `BAROCK CAFE menu page ${index + 1} of ${pageCount}: ${pageLabels[index]}`;
+      image.decoding = "async";
+      image.loading = "eager";
+      image.draggable = false;
+      pageImages.set(index, image);
+      return image;
+    }
+
+    const createPage = (index, position) => {
+      const figure = document.createElement("figure");
+      figure.className = `menu-book__page menu-book__page--${position}`;
+
+      if (index < 0 || index >= pageCount) {
+        figure.classList.add("is-empty");
+        figure.setAttribute("aria-hidden", "true");
+        return figure;
+      }
+
+      figure.append(getPageImage(index));
+      return figure;
     };
 
-    const setImage = (image, index) => {
-      const frame = image.closest("figure");
+    const renderSlide = (slide, index) => {
+      slide.replaceChildren();
+      slide.dataset.pageIndex = String(index);
+
       if (index < 0 || index >= pageCount) {
-        image.removeAttribute("src");
-        image.alt = "";
-        frame?.setAttribute("hidden", "");
+        slide.classList.add("is-empty");
+        slide.setAttribute("aria-hidden", "true");
         return;
       }
 
-      frame?.removeAttribute("hidden");
-      if (!image.src.endsWith(pagePath(index).replace("./", "/"))) image.src = pagePath(index);
-      image.alt = `BAROCK CAFE menu page ${index + 1} of ${pageCount}: ${pageLabels[index]}`;
-      image.loading = Math.abs(index - currentPage) <= 2 ? "eager" : "lazy";
+      slide.classList.remove("is-empty", "is-cover");
+      if (mobileQuery.matches) {
+        slide.append(createPage(index, "single"));
+        return;
+      }
+
+      const spreadStart = normalizeDesktopPage(index);
+      const isCover = spreadStart === 0;
+      slide.classList.toggle("is-cover", isCover);
+      slide.append(
+        createPage(isCover ? -1 : spreadStart, "left"),
+        createPage(isCover ? 0 : spreadStart + 1, "right"),
+      );
+
+      if (!isCover) {
+        const gutter = document.createElement("span");
+        gutter.className = "menu-book__gutter";
+        gutter.setAttribute("aria-hidden", "true");
+        slide.append(gutter);
+      }
+    };
+
+    const setRole = (slide, role) => {
+      slide.className = `menu-book__slide menu-book__slide--${role}`;
+      slide.dataset.slideRole = role;
+      slide.setAttribute("aria-hidden", role === "current" ? "false" : "true");
+    };
+
+    const renderAllSlides = () => {
+      renderSlide(slides.previous, adjacentPage(currentPage, "previous"));
+      renderSlide(slides.current, currentPage);
+      renderSlide(slides.next, adjacentPage(currentPage, "next"));
     };
 
     const updateControls = () => {
-      const desktopStart = normalizeDesktopPage(currentPage);
-      const atEnd = mobileQuery.matches ? currentPage >= pageCount - 1 : desktopStart >= pageCount - 2;
-      previousButton.disabled = !assetsReady || isAnimating || currentPage === 0;
+      const atStart = currentPage === 0;
+      const atEnd = mobileQuery.matches ? currentPage >= pageCount - 1 : currentPage >= pageCount - 2;
+      previousButton.disabled = !assetsReady || isAnimating || atStart;
       nextButton.disabled = !assetsReady || isAnimating || atEnd;
-      status.textContent = !mobileQuery.matches && desktopStart > 0
-        ? `${String(desktopStart + 1).padStart(2, "0")}-${String(Math.min(desktopStart + 2, pageCount)).padStart(2, "0")} / ${pageCount}`
+      status.textContent = !mobileQuery.matches && currentPage > 0
+        ? `${String(currentPage + 1).padStart(2, "0")}-${String(Math.min(currentPage + 2, pageCount)).padStart(2, "0")} / ${pageCount}`
         : `${String(currentPage + 1).padStart(2, "0")} / ${pageCount}`;
     };
 
     const setAnimating = (active) => {
       isAnimating = active;
-      book.classList.toggle("is-turning", active);
+      book.classList.toggle("is-sliding", active);
       book.setAttribute("aria-busy", String(active || !assetsReady));
-      cover.disabled = active || !assetsReady;
       updateControls();
     };
 
-    const resetTurner = () => {
-      turner.className = "menu-book__turner";
-      turnFront.removeAttribute("src");
-      turnBack.removeAttribute("src");
-    };
-
-    const renderBase = () => {
-      book.classList.remove("is-opening", "is-closing");
-      if (mobileQuery.matches) {
-        setImage(mobileImage, currentPage);
-        book.classList.toggle("is-open", currentPage > 0);
-      } else if (currentPage === 0) {
-        book.classList.remove("is-open");
-        cover.hidden = false;
-        spread.setAttribute("aria-hidden", "true");
-      } else {
-        currentPage = normalizeDesktopPage(currentPage);
-        setImage(leftImage, currentPage);
-        setImage(rightImage, currentPage + 1);
-        cover.hidden = true;
-        spread.setAttribute("aria-hidden", "false");
-        book.classList.add("is-open");
-      }
-    };
-
-    const finishTurn = (nextPage) => {
-      window.clearTimeout(settleTimer);
+    const finishSlide = (direction, nextPage) => {
+      window.clearTimeout(transitionTimer);
       currentPage = nextPage;
-      renderBase();
+      slider.classList.add("is-resetting");
 
-      // Keep the completed sheet above the destination for one painted frame.
-      // This prevents a one-frame flash of the previous spread at cleanup time.
+      if (direction === "next") {
+        const recycled = slides.previous;
+        slides.previous = slides.current;
+        slides.current = slides.next;
+        slides.next = recycled;
+      } else {
+        const recycled = slides.next;
+        slides.next = slides.current;
+        slides.current = slides.previous;
+        slides.previous = recycled;
+      }
+
+      setRole(slides.previous, "previous");
+      setRole(slides.current, "current");
+      setRole(slides.next, "next");
+      renderSlide(
+        direction === "next" ? slides.next : slides.previous,
+        adjacentPage(currentPage, direction),
+      );
+      slider.classList.remove("is-moving-next", "is-moving-previous");
+
       window.requestAnimationFrame(() => {
-        resetTurner();
+        slider.classList.remove("is-resetting");
         setAnimating(false);
-        preloadNearby();
       });
     };
 
-    const startAnimation = (element, nextPage, activate, fallbackMs = 920) => {
-      const complete = (event) => {
-        if (event && event.target !== element) return;
-        element.removeEventListener("animationend", complete);
-        finishTurn(nextPage);
-      };
-      element.addEventListener("animationend", complete);
-
-      // Let the browser paint the fully prepared front/back faces before rotation.
-      window.requestAnimationFrame(() => {
-        window.requestAnimationFrame(() => {
-          activate();
-          settleTimer = window.setTimeout(() => complete(), fallbackMs);
-        });
-      });
-    };
-
-    const openCover = () => {
-      if (!assetsReady || isAnimating || currentPage !== 0) return;
-      hint?.classList.add("is-hidden");
-      if (mobileQuery.matches) {
-        turnTo(1, "next");
-        return;
-      }
-      if (reducedMotion.matches) {
-        currentPage = 1;
-        renderBase();
-        setAnimating(false);
-        return;
-      }
-
-      setAnimating(true);
-      setImage(leftImage, 1);
-      setImage(rightImage, 2);
-      spread.setAttribute("aria-hidden", "false");
-      startAnimation(cover, 1, () => book.classList.add("is-opening"));
-    };
-
-    const closeCover = () => {
-      if (!assetsReady || isAnimating || currentPage === 0) return;
-      if (reducedMotion.matches) {
-        currentPage = 0;
-        renderBase();
-        setAnimating(false);
-        return;
-      }
-
-      setAnimating(true);
-      cover.hidden = false;
-      startAnimation(cover, 0, () => book.classList.add("is-closing"));
-    };
-
-    const turnTo = (nextPage, direction) => {
-      if (!assetsReady || isAnimating || nextPage < 0 || nextPage >= pageCount || nextPage === currentPage) return;
-      if (currentPage === 0 && direction === "next" && !mobileQuery.matches) {
-        openCover();
-        return;
-      }
-      if (nextPage === 0 && !mobileQuery.matches) {
-        closeCover();
-        return;
-      }
+    const slideTo = (direction) => {
+      if (!assetsReady || isAnimating) return;
+      const nextPage = adjacentPage(currentPage, direction);
+      if (nextPage < 0 || nextPage >= pageCount) return;
 
       hint?.classList.add("is-hidden");
       if (reducedMotion.matches) {
         currentPage = nextPage;
-        renderBase();
-        setAnimating(false);
+        renderAllSlides();
+        updateControls();
         return;
       }
 
       setAnimating(true);
-      if (mobileQuery.matches) {
-        turnFront.src = pagePath(currentPage);
-        turnBack.src = pagePath(nextPage);
-      } else {
-        const currentSpread = normalizeDesktopPage(currentPage);
-        const nextSpread = normalizeDesktopPage(nextPage);
-        if (direction === "next") {
-          setImage(leftImage, currentSpread);
-          setImage(rightImage, nextSpread + 1);
-          turnFront.src = pagePath(currentSpread + 1);
-          turnBack.src = pagePath(nextSpread);
-        } else {
-          setImage(leftImage, nextSpread);
-          setImage(rightImage, currentSpread + 1);
-          turnFront.src = pagePath(currentSpread);
-          turnBack.src = pagePath(nextSpread + 1);
-        }
-      }
+      const incoming = direction === "next" ? slides.next : slides.previous;
+      let completed = false;
+      const complete = (event) => {
+        if (completed || (event && event.target !== incoming) || (event && event.propertyName !== "transform")) return;
+        completed = true;
+        incoming.removeEventListener("transitionend", complete);
+        finishSlide(direction, nextPage);
+      };
 
-      turner.className = "menu-book__turner is-active";
-      startAnimation(
-        turner,
-        mobileQuery.matches ? nextPage : normalizeDesktopPage(nextPage),
-        () => turner.classList.add(`is-${direction}`),
-      );
+      incoming.addEventListener("transitionend", complete);
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          slider.classList.add(`is-moving-${direction}`);
+          transitionTimer = window.setTimeout(() => complete(), transitionMs + 140);
+        });
+      });
     };
 
-    const next = () => {
-      const step = mobileQuery.matches || currentPage === 0 ? 1 : 2;
-      turnTo(Math.min(pageCount - 1, currentPage + step), "next");
-    };
+    const next = () => slideTo("next");
+    const previous = () => slideTo("previous");
 
-    const previous = () => {
-      if (currentPage === 0) return;
-      const nextPage = mobileQuery.matches ? currentPage - 1 : currentPage <= 1 ? 0 : currentPage - 2;
-      turnTo(Math.max(0, nextPage), "previous");
-    };
-
-    cover.addEventListener("click", openCover);
     previousButton.addEventListener("click", previous);
     nextButton.addEventListener("click", next);
     book.addEventListener("keydown", (event) => {
@@ -282,17 +263,17 @@
       }
     });
 
-    surface.addEventListener("pointerdown", (event) => {
-      if (!mobileQuery.matches || isAnimating || !event.isPrimary) return;
+    viewport.addEventListener("pointerdown", (event) => {
+      if (!mobileQuery.matches || isAnimating || !assetsReady || !event.isPrimary) return;
       pointerId = event.pointerId;
       startX = event.clientX;
       startY = event.clientY;
       startTime = performance.now();
       gestureAxis = "pending";
-      surface.setPointerCapture?.(pointerId);
+      viewport.setPointerCapture?.(pointerId);
     });
 
-    surface.addEventListener("pointermove", (event) => {
+    viewport.addEventListener("pointermove", (event) => {
       if (event.pointerId !== pointerId || gestureAxis === "vertical") return;
       const deltaX = event.clientX - startX;
       const deltaY = event.clientY - startY;
@@ -302,32 +283,24 @@
     });
 
     const resetPointer = () => {
-      if (pointerId !== null && surface.hasPointerCapture?.(pointerId)) surface.releasePointerCapture(pointerId);
+      if (pointerId !== null && viewport.hasPointerCapture?.(pointerId)) viewport.releasePointerCapture(pointerId);
       pointerId = null;
       gestureAxis = "idle";
     };
 
-    surface.addEventListener("pointerup", (event) => {
+    viewport.addEventListener("pointerup", (event) => {
       if (event.pointerId !== pointerId) return;
       const deltaX = event.clientX - startX;
       const deltaY = event.clientY - startY;
       const duration = Math.max(1, performance.now() - startTime);
       const velocity = Math.abs(deltaX) / duration;
-      const isSwipe = gestureAxis === "horizontal" && Math.abs(deltaX) > Math.abs(deltaY) * 1.2 && (Math.abs(deltaX) >= 50 || (Math.abs(deltaX) >= 28 && velocity > 0.55));
-      const isTap = Math.abs(deltaX) < 10 && Math.abs(deltaY) < 10;
+      const horizontal = gestureAxis === "horizontal" && Math.abs(deltaX) > Math.abs(deltaY) * 1.2;
+      const isSwipe = horizontal && (Math.abs(deltaX) >= 50 || (Math.abs(deltaX) >= 28 && velocity > 0.55));
       resetPointer();
-      if (isSwipe) {
-        deltaX < 0 ? next() : previous();
-      } else if (isTap) {
-        const rect = surface.getBoundingClientRect();
-        const ratio = (event.clientX - rect.left) / rect.width;
-        if (currentPage === 0) next();
-        else if (ratio <= 0.28) previous();
-        else if (ratio >= 0.72) next();
-      }
+      if (isSwipe) deltaX < 0 ? next() : previous();
     });
 
-    surface.addEventListener("pointercancel", resetPointer);
+    viewport.addEventListener("pointercancel", resetPointer);
 
     if (fullscreenButton) {
       const updateFullscreenLabel = () => {
@@ -338,7 +311,7 @@
           if (document.fullscreenElement) await document.exitFullscreen();
           else if (stage.requestFullscreen) await stage.requestFullscreen();
         } catch {
-          // Browser policy can reject fullscreen without affecting book navigation.
+          // Browser policy can reject fullscreen without affecting navigation.
         } finally {
           window.setTimeout(updateFullscreenLabel, 80);
         }
@@ -347,15 +320,15 @@
     }
 
     mobileQuery.addEventListener("change", () => {
-      window.clearTimeout(settleTimer);
-      resetTurner();
+      window.clearTimeout(transitionTimer);
+      slider.classList.remove("is-moving-next", "is-moving-previous", "is-resetting");
       currentPage = mobileQuery.matches ? currentPage : normalizeDesktopPage(currentPage);
-      renderBase();
+      renderAllSlides();
       setAnimating(false);
     });
 
     book.classList.add("is-loading");
-    renderBase();
+    renderAllSlides();
     setAnimating(false);
 
     Promise.all(Array.from({ length: pageCount }, (_, index) => loadPage(index))).then(() => {
@@ -365,5 +338,5 @@
     });
   }
 
-  document.querySelectorAll("[data-menu-book]").forEach(initBook);
+  document.querySelectorAll("[data-menu-book]").forEach(initSlider);
 })();
