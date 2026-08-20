@@ -149,11 +149,11 @@ html.barock-loader-pending body { overflow: hidden; }
 
 .brand-hero {
   position: relative;
-  display: grid;
-  min-height: min(920px, 100svh);
-  place-items: end start;
+  display: block;
+  min-height: 100svh;
   overflow: hidden;
   isolation: isolate;
+  padding: 0 24px clamp(54px, 7vw, 90px);
   background: var(--barock-lacquer);
   color: var(--barock-cream);
 }
@@ -162,9 +162,9 @@ html.barock-loader-pending body { overflow: hidden; }
 .brand-hero__media img,
 .brand-hero__overlay {
   position: absolute;
-  inset: 0;
+  inset: 0 0 auto;
   width: 100%;
-  height: 100%;
+  height: min(960px, 100svh);
 }
 
 .brand-hero__media { z-index: -3; }
@@ -180,13 +180,14 @@ html.barock-loader-pending body { overflow: hidden; }
   z-index: -2;
   background:
     linear-gradient(90deg, rgba(5, 3, 2, 0.9) 0%, rgba(5, 3, 2, 0.56) 43%, rgba(5, 3, 2, 0.16) 72%),
-    linear-gradient(0deg, rgba(5, 3, 2, 0.75), transparent 42%),
+    linear-gradient(0deg, #070504 0%, rgba(5, 3, 2, 0.82) 16%, transparent 58%),
     linear-gradient(180deg, rgba(5, 3, 2, 0.42), transparent 28%);
 }
 
 .brand-hero__content {
-  width: min(700px, calc(100% - 48px));
-  margin: 0 0 clamp(72px, 10vh, 112px) max(24px, calc((100vw - 1280px) / 2));
+  width: min(1280px, 100%);
+  margin: 0 auto;
+  padding-top: clamp(150px, 16vh, 190px);
   animation: hero-copy-in 900ms 160ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -228,18 +229,6 @@ html.barock-loader-pending body { overflow: hidden; }
   line-height: 1.75;
 }
 
-.brand-hero__actions {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-  margin-top: 30px;
-}
-
-.brand-hero__actions .button.primary {
-  min-width: 144px;
-  border-radius: 2px !important;
-}
-
 .brand-hero__text-link,
 .barock-text-link {
   display: inline-flex;
@@ -262,21 +251,21 @@ html.barock-loader-pending body { overflow: hidden; }
 }
 
 .brand-hero__hours {
-  position: absolute;
-  right: max(24px, calc((100vw - 1280px) / 2));
-  bottom: 34px;
-  margin: 0;
+  position: static;
+  width: min(1280px, 100%);
+  margin: 30px auto 0;
   color: rgba(255, 247, 232, 0.82);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.14em;
+  text-align: right;
   text-transform: uppercase;
 }
 
 .brand-hero__ornament {
   position: absolute;
   right: 4vw;
-  bottom: -10vw;
+  top: 36vh;
   display: grid;
   width: min(41vw, 570px);
   aspect-ratio: 1;
@@ -288,6 +277,45 @@ html.barock-loader-pending body { overflow: hidden; }
   font-size: clamp(12rem, 30vw, 28rem);
   line-height: 1;
   pointer-events: none;
+}
+
+.home-menu-embed {
+  width: min(1120px, 100%);
+  margin: clamp(54px, 8vw, 92px) auto 0;
+  padding-top: 24px;
+  scroll-margin-top: 104px;
+}
+
+.home-menu-embed__heading {
+  margin: 0 auto clamp(30px, 4vw, 48px);
+  text-align: center;
+}
+
+.home-menu-embed__heading .eyebrow {
+  justify-content: center;
+}
+
+.home-menu-embed__heading h2 {
+  margin: 0;
+  color: var(--barock-cream);
+  font-family: "Bodoni Moda", serif;
+  font-size: clamp(2.9rem, 5.8vw, 5.8rem);
+  font-weight: 600;
+  line-height: 0.94;
+  letter-spacing: 0;
+}
+
+.home-menu-embed .menu-book-stage {
+  width: 100%;
+}
+
+.home-menu-embed .menu-book__surface {
+  width: min(1000px, calc(100vw - 72px));
+}
+
+.home-menu-embed > .brand-hero__text-link {
+  width: max-content;
+  margin: 30px auto 0;
 }
 
 .brand-story,
@@ -541,7 +569,7 @@ html.barock-loader-pending body { overflow: hidden; }
 }
 
 @media (max-width: 1024px) {
-  .brand-hero__content { margin-left: 36px; }
+  .brand-hero__content { margin: 0 auto; }
   .brand-story__layout { gap: 54px; }
 
   .signature-sips__grid {
@@ -564,19 +592,20 @@ html.barock-loader-pending body { overflow: hidden; }
   .site-loader__portal--right { right: 7%; }
 
   .brand-hero {
-    min-height: min(860px, 100svh);
-    place-items: end start;
+    min-height: 0;
+    padding: 0 14px 54px;
   }
 
   .brand-hero__media img { object-position: 56% center; }
 
   .brand-hero__overlay {
-    background: linear-gradient(0deg, rgba(5, 3, 2, 0.94) 0%, rgba(5, 3, 2, 0.54) 57%, rgba(5, 3, 2, 0.28)), linear-gradient(90deg, rgba(5, 3, 2, 0.28), transparent);
+    background: linear-gradient(0deg, #070504 0%, rgba(5, 3, 2, 0.78) 24%, rgba(5, 3, 2, 0.3) 78%), linear-gradient(90deg, rgba(5, 3, 2, 0.3), transparent);
   }
 
   .brand-hero__content {
-    width: calc(100% - 36px);
-    margin: 0 18px 72px;
+    width: 100%;
+    margin: 0 auto;
+    padding-top: 112px;
   }
 
   .brand-hero h1 { font-size: clamp(3.7rem, 19vw, 5.8rem); }
@@ -591,23 +620,47 @@ html.barock-loader-pending body { overflow: hidden; }
     line-height: 1.6;
   }
 
-  .brand-hero__actions {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 16px;
-  }
-
   .brand-hero__hours {
-    right: 18px;
-    bottom: 18px;
-    left: 18px;
+    width: 100%;
+    margin-top: 24px;
     text-align: right;
   }
 
   .brand-hero__ornament {
     right: -24vw;
-    bottom: 20vh;
+    top: 32vh;
     width: 85vw;
+  }
+
+  .home-menu-embed {
+    margin-top: 38px;
+    padding-top: 16px;
+  }
+
+  .home-menu-embed__heading {
+    margin-bottom: 24px;
+  }
+
+  .home-menu-embed__heading h2 {
+    font-size: clamp(2.35rem, 12vw, 3.7rem);
+  }
+
+  .home-menu-embed .menu-book__surface {
+    width: min(100%, 430px);
+  }
+
+  .home-menu-embed .menu-book__hint {
+    min-height: 1.3em;
+    margin-top: 18px;
+    font-size: 0.64rem;
+  }
+
+  .home-menu-embed .menu-book-controls {
+    margin-top: 20px;
+  }
+
+  .home-menu-embed > .brand-hero__text-link {
+    margin-top: 24px;
   }
 
   .brand-story,
