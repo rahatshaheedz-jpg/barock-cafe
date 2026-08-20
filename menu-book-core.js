@@ -38,9 +38,10 @@
 
     const mobileQuery = window.matchMedia("(max-width: 768px)");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const loadedPages = new Set([0]);
+    const pageLoads = new Map();
     let currentPage = 0;
     let isAnimating = false;
+    let assetsReady = false;
     let settleTimer = 0;
     let pointerId = null;
     let startX = 0;
@@ -54,11 +55,32 @@
     };
 
     const loadPage = (index) => {
-      if (index < 0 || index >= pageCount || loadedPages.has(index)) return;
-      const preload = new Image();
-      preload.decoding = "async";
-      preload.src = pagePath(index);
-      loadedPages.add(index);
+      if (index < 0 || index >= pageCount) return Promise.resolve();
+      if (pageLoads.has(index)) return pageLoads.get(index);
+
+      const load = new Promise((resolve) => {
+        const preload = new Image();
+        let settled = false;
+        const complete = async () => {
+          if (settled) return;
+          settled = true;
+          try {
+            if (preload.decode) await preload.decode();
+          } catch {
+            // A decoded cache hit is ideal, but load completion is enough to continue safely.
+          }
+          resolve();
+        };
+
+        preload.decoding = "async";
+        preload.onload = complete;
+        preload.onerror = complete;
+        preload.src = pagePath(index);
+        if (preload.complete) complete();
+      });
+
+      pageLoads.set(index, load);
+      return load;
     };
 
     const preloadNearby = () => {
@@ -83,8 +105,8 @@
     const updateControls = () => {
       const desktopStart = normalizeDesktopPage(currentPage);
       const atEnd = mobileQuery.matches ? currentPage >= pageCount - 1 : desktopStart >= pageCount - 2;
-      previousButton.disabled = isAnimating || currentPage === 0;
-      nextButton.disabled = isAnimating || atEnd;
+      previousButton.disabled = !assetsReady || isAnimating || currentPage === 0;
+      nextButton.disabled = !assetsReady || isAnimating || atEnd;
       status.textContent = !mobileQuery.matches && desktopStart > 0
         ? `${String(desktopStart + 1).padStart(2, "0")}-${String(Math.min(desktopStart + 2, pageCount)).padStart(2, "0")} / ${pageCount}`
         : `${String(currentPage + 1).padStart(2, "0")} / ${pageCount}`;
@@ -93,7 +115,8 @@
     const setAnimating = (active) => {
       isAnimating = active;
       book.classList.toggle("is-turning", active);
-      book.setAttribute("aria-busy", String(active));
+      book.setAttribute("aria-busy", String(active || !assetsReady));
+      cover.disabled = active || !assetsReady;
       updateControls();
     };
 
@@ -103,7 +126,7 @@
       turnBack.removeAttribute("src");
     };
 
-    const render = () => {
+    const renderBase = () => {
       book.classList.remove("is-opening", "is-closing");
       if (mobileQuery.matches) {
         setImage(mobileImage, currentPage);
@@ -120,29 +143,41 @@
         spread.setAttribute("aria-hidden", "false");
         book.classList.add("is-open");
       }
-      setAnimating(false);
-      preloadNearby();
     };
 
     const finishTurn = (nextPage) => {
       window.clearTimeout(settleTimer);
       currentPage = nextPage;
-      resetTurner();
-      render();
+      renderBase();
+
+      // Keep the completed sheet above the destination for one painted frame.
+      // This prevents a one-frame flash of the previous spread at cleanup time.
+      window.requestAnimationFrame(() => {
+        resetTurner();
+        setAnimating(false);
+        preloadNearby();
+      });
     };
 
-    const settleOnAnimationEnd = (element, nextPage, fallbackMs = 860) => {
+    const startAnimation = (element, nextPage, activate, fallbackMs = 920) => {
       const complete = (event) => {
         if (event && event.target !== element) return;
         element.removeEventListener("animationend", complete);
         finishTurn(nextPage);
       };
       element.addEventListener("animationend", complete);
-      settleTimer = window.setTimeout(() => complete(), fallbackMs);
+
+      // Let the browser paint the fully prepared front/back faces before rotation.
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          activate();
+          settleTimer = window.setTimeout(() => complete(), fallbackMs);
+        });
+      });
     };
 
     const openCover = () => {
-      if (isAnimating || currentPage !== 0) return;
+      if (!assetsReady || isAnimating || currentPage !== 0) return;
       hint?.classList.add("is-hidden");
       if (mobileQuery.matches) {
         turnTo(1, "next");
@@ -150,7 +185,8 @@
       }
       if (reducedMotion.matches) {
         currentPage = 1;
-        render();
+        renderBase();
+        setAnimating(false);
         return;
       }
 
@@ -158,26 +194,25 @@
       setImage(leftImage, 1);
       setImage(rightImage, 2);
       spread.setAttribute("aria-hidden", "false");
-      book.classList.add("is-opening");
-      settleOnAnimationEnd(cover, 1);
+      startAnimation(cover, 1, () => book.classList.add("is-opening"));
     };
 
     const closeCover = () => {
-      if (isAnimating || currentPage === 0) return;
+      if (!assetsReady || isAnimating || currentPage === 0) return;
       if (reducedMotion.matches) {
         currentPage = 0;
-        render();
+        renderBase();
+        setAnimating(false);
         return;
       }
 
       setAnimating(true);
       cover.hidden = false;
-      book.classList.add("is-closing");
-      settleOnAnimationEnd(cover, 0);
+      startAnimation(cover, 0, () => book.classList.add("is-closing"));
     };
 
     const turnTo = (nextPage, direction) => {
-      if (isAnimating || nextPage < 0 || nextPage >= pageCount || nextPage === currentPage) return;
+      if (!assetsReady || isAnimating || nextPage < 0 || nextPage >= pageCount || nextPage === currentPage) return;
       if (currentPage === 0 && direction === "next" && !mobileQuery.matches) {
         openCover();
         return;
@@ -190,7 +225,8 @@
       hint?.classList.add("is-hidden");
       if (reducedMotion.matches) {
         currentPage = nextPage;
-        render();
+        renderBase();
+        setAnimating(false);
         return;
       }
 
@@ -214,8 +250,12 @@
         }
       }
 
-      turner.className = `menu-book__turner is-active is-${direction}`;
-      settleOnAnimationEnd(turner, mobileQuery.matches ? nextPage : normalizeDesktopPage(nextPage));
+      turner.className = "menu-book__turner is-active";
+      startAnimation(
+        turner,
+        mobileQuery.matches ? nextPage : normalizeDesktopPage(nextPage),
+        () => turner.classList.add(`is-${direction}`),
+      );
     };
 
     const next = () => {
@@ -310,14 +350,19 @@
       window.clearTimeout(settleTimer);
       resetTurner();
       currentPage = mobileQuery.matches ? currentPage : normalizeDesktopPage(currentPage);
-      render();
+      renderBase();
+      setAnimating(false);
     });
 
-    render();
-    window.setTimeout(() => {
-      loadPage(1);
-      loadPage(2);
-    }, 180);
+    book.classList.add("is-loading");
+    renderBase();
+    setAnimating(false);
+
+    Promise.all(Array.from({ length: pageCount }, (_, index) => loadPage(index))).then(() => {
+      assetsReady = true;
+      book.classList.remove("is-loading");
+      setAnimating(false);
+    });
   }
 
   document.querySelectorAll("[data-menu-book]").forEach(initBook);
