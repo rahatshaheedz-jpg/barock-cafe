@@ -42,7 +42,8 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css?v=20260820-authentic-v1" />
-    <link rel="stylesheet" href="./home-intro.css?v=20260820-authentic-v1" />
+    <link rel="stylesheet" href="./menu-book.css?v=20260820-book-v4" />
+    <link rel="stylesheet" href="./home-intro.css?v=20260820-embedded-book-v1" />
     <script>
       try {
         const loaderSeen = sessionStorage.getItem("barockLoaderSeen") === "true";
@@ -111,13 +112,13 @@
         </a>
         <nav class="nav-links" aria-label="Primary navigation">
           <a href="#home" aria-current="page">Home</a>
-          <a href="/menu.html">Menu</a>
+          <a href="#menu-book">Menu</a>
           <a href="./reviews.html">Reviews</a>
           <a href="#gallery">Gallery</a>
           <a href="#location">Location</a>
           <a href="#contact">Contact</a>
         </nav>
-        <a class="visit-pill glass-button" href="/menu.html">View Menu</a>
+        <a class="visit-pill glass-button" href="https://maps.app.goo.gl/avBMt5ym5eqpp7WZ7" target="_blank" rel="noopener noreferrer">Visit BAROCK</a>
         <button
           class="menu-toggle"
           type="button"
@@ -134,7 +135,7 @@
 
       <nav class="mobile-menu" id="mobile-menu" data-mobile-menu aria-label="Mobile navigation">
         <a href="#home" aria-current="page">Home</a>
-        <a href="/menu.html">Menu</a>
+        <a href="#menu-book">Menu</a>
         <a href="./reviews.html">Reviews</a>
         <a href="#gallery">Gallery</a>
         <a href="#location">Location</a>
@@ -166,8 +167,48 @@
           <h1 id="barock-hero-title">BAROCK <span>CAFÉ</span></h1>
           <p class="brand-hero__motto">Every Moment, Perfectly Yours.</p>
           <p class="brand-hero__intro">Coffee, cuisine, and evening hospitality beneath the golden lights of BAROCK.</p>
-          <div class="brand-hero__actions">
-            <a class="button primary" href="/menu.html">View Menu</a>
+          <div class="home-menu-embed" id="menu-book" aria-labelledby="home-menu-title">
+            <div class="home-menu-embed__heading">
+              <p class="eyebrow">The Official Collection</p>
+              <h2 id="home-menu-title">The BAROCK Menu</h2>
+            </div>
+
+            <div class="menu-book-stage" data-book-stage>
+              <div class="menu-book" data-menu-book role="region" aria-roledescription="interactive menu book" aria-label="BAROCK CAFE official 11-page menu book" tabindex="0">
+                <div class="menu-book__surface" data-book-surface>
+                  <div class="menu-book__spread" data-book-spread aria-hidden="true">
+                    <figure class="menu-book__page menu-book__page--left"><img data-book-left width="1427" height="2095" alt="" draggable="false" /></figure>
+                    <span class="menu-book__gutter" aria-hidden="true"></span>
+                    <figure class="menu-book__page menu-book__page--right"><img data-book-right width="1427" height="2095" alt="" draggable="false" /></figure>
+                  </div>
+
+                  <button class="menu-book__cover" type="button" data-book-cover aria-label="Open the BAROCK CAFE menu book">
+                    <span class="menu-book__cover-face menu-book__cover-face--front">
+                      <img src="./assets/menu-book/page-01.webp" width="1427" height="2095" loading="lazy" decoding="async" alt="BAROCK CAFE official menu cover" draggable="false" />
+                    </span>
+                    <span class="menu-book__cover-face menu-book__cover-face--back" aria-hidden="true">B</span>
+                  </button>
+
+                  <figure class="menu-book__mobile-page" data-book-mobile-page>
+                    <img data-book-mobile src="./assets/menu-book/page-01.webp" width="1427" height="2095" loading="lazy" decoding="async" alt="BAROCK CAFE menu page 1 of 11: cover" draggable="false" />
+                  </figure>
+
+                  <div class="menu-book__turner" data-book-turner aria-hidden="true">
+                    <div class="menu-book__turner-face menu-book__turner-face--front"><img data-turn-front width="1427" height="2095" alt="" draggable="false" /></div>
+                    <div class="menu-book__turner-face menu-book__turner-face--back"><img data-turn-back width="1427" height="2095" alt="" draggable="false" /></div>
+                  </div>
+                </div>
+
+                <p class="menu-book__hint" data-book-hint><span class="menu-book__hint-desktop">Click the cover to open the menu</span><span class="menu-book__hint-touch">Tap the page edge or swipe to browse</span></p>
+              </div>
+
+              <div class="menu-book-controls" aria-label="Menu book controls">
+                <button type="button" data-book-previous aria-label="Show previous menu page">&larr; <span>Previous</span></button>
+                <output data-book-status aria-live="polite">01 / 11</output>
+                <button type="button" data-book-next aria-label="Show next menu page"><span>Next</span> &rarr;</button>
+              </div>
+            </div>
+
             <a class="brand-hero__text-link" href="#gallery">Explore Our Space <span aria-hidden="true">↓</span></a>
           </div>
         </div>
@@ -270,21 +311,6 @@
               <figcaption><span>The Craft</span><strong>Prepared at the BAROCK bar</strong></figcaption>
             </figure>
           </div>
-        </div>
-      </section>
-
-      <section class="barock-selection menu-book-showcase" id="signature" aria-labelledby="selection-title">
-        <div class="barock-section-shell menu-book-showcase__layout">
-          <div class="menu-book-showcase__copy reveal">
-            <p class="eyebrow">The Official Collection</p>
-            <h2 id="selection-title">Discover Our Menu</h2>
-            <p>Open the complete eleven-page BAROCK menu book, presented exactly as designed.</p>
-            <a class="button primary" href="/menu.html">Open the Menu Book <span aria-hidden="true">&rarr;</span></a>
-          </div>
-          <a class="menu-book-showcase__cover reveal" href="/menu.html" aria-label="Open the official BAROCK CAFE menu book">
-            <span class="menu-book-showcase__back" aria-hidden="true"></span>
-            <img src="./assets/menu-book/page-01.webp" width="1427" height="2095" loading="lazy" decoding="async" alt="BAROCK CAFE official menu cover" />
-          </a>
         </div>
       </section>
 
@@ -393,7 +419,7 @@
           <div>
             <h3>Quick Links</h3>
             <ul>
-              <li><a href="/menu.html">Menu</a></li>
+              <li><a href="#menu-book">Menu</a></li>
               <li><a href="./reviews.html">Reviews</a></li>
               <li><a href="#gallery">Gallery</a></li>
               <li><a href="#contact">Contact</a></li>
@@ -418,6 +444,7 @@
       Thanks. Your message is ready for BAROCK CAFE.
     </div>
 
+    <script defer src="./menu-book-core.js?v=20260820-book-v4"></script>
     <script defer src="./script.js?v=20260820-authentic-v1"></script>
   </body>
 </html>
