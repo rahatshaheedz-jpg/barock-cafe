@@ -118,6 +118,7 @@ html { background: var(--book-black); }
 .menu-book__slide {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: minmax(0, 1fr);
   overflow: hidden;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -144,6 +145,10 @@ html { background: var(--book-black); }
 
 .menu-book__page {
   position: relative;
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 0;
+  padding: clamp(10px, 1.5vw, 18px);
   overflow: hidden;
   margin: 0;
   background: #050706;
@@ -170,6 +175,13 @@ html { background: var(--book-black); }
   width: 100%;
   height: 100%;
   object-fit: contain;
+  object-position: center;
+  position: static;
+  min-width: 0;
+  min-height: 0;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   transform: translate3d(0, 0, 0);

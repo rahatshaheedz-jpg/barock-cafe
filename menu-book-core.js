@@ -1,19 +1,20 @@
 (() => {
-  const pageCount = 11;
+  const pageCount = 12;
   const transitionMs = 500;
-  const pagePath = (index) => `./assets/menu-book/page-${String(index + 1).padStart(2, "0")}.webp`;
+  const pagePath = (index) => `./assets/menu-book/page-${String(index + 1).padStart(2, "0")}.webp?v=20260911`;
   const pageLabels = [
-    "cover",
+    "front cover and contact details",
     "the story of BAROCK",
     "coffee, hot chocolate, and iced coffee",
-    "tea, iced tea, matcha, and frappe",
-    "smoothies, milkshakes, and signature mocktails",
-    "beverages, juices, and kids zone",
-    "soup, salad, and appetizers",
-    "sandwiches, burgers, and fajitas",
+    "tea, iced tea, matcha, frappe, smoothies, and milkshakes",
+    "signature mocktails and beverages",
+    "juices, kids zone, soup, and salad",
+    "appetizers, sandwiches, burgers, and fajitas",
     "alambre, pizza, and pasta",
-    "seafood and straight from the butcher",
-    "back cover and restaurant details",
+    "seafood, chicken dishes, and straight from the butcher",
+    "desserts and breakfast",
+    "menu artwork",
+    "back cover and contact details",
   ];
 
   function initSlider(book) {
@@ -99,7 +100,7 @@
     function getPageImage(index) {
       if (pageImages.has(index)) return pageImages.get(index);
 
-      const image = new Image(1427, 2095);
+      const image = new Image(1201, 2400);
       image.src = pagePath(index);
       image.alt = `BAROCK CAFE menu page ${index + 1} of ${pageCount}: ${pageLabels[index]}`;
       image.decoding = "async";
@@ -172,7 +173,7 @@
       const atEnd = mobileQuery.matches ? currentPage >= pageCount - 1 : currentPage >= pageCount - 2;
       previousButton.disabled = !assetsReady || isAnimating || atStart;
       nextButton.disabled = !assetsReady || isAnimating || atEnd;
-      status.textContent = !mobileQuery.matches && currentPage > 0
+      status.textContent = !mobileQuery.matches && currentPage > 0 && currentPage < pageCount - 1
         ? `${String(currentPage + 1).padStart(2, "0")}-${String(Math.min(currentPage + 2, pageCount)).padStart(2, "0")} / ${pageCount}`
         : `${String(currentPage + 1).padStart(2, "0")} / ${pageCount}`;
     };
