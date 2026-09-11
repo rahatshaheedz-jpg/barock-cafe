@@ -1,7 +1,7 @@
 (() => {
-  const pageCount = 12;
+  const pageCount = 11;
   const transitionMs = 500;
-  const pagePath = (index) => `./assets/menu-book/page-${String(index + 1).padStart(2, "0")}.webp?v=20260911`;
+  const pagePath = (index) => `./assets/menu-book/page-${String(index + 1).padStart(2, "0")}.webp?v=20260911-menu11`;
   const pageLabels = [
     "front cover and contact details",
     "the story of BAROCK",
@@ -13,7 +13,6 @@
     "alambre, pizza, and pasta",
     "seafood, chicken dishes, and straight from the butcher",
     "desserts and breakfast",
-    "menu artwork",
     "back cover and contact details",
   ];
 
