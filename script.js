@@ -6,7 +6,7 @@ const year = document.querySelector("[data-year]");
 const revealItems = document.querySelectorAll(".reveal");
 const web3FormsEndpoint = ["https://api.web3forms.com", "submit"].join("/");
 const web3FormsAccessKey = ["9a69aef0", "2ec6", "43c9", "b2c4", "f59c89d8107d"].join("-");
-const defaultCafeImage = "./assets/site/hero-coffee.svg";
+const defaultCafeImage = "./assets/photography-new/coffee.webp";
 
 function waitForCriticalImage(image, onReady = () => {}) {
   if (!image) {

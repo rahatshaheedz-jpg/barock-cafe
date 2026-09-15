@@ -2,7 +2,7 @@ const { useEffect, useMemo, useRef, useState } = React;
 
 const SUPABASE_URL = "PASTE_SUPABASE_URL_HERE";
 const SUPABASE_ANON_KEY = "PASTE_SUPABASE_ANON_KEY_HERE";
-const defaultCafeImage = "./assets/site/hero-coffee.svg";
+const defaultCafeImage = "./assets/photography-new/coffee.webp";
 
 const supabaseIsConfigured =
   SUPABASE_URL !== "PASTE_SUPABASE_URL_HERE" &&
@@ -226,7 +226,7 @@ function ReviewsApp() {
       { className: "relative isolate grid min-h-[82svh] items-center overflow-hidden px-5 pb-20 pt-36 md:pt-40" },
       React.createElement("div", {
         className:
-          "absolute inset-0 -z-40 bg-[url('./assets/site/hero-coffee.svg')] bg-cover bg-center opacity-55 saturate-75",
+          "absolute inset-0 -z-40 bg-[url('./assets/photography-new/coffee.webp')] bg-cover bg-center opacity-55 saturate-75",
       }),
       React.createElement("div", {
         className:

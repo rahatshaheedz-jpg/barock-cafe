@@ -171,7 +171,7 @@ html.barock-loader-pending body { overflow: hidden; }
 
 .brand-hero__media img {
   object-fit: cover;
-  object-position: 50% 48%;
+  object-position: center;
   transform: scale(1.025);
   animation: hero-settle 1600ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -179,7 +179,7 @@ html.barock-loader-pending body { overflow: hidden; }
 .brand-hero__overlay {
   z-index: -2;
   background:
-    linear-gradient(90deg, rgba(5, 3, 2, 0.9) 0%, rgba(5, 3, 2, 0.56) 43%, rgba(5, 3, 2, 0.16) 72%),
+    linear-gradient(90deg, rgba(5, 4, 3, 0.72) 0%, rgba(5, 4, 3, 0.38) 45%, rgba(5, 4, 3, 0.18) 100%),
     linear-gradient(0deg, #070504 0%, rgba(5, 3, 2, 0.82) 16%, transparent 58%),
     linear-gradient(180deg, rgba(5, 3, 2, 0.42), transparent 28%);
 }
@@ -720,4 +720,60 @@ html.barock-loader-pending body { overflow: hidden; }
   }
 
   .home-page .reveal { opacity: 1; }
+}
+
+/* Supplied BAROCK photography: scoped to the requested image sections. */
+.brand-story { background: #0d0b09; color: var(--barock-cream); }
+.brand-story__copy h2 { color: var(--barock-cream); }
+.brand-story__copy > p:not(.eyebrow) { color: var(--barock-muted); }
+.brand-story .barock-text-link { color: var(--barock-gold); }
+.brand-story__portrait { aspect-ratio: 771 / 913; border: 1px solid rgba(203,164,93,.4); border-radius: 6px; box-shadow: none; }
+.brand-story__portrait::before { content: none; }
+.brand-story__portrait picture { display: block; height: 100%; }
+.signature-sips__grid { grid-template-columns: repeat(4,minmax(0,1fr)); grid-template-rows: auto; gap: 16px; }
+.authentic-gallery__grid { grid-template-columns: repeat(2,minmax(0,1fr)); grid-template-rows: repeat(3,minmax(0,400px)); gap: 16px; }
+.authentic-gallery__scene--grand { grid-row: span 2; }
+.photo-editorial { display: flex; flex-direction: column; min-width: 0; min-height: 0; margin: 0; border: 1px solid transparent; border-radius: 6px; overflow: hidden; box-shadow: none; background: #11100e; transition: border-color 550ms ease; }
+.photo-editorial picture { display: block; flex: 1; min-height: 0; overflow: hidden; width: 100%; }
+.photo-editorial img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; transition: transform 550ms cubic-bezier(.2,.8,.2,1),filter 550ms ease; }
+.photo-editorial::after { content: none; }
+.photo-editorial figcaption { position: static; flex: none; padding: 15px 16px 17px; line-height: 1.5; }
+.photo-editorial figcaption span { display: block; margin: 0 0 4px; color: var(--barock-gold); font-size: .65rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+.photo-editorial figcaption strong { color: var(--barock-muted); font: inherit; font-size: .75rem; font-weight: 400; }
+.signature-sip.photo-editorial picture { aspect-ratio: 3/4; flex: auto; }
+.photo-editorial:hover { border-color: rgba(94,197,190,.65); }
+.photo-editorial:hover img { transform: scale(1.025); filter: brightness(1.05); }
+.barock-experience { padding: clamp(80px,9vw,130px) 28px; background: #080705; color: var(--barock-cream); }
+.experience-heading { max-width: 800px; margin-bottom: 42px; }
+.experience-heading h2 { margin: 0; font-family: var(--font-display); font-size: clamp(3rem,6.2vw,6.4rem); font-weight: 600; line-height: .98; }
+.experience-heading > p:last-child { max-width: 600px; color: var(--barock-muted); line-height: 1.7; margin-top: 24px; }
+.experience-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; }
+.experience-photo picture { aspect-ratio: 3/4; }
+@media (min-width: 761px) and (max-width: 1100px) {
+ .signature-sips__grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+ .authentic-gallery__grid { grid-template-rows: repeat(3,minmax(0,340px)); }
+}
+@media (max-width: 760px) {
+ .brand-hero__media,.brand-hero__media img,.brand-hero__overlay { height: clamp(320px,100vw,520px); }
+ .brand-hero__media img { object-position: center center; }
+ .signature-sips__grid,.authentic-gallery__grid,.experience-grid { grid-template-columns: 1fr; grid-template-rows: auto; gap: 16px; }
+ .photo-editorial,.authentic-gallery__scene--grand { grid-column: auto; grid-row: auto; min-height: 0; aspect-ratio: auto; }
+ .photo-editorial picture { flex: auto; aspect-ratio: 3/4; }
+ .barock-experience { padding: 82px 18px; }
+ .experience-heading h2 { font-size: clamp(2.7rem,13vw,4.6rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+ .photo-editorial,.photo-editorial img { transition: none; }
+ .photo-editorial:hover img { transform: none; }
+}
+/* Keep the portrait drinks legible without wide landscape crops. */
+@media (min-width: 761px) {
+ .authentic-gallery__grid { grid-template-columns: repeat(6,minmax(0,1fr)); grid-template-rows: auto; }
+ .authentic-gallery__scene { grid-column: span 2; grid-row: auto; }
+ .authentic-gallery__scene:nth-child(-n+2) { grid-column: span 3; }
+ .authentic-gallery__scene picture { flex: auto; aspect-ratio: 3/4; }
+}
+.brand-hero__media { overflow: hidden; }
+@media (max-width: 760px) {
+ .brand-hero__overlay { background: linear-gradient(0deg,#070504 0%,rgba(5,4,3,.6) 22%,rgba(5,4,3,.25) 80%),linear-gradient(90deg,rgba(5,4,3,.4),transparent); }
 }
