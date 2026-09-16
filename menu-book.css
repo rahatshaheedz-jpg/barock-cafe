@@ -126,22 +126,9 @@ html { background: var(--book-black); }
   will-change: transform;
 }
 
-.menu-book__slide--previous { transform: translate3d(-100%, 0, 0); }
-.menu-book__slide--current { z-index: 2; transform: translate3d(0, 0, 0); }
-.menu-book__slide--next { transform: translate3d(100%, 0, 0); }
-
-.menu-book__slider.is-moving-next .menu-book__slide,
-.menu-book__slider.is-moving-previous .menu-book__slide {
-  transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.menu-book__slider.is-moving-next .menu-book__slide--current { transform: translate3d(-100%, 0, 0); }
-.menu-book__slider.is-moving-next .menu-book__slide--next { z-index: 3; transform: translate3d(0, 0, 0); }
-.menu-book__slider.is-moving-previous .menu-book__slide--current { transform: translate3d(100%, 0, 0); }
-.menu-book__slider.is-moving-previous .menu-book__slide--previous { z-index: 3; transform: translate3d(0, 0, 0); }
-
-.menu-book__slider.is-resetting .menu-book__slide { transition: none !important; }
-.menu-book__slide.is-empty { visibility: hidden; }
+/* All pages stay mounted and decoded; only the visible spread changes. */
+.menu-book__slide { opacity: 0; pointer-events: none; transform: none; will-change: auto; }
+.menu-book__slide.is-current { opacity: 1; pointer-events: auto; z-index: 2; }
 
 .menu-book__page {
   position: relative;
