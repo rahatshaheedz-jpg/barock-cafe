@@ -61,3 +61,6 @@ html.barock-loader-pending,html.barock-loader-pending body { overflow:visible; }
  html { scroll-behavior:auto; }
  .site-header,.mobile-menu,.mobile-menu-backdrop,.mobile-menu a { transition:none!important; animation:none!important; }
 }
+/* Match fullscreen fitting to the official portrait PDF without cropping. */
+.menu-book-stage:fullscreen .menu-book__surface { width:min(1100px,calc(100vw - 72px),calc(100dvh - 190px)); }
+@media(max-width:768px){.menu-book-stage:fullscreen .menu-book__surface { width:min(calc(100vw - 24px),calc((100dvh - 180px)*.5)); }}

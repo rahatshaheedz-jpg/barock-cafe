@@ -12,29 +12,7 @@ const supabaseClient = supabaseIsConfigured
   ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
   : null;
 
-const fallbackReviews = [
-  {
-    id: "sample-1",
-    name: "Nabila Rahman",
-    rating: 5,
-    message: "The atmosphere feels premium and warm. Exactly the kind of cafe Gulshan needs.",
-    created_at: "2026-05-28T10:30:00.000Z",
-  },
-  {
-    id: "sample-2",
-    name: "Arman Chowdhury",
-    rating: 5,
-    message: "Beautiful coffee, calm lighting, and a very polished cafe mood. Looking forward to opening day.",
-    created_at: "2026-05-27T15:45:00.000Z",
-  },
-  {
-    id: "sample-3",
-    name: "Tasnima Karim",
-    rating: 4,
-    message: "The brand feels cozy and elegant. The dessert preview already looks amazing.",
-    created_at: "2026-05-26T12:10:00.000Z",
-  },
-];
+const fallbackReviews = [];
 
 function formatDate(value) {
   return new Intl.DateTimeFormat("en", {
@@ -194,7 +172,7 @@ function ReviewsApp() {
     }
 
     if (!supabaseClient) {
-      setStatus("Supabase is not configured yet. Replace the Supabase placeholders in reviews.js.");
+      setStatus("Online reviews are currently unavailable. Please contact us at 01351943077.");
       return;
     }
 

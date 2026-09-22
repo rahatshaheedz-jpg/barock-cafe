@@ -391,3 +391,32 @@ html { background: var(--book-black); }
   .menu-book-controls button,
   .menu-book-actions button { transition: none; }
 }
+
+/* Official PDF book: portrait pages, a centered closed cover, and a turning sheet. */
+.menu-book__surface { aspect-ratio:1; }
+.menu-book__slider { perspective:1600px; }
+.menu-book__slide { transform-style:preserve-3d; }
+.menu-book__slide[data-page-index="0"] { grid-template-columns:1fr; }
+.menu-book__slide[data-page-index="0"] .is-empty { display:none; }
+.menu-book__slide[data-page-index="0"] .menu-book__page--right { width:50%; justify-self:center; border-radius:4px 12px 12px 4px; box-shadow:8px 10px 24px #0007; cursor:pointer; }
+.menu-turn-sheet { position:absolute; top:0; bottom:0; width:50%; z-index:5; transform-style:preserve-3d; pointer-events:none; }
+.menu-turn-sheet--right { left:50%; transform-origin:left center; }
+.menu-turn-sheet--left { left:0; transform-origin:right center; }
+.menu-turn-face { position:absolute; inset:0; margin:0; padding:clamp(10px,1.5vw,18px); background:#050706; backface-visibility:hidden; -webkit-backface-visibility:hidden; overflow:hidden; box-shadow:0 8px 18px #0005; }
+.menu-turn-face--back { transform:rotateY(180deg); }
+.menu-turn-face img { display:block; width:100%; height:100%; object-fit:contain; object-position:center; }
+.menu-book-actions .menu-download { display:inline-flex; align-items:center; justify-content:center; min-height:46px; padding:0 22px; color:var(--book-gold-light); border:1px solid rgba(210,163,94,.46); border-radius:999px; text-decoration:none; font-size:.74rem; font-weight:700; }
+.menu-download:focus-visible,.menu-cover-link:focus-visible { outline:2px solid var(--book-gold-light); outline-offset:6px; }
+.menu-preview-book { display:flex; flex-direction:column; align-items:center; gap:28px; }
+.menu-preview-book .home-menu-embed__heading { margin-bottom:12px; }
+.menu-cover-link { display:block; width:min(300px,70vw); transform:perspective(1200px) rotateY(-5deg); transition:transform 400ms ease; box-shadow:14px 22px 40px #0008; border-radius:3px 8px 8px 3px; }
+.menu-cover-link img { display:block; width:100%; height:auto; border-radius:inherit; }
+.menu-cover-link:hover { transform:perspective(1200px) rotateY(0deg) translateY(-4px); }
+.menu-open-link { font-size:.8rem; letter-spacing:.1em; }
+@media(max-width:768px){
+ .menu-book__surface { aspect-ratio:1/2; }
+ .menu-book__slide[data-page-index="0"] .menu-book__page--single { width:100%; }
+ .menu-book-actions { gap:10px; }
+ .menu-book-actions .menu-download { min-height:44px; }
+}
+@media(prefers-reduced-motion:reduce){.menu-cover-link,.menu-cover-link:hover{transform:none;transition:none;}}
