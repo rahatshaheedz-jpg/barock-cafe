@@ -64,3 +64,76 @@ html.barock-loader-pending,html.barock-loader-pending body { overflow:visible; }
 /* Match fullscreen fitting to the official portrait PDF without cropping. */
 .menu-book-stage:fullscreen .menu-book__surface { width:min(1100px,calc(100vw - 72px),calc(100dvh - 190px)); }
 @media(max-width:768px){.menu-book-stage:fullscreen .menu-book__surface { width:min(calc(100vw - 24px),calc((100dvh - 180px)*.5)); }}
+/* Shared finishing rules: existing brand palette, consistent spacing and restrained motion. */
+:root { --space-1:8px; --space-2:16px; --space-3:24px; --space-4:32px; --space-5:48px; --space-section:clamp(64px,8vw,112px); --motion-ease:cubic-bezier(.2,.7,.3,1); }
+:where(a,button,input,textarea,select):focus-visible { outline:2px solid #d4a85f; outline-offset:4px; }
+:where(button,a.button,.visit-pill) { touch-action:manipulation; }
+:where(#menu-book,#gallery,#location,#contact) { scroll-margin-top:108px; }
+.site-header.glass-navbar { background:rgba(14,16,12,.96)!important; backdrop-filter:none!important; -webkit-backdrop-filter:none!important; }
+.site-header .nav-links { gap:24px; }
+.site-header .nav-links a { min-height:44px; display:inline-flex; align-items:center; letter-spacing:.015em; }
+.site-header .nav-links a[aria-current],.mobile-menu a[aria-current] { color:#e1c38d!important; }
+.mobile-menu { transition:opacity 180ms var(--motion-ease),transform 180ms var(--motion-ease)!important; }
+.home-page :is(.home-menu-section,.brand-story,.signature-sips,.authentic-gallery.barock-salon,.barock-experience,.barock-visit) { padding-block:var(--space-section); }
+.home-page :is(.barock-section-shell,.section-shell,.home-menu-embed) { width:min(1180px,100%); margin-inline:auto; }
+.home-page :is(.brand-story,.signature-sips,.barock-experience,.barock-visit) { border-top:1px solid rgba(212,168,95,.15); }
+.home-page :is(.brand-story__copy h2,.signature-sips__heading h2,.salon-heading h2,.experience-heading h2,.visit-heading h2,.contact-intro h2) { font-size:clamp(36px,4.8vw,64px); line-height:1.08; letter-spacing:-.025em; text-wrap:balance; }
+.home-page :is(.brand-story__copy,.signature-sips__heading,.salon-heading,.experience-heading,.visit-heading,.contact-intro) p:not(.eyebrow) { font-size:clamp(15px,1.2vw,17px); line-height:1.75; max-width:58ch; }
+.home-page :is(.signature-sips__heading,.authentic-gallery__heading,.experience-heading,.visit-heading) { margin-bottom:var(--space-5); gap:var(--space-4); }
+.home-page .eyebrow { line-height:1.5; letter-spacing:.16em; font-size:11px; }
+.home-page .button,.visit-pill { min-height:48px; padding:13px 24px; border-radius:8px; font-size:14px; line-height:1.4; font-weight:600; letter-spacing:.025em; transition:background-color 150ms ease,transform 150ms ease!important; }
+.brand-hero__overlay { background:linear-gradient(90deg,rgba(5,4,3,.76),rgba(5,4,3,.45) 38%,rgba(5,4,3,.06) 72%),linear-gradient(0deg,#080705,transparent 40%); }
+.brand-hero__content { max-width:1180px; }
+.brand-hero__motto { line-height:1.45; letter-spacing:.005em; }
+@keyframes barock-arrive { from { opacity:.3; transform:translateY(10px); } to { opacity:1; transform:none; } }
+@media(prefers-reduced-motion:no-preference) { .hero-ready .brand-hero__content { animation:barock-arrive 460ms var(--motion-ease) both; } }
+.home-page .reveal { opacity:0; transform:translateY(12px); filter:none!important; transition:opacity 420ms var(--motion-ease),transform 420ms var(--motion-ease); }
+.home-page .reveal.is-visible { opacity:1; transform:none; }
+.home-page .photo-editorial { border-color:rgba(212,168,95,.15); border-radius:8px; transition:border-color 160ms ease; }
+.home-page .photo-editorial img { filter:none!important; transform:none; transition:transform 300ms var(--motion-ease); }
+.home-page .photo-editorial figcaption { padding:18px 20px; }
+.home-page .photo-editorial figcaption span { font-size:11px; line-height:1.6; letter-spacing:.1em; }
+.home-page .photo-editorial figcaption strong { font-size:14px; line-height:1.6; }
+.home-page .contact-form :is(input,textarea) { font-size:16px!important; line-height:1.5; min-height:48px; padding:14px 16px; border-radius:6px; box-shadow:none!important; }
+.home-page .contact-form label { line-height:1.5; font-size:14px; }
+.home-page .contact-form textarea { min-height:140px; resize:vertical; }
+.form-status { min-height:3em; margin:0; font-size:14px; line-height:1.5; color:inherit; }
+.home-page .contact-form button:disabled { opacity:.65; cursor:wait; }
+.footer { padding-top:64px; }
+.footer-grid { gap:32px; }
+.footer h3 { font-size:15px; line-height:1.5; letter-spacing:.025em; }
+.footer p,.footer li { font-size:14px; line-height:1.75; }
+.footer li a,.footer .socials a { display:inline-flex; align-items:center; min-height:40px; }
+.reviews-page #reviews-root label { font-size:15px; }
+.reviews-page #reviews-root :is(input,textarea) { font-size:16px; }
+@media(hover:hover) and (pointer:fine) { .home-page .photo-editorial:hover img { transform:scale(1.015); } .home-page .button:hover { transform:translateY(-1px); } }
+@media(hover:none) { .home-page .photo-editorial:hover img { transform:none; } }
+@media(max-width:760px) {
+ .brand-hero { min-height:740px; padding:370px 24px 40px; }
+ .brand-hero h1 { font-size:clamp(44px,13vw,58px); line-height:1.02; }
+ .brand-hero__motto { font-size:21px; max-width:300px; margin-top:18px; }
+ .brand-hero__intro { font-size:15px; line-height:1.65; margin-top:16px; }
+ .brand-hero__overlay { height:440px; background:linear-gradient(0deg,#080705,rgba(8,7,5,.05) 62%); }
+ .home-page :is(.signature-sips__heading,.authentic-gallery__heading,.experience-heading,.visit-heading) { margin-bottom:32px; gap:20px; }
+ .home-page .visit-details { min-height:0; padding:32px 24px; }
+ .home-page .visit-map-frame { min-height:300px; }
+ .home-page .brand-story__layout { gap:32px; }
+ .footer-grid { gap:28px; }
+ .footer { padding-bottom:max(24px,env(safe-area-inset-bottom)); }
+}
+@media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto!important; } .home-page .reveal { opacity:1;transform:none;transition:none; } .brand-hero__content,.home-page .photo-editorial img,.home-page .button { animation:none!important;transition:none!important;transform:none!important; } }
+.visit-map-frame { position:relative; }
+.map-activate { width:100%; min-height:380px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:32px; border:0; background:#10221d; color:#d4a85f; cursor:pointer; }
+.map-activate strong { font-family:var(--font-display); font-size:clamp(30px,4vw,48px); font-weight:500; }
+.map-activate span { font-size:14px; line-height:1.6; }
+.visit-map-frame [hidden] { display:none!important; }
+.reviews-page #reviews-root .glass-card { border-radius:12px!important; box-shadow:0 8px 24px #0002!important; backdrop-filter:none!important; }
+.reviews-page #reviews-root .glass-button { box-shadow:none!important; border-radius:8px!important; }
+.reviews-page .review-steam { display:none; }
+@media(max-width:760px){.map-activate{min-height:300px;}}
+
+/* Interactive gallery links overlay each existing figure without changing its geometry. */
+#gallery .authentic-gallery__scene { position:relative; }
+#gallery .gallery-open { position:absolute; inset:0; z-index:2; cursor:zoom-in; border-radius:inherit; }
+#gallery .gallery-open:focus-visible { outline:2px solid var(--barock-gold); outline-offset:-4px; }
+#gallery .gallery-open[aria-busy="true"] { cursor:progress; }

@@ -3,7 +3,7 @@
   // Labels are transcribed from headings in the official PDF, in PDF order.
   const labels = ['Cover', 'Our story', 'Coffee & hot chocolate', 'Iced coffee & tea', 'Iced tea, matcha & frappe', 'Smoothies, milkshakes & mocktails', 'Signature mocktails', 'Beverages', 'Juices, kids zone & soup', 'Salads & appetizers', 'Appetizers & sandwiches', 'Burgers, fajitas & alambre', 'Pizza', 'Pasta', 'Seafood & chicken', 'Straight from the butcher', 'Desserts', 'Desserts continued', 'Breakfast', 'Back cover'];
   const count = labels.length;
-  const version = '20261014-menu-v1';
+  const version = '20261020-menu-v1';
   document.querySelectorAll('[data-menu-viewer]').forEach(viewer => {
     const surface = viewer.querySelector('[data-menu-surface]');
     const frame = viewer.querySelector('[data-menu-frame]');
@@ -17,6 +17,7 @@
     const connection = navigator.connection;
     const constrained = connection?.saveData || /(^|-)2g$/.test(connection?.effectiveType || '') || (navigator.deviceMemory && navigator.deviceMemory <= 4);
     const capacity = constrained ? 3 : 5;
+    let engaged = false;
     let selected = 0, displayed = -1, running = 0, started = false, sequence = 0, idleScheduled = false;
     let pointer = null, multiTouch = false, tabFrame = 0;
     const pointers = new Set();
@@ -59,7 +60,7 @@
       displayed=selected;record.touched=++sequence;
       viewer.dataset.currentPage=String(displayed+1);
       status.textContent=`${String(displayed+1).padStart(2,'0')} / ${count}`;
-      notice.textContent='';retry.hidden=true;
+      notice.textContent='';retry.hidden=true;surface.setAttribute('aria-busy','false');
       surface.setAttribute('aria-label',`Menu page ${displayed+1} of ${count}: ${labels[displayed]}`);
       performance.measure('barock-menu-commit',{start:begin,end:performance.now()});
       trim();
@@ -82,18 +83,23 @@
           if(!img.naturalWidth)throw new Error('Image unavailable');
           record.state='ready';record.touched=++sequence;show(record);
         }).catch(()=>{
+          if(record.state==='cancelled')return;
           record.state='error';
-          if(record.key===keyFor(selected)) {notice.textContent=`Page ${selected+1} could not load. ${displayed<0?"Please retry or download the PDF below.":"Your current page is still available."}`;retry.hidden=false;}
+          if(record.key===keyFor(selected)) {surface.setAttribute('aria-busy','false');notice.textContent=`Page ${selected+1} could not load. ${displayed<0?"Please retry or download the PDF below.":"Your current page is still available."}`;retry.hidden=false;}
         }).finally(()=>{running--;trim();pump();});
       }
     }
     // This index changes synchronously for EVERY input, even while an image request is pending.
-    function select(index) {
+    function select(index, fromInput=false) {
+      engaged ||= fromInput;
       selected=Math.max(0,Math.min(count-1,index));
-      controls();const record=getRecord(selected);record.touched=++sequence;
+      controls();
+      for(const [key,old] of records){if(old.state==='loading'&&Math.abs(old.index-selected)>1){old.state='cancelled';records.delete(key);old.image.removeAttribute('src');}}
+      const record=getRecord(selected);record.touched=++sequence;
       if(record.state==='ready')show(record);
       else {
-        notice.textContent=displayed<0?'':`Page ${selected+1} selected`;
+        surface.setAttribute('aria-busy',String(record.state!=='error'));
+        notice.textContent=displayed<0?'Loading the official menu...':`Page ${selected+1} selected`;
         retry.hidden=record.state!=='error';
       }
       scheduleNearby();
@@ -101,7 +107,7 @@
     function start() {if(started)return;started=true;select(0);}
     let backgroundIndex=0;
     function scheduleBackground() {
-      if(constrained||idleScheduled||backgroundIndex>=count||document.hidden||!started)return;
+      if(!engaged||constrained||idleScheduled||backgroundIndex>=count||document.hidden||!started)return;
       idleScheduled=true;
       const idle=window.requestIdleCallback||((fn)=>setTimeout(fn,800));
       idle(async()=>{
@@ -115,14 +121,14 @@
     }
     labels.forEach((label,i)=>{
       const button=document.createElement('button');button.type='button';button.textContent=label;
-      button.setAttribute('aria-label',`${label}, page ${i+1}`);button.addEventListener('click',()=>{start();select(i);});tabs.append(button);
+      button.setAttribute('aria-label',`${label}, page ${i+1}`);button.addEventListener('click',()=>{start();select(i,true);});tabs.append(button);
     });
-    previous.forEach(b=>b.addEventListener('click',()=>{start();select(selected-1);}));
-    next.forEach(b=>b.addEventListener('click',()=>{start();select(selected+1);}));
+    previous.forEach(b=>b.addEventListener('click',()=>{start();select(selected-1,true);}));
+    next.forEach(b=>b.addEventListener('click',()=>{start();select(selected+1,true);}));
     retry.addEventListener('click',()=>{records.delete(keyFor(selected));select(selected);});
     viewer.addEventListener('keydown',e=>{
       if(e.target.closest('input,select,textarea'))return;
-      if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();start();select(selected+(e.key==='ArrowRight'?1:-1));}
+      if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();start();select(selected+(e.key==='ArrowRight'?1:-1),true);}
       if(e.key==='Escape'&&document.fullscreenElement===viewer)document.exitFullscreen?.();
     });
     surface.addEventListener('pointerdown',e=>{
@@ -140,7 +146,7 @@
       const p=pointer;
       if(p?.id===e.pointerId&&!multiTouch&&!p.vertical&&(window.visualViewport?.scale||1)<=1.05){
         const x=e.clientX-p.x,y=e.clientY-p.y;
-        if(Math.abs(x)>45&&Math.abs(x)>Math.abs(y)*1.5){start();select(selected+(x<0?1:-1));}
+        if(Math.abs(x)>45&&Math.abs(x)>Math.abs(y)*1.5){start();select(selected+(x<0?1:-1),true);}
       }
       pointers.delete(e.pointerId);pointer=null;if(!pointers.size)multiTouch=false;
     },{passive:true});
@@ -155,6 +161,6 @@
     window.visualViewport?.addEventListener('resize',()=>{if(started&&smallSource()===false&&frame.firstElementChild?.naturalWidth<1000)select(selected);},{passive:true});
     document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleBackground();});
     controls();
-    if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){start();observer.disconnect();}},{rootMargin:'600px'});observer.observe(viewer);}else start();
+    if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){start();observer.disconnect();}},{rootMargin:'0px'});observer.observe(viewer);}else start();
   });
 })();

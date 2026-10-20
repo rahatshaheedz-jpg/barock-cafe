@@ -43,6 +43,8 @@ function Stars({ rating, interactive = false, onChange, hoveredRating, onHover }
             isActive ? "text-gold drop-shadow-[0_0_12px_rgba(212,168,95,0.62)]" : "text-[#C7AA83]",
           ].join(" "),
           "aria-label": interactive ? `${star} stars` : undefined,
+          "aria-pressed": interactive ? rating === star : undefined,
+          style: interactive ? {minWidth:44,minHeight:44} : undefined,
         },
         "\u2605",
       );
@@ -293,6 +295,9 @@ function ReviewsApp() {
               onChange: (event) => updateForm("name", event.target.value),
               className: "min-h-12 rounded-[8px] border border-borderGold bg-cream px-4 text-cafeBlack placeholder:text-[#8B7A65] outline-none transition focus:border-gold focus:ring-4 focus:ring-gold/20",
               placeholder: "Your name",
+              autoComplete: "name",
+              required: true,
+              maxLength: 80,
             })
           ),
           React.createElement("div", { className: "mb-4 grid gap-2" },
@@ -312,6 +317,8 @@ function ReviewsApp() {
               onChange: (event) => updateForm("message", event.target.value),
               className: "min-h-36 rounded-[8px] border border-borderGold bg-cream px-4 py-3 text-cafeBlack placeholder:text-[#8B7A65] outline-none transition focus:border-gold focus:ring-4 focus:ring-gold/20",
               placeholder: "Write your review...",
+              required: true,
+              maxLength: 1200,
             })
           ),
           React.createElement(
@@ -324,7 +331,7 @@ function ReviewsApp() {
             },
             isSubmitting ? "Submitting..." : "Submit Review",
           ),
-          status ? React.createElement("p", { className: "mt-4 rounded-[8px] border border-borderGold bg-espresso p-3 text-sm font-bold text-secondary" }, status) : null,
+          status ? React.createElement("p", { role: "status", "aria-live": "polite", className: "mt-4 rounded-[8px] border border-borderGold bg-espresso p-3 text-sm font-bold text-secondary" }, status) : null,
         ),
       ),
     ),

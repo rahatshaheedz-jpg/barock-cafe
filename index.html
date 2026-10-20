@@ -26,33 +26,20 @@
     <meta name="twitter:title" content="BAROCK CAFÉ | Every Moment, Perfectly Yours" />
     <meta name="twitter:description" content="A refined dining and coffee experience in Gulshan, Dhaka." />
     <meta name="twitter:image" content="https://barockcafe.com/barock-social-preview.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      rel="preload"
-      as="image"
+      rel="preload" media="(min-width: 761px)" as="image"
       href="./assets/photography-new/exterior.webp"
-      imagesrcset="./assets/photography-new/exterior-640.webp 640w, ./assets/photography-new/exterior.webp 2061w"
+      imagesrcset="./assets/photography-new/exterior-640.webp 640w, ./assets/photography-new/exterior-1280.webp 1280w, ./assets/photography-new/exterior.webp 2061w"
       imagesizes="100vw"
       type="image/webp"
       fetchpriority="high"
     />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,500;0,600;0,700;1,600&family=Instrument+Sans:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="./styles.css?v=20260820-authentic-v1" />
+    <link rel="preload" as="image" media="(max-width: 760px)" href="./assets/photography-new/exterior-mobile.webp" fetchpriority="high" />
+    <link rel="stylesheet" href="./fonts.css?v=20261014-polish-v1" />
+    <link rel="stylesheet" href="./site.css?v=20261014-polish-v1" />
     <link rel="stylesheet" href="./menu-book.css?v=20261012-fast-v1" />
     <link rel="stylesheet" href="./home-intro.css?v=20260916-smooth-v1" />
-    <script>
-      try {
-        const loaderSeen = sessionStorage.getItem("barockLoaderSeen") === "true";
-        document.documentElement.classList.add(loaderSeen ? "barock-loader-seen" : "barock-loader-pending");
-      } catch (error) {
-        document.documentElement.classList.add("barock-loader-pending");
-      }
-    </script>
-    <noscript><style>.site-loader{display:none!important}html,body{overflow:auto!important}</style></noscript>
+
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -75,30 +62,10 @@
   ]
 }
     </script>
-      <link rel="stylesheet" href="./refinements.css?v=20260916-smooth-v1" />
+      <link rel="stylesheet" href="./refinements.css?v=20261014-gallery-v1" />
+  <noscript><style>.reveal{opacity:1!important;transform:none!important}</style></noscript>
   </head>
   <body class="home-page">
-    <div class="site-loader" data-site-loader aria-hidden="true">
-      <span class="site-loader__portal site-loader__portal--left" aria-hidden="true"></span>
-      <span class="site-loader__portal site-loader__portal--right" aria-hidden="true"></span>
-      <div class="site-loader__mark">
-        <svg class="site-loader__progress" viewBox="0 0 120 120" aria-hidden="true">
-          <circle class="site-loader__progress-track" cx="60" cy="60" r="55"></circle>
-          <circle class="site-loader__progress-value" data-loader-progress cx="60" cy="60" r="55" pathLength="100"></circle>
-        </svg>
-        <img
-          class="site-loader__logo"
-          data-loader-logo
-          src="./assets/site/barock-loader-logo-320.webp"
-          width="320"
-          height="320"
-          alt=""
-          decoding="async"
-        />
-      </div>
-      <p class="site-loader__eyebrow">House 9/B · Gulshan-02</p>
-      <p class="site-loader__label">Preparing Your Table</p>
-    </div>
     <main>
       <header class="site-header glass-navbar" id="home">
         <a class="brand" href="#home" aria-label="BAROCK CAFÉ home">
@@ -143,23 +110,7 @@
       </nav>
 
       <section class="brand-hero" data-brand-hero aria-labelledby="barock-hero-title">
-        <picture class="brand-hero__media">
-          <source
-            type="image/webp"
-            media="(max-width: 760px)"
-            srcset="./assets/photography-new/exterior.webp"
-          />
-          <img
-            data-loader-critical
-            src="./assets/photography-new/exterior.webp"
-            width="2061"
-            height="763"
-            alt="BAROCK CAFÉ illuminated at night in Gulshan"
-            loading="eager"
-            fetchpriority="high"
-            decoding="async"
-          />
-        </picture>
+        <picture class="brand-hero__media"><source media="(max-width: 760px)" type="image/webp" srcset="./assets/photography-new/exterior-mobile.webp" /><img data-loader-critical src="./assets/photography-new/exterior.webp" srcset="./assets/photography-new/exterior-640.webp 640w, ./assets/photography-new/exterior-1280.webp 1280w, ./assets/photography-new/exterior.webp 2061w" sizes="100vw" width="2061" height="763" alt="BAROCK CAFÉ illuminated at night in Gulshan" loading="eager" fetchpriority="high" decoding="async" /></picture>
         <div class="brand-hero__overlay" aria-hidden="true"></div>
         <div class="brand-hero__content">
           <p class="eyebrow">Gulshan-02 · Dhaka</p>
@@ -187,8 +138,8 @@
       <button type="button" data-menu-next aria-label="Next menu page">Next &rarr;</button>
     </div>
     <p class="fast-menu__notice" data-menu-notice role="status"></p><button class="fast-menu__retry" data-menu-retry type="button" hidden>Retry page</button>
-    <div class="fast-menu__actions"><a href="./assets/menu-current/barock-cafe-menu.pdf?v=20261014-menu-v1" download="BAROCK-CAFE-Menu.pdf">Download PDF</a><button type="button" data-menu-fullscreen>Fullscreen</button></div>
-    <noscript><p><a href="./assets/menu-current/barock-cafe-menu.pdf?v=20261014-menu-v1">Read the complete official menu PDF</a></p></noscript>
+    <div class="fast-menu__actions"><a href="./assets/menu-current/barock-cafe-menu.pdf?v=20261020-menu-v1" download="BAROCK-CAFE-Menu.pdf">Download PDF</a><button type="button" data-menu-fullscreen>Fullscreen</button></div>
+    <noscript><p><a href="./assets/menu-current/barock-cafe-menu.pdf?v=20261020-menu-v1">Read the complete official menu PDF</a></p></noscript>
   </div>
 </div></div></section>
 
@@ -252,11 +203,12 @@
 
           <div class="visit-stage">
             <div class="visit-map-frame reveal">
+              <button class="map-activate" type="button" data-map-activate><span>House 9/B, Road 51/53</span><strong>Explore our location</strong><span>Load interactive map</span></button>
               <iframe
                 title="BAROCK CAFÉ location map"
                 loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"
-                src="https://www.google.com/maps?q=House%209%2FB%2C%20Road%2051%2F53%2C%20Gulshan-02%2C%20Dhaka%20-1212&output=embed"
+                hidden data-map-src="https://www.google.com/maps?q=House%209%2FB%2C%20Road%2051%2F53%2C%20Gulshan-02%2C%20Dhaka%20-1212&output=embed"
               ></iframe>
             </div>
             <aside class="visit-details reveal">
@@ -292,17 +244,18 @@
             <form class="contact-form reveal" data-contact-form>
               <label>
                 Name
-                <input type="text" name="name" placeholder="Your name" maxlength="80" required />
+                <input type="text" name="name" autocomplete="name" placeholder="Your name" maxlength="80" required />
               </label>
               <label>
                 Phone
-                <input type="tel" name="phone" placeholder="+880" maxlength="24" required />
+                <input type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="+880" maxlength="24" required />
               </label>
               <label>
                 Message
                 <textarea name="message" placeholder="Write your message..." maxlength="1200" required></textarea>
               </label>
               <button class="button primary" type="submit">Send Message</button>
+              <p class="form-status" data-form-status role="status" aria-live="polite"></p>
             </form>
           </div>
         </div>
@@ -366,11 +319,12 @@
       </footer>
     </main>
 
-    <div class="toast" data-toast role="status" aria-live="polite">
+    <div class="toast" data-toast aria-hidden="true">
       Thanks. Your message is ready for BAROCK CAFÉ.
     </div>
-    <script defer src="./script.js?v=20260916-smooth-v1"></script>
-      <script defer src="./navigation.js?v=20260916-smooth-v1"></script>
-  <script defer src="./menu-book-core.js?v=20261014-menu-v1"></script>
-  </body>
+    <script defer src="./script.js?v=20261014-polish-v1"></script>
+      <script defer src="./navigation.js?v=20261014-polish-v1"></script>
+  <script defer src="./menu-book-core.js?v=20261020-menu-v1"></script>
+  <script type="module" src="./gallery-viewer.js?v=20261014-gallery-v1"></script>
+</body>
 </html>

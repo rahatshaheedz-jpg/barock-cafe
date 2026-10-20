@@ -20,10 +20,16 @@
   toggle.addEventListener('click',()=>setOpen(toggle.getAttribute('aria-expanded')!=='true'));
   backdrop.addEventListener('click',()=>setOpen(false,true));
   panel.addEventListener('click',event=>{if(event.target.closest('a'))setOpen(false);});
-  document.addEventListener('keydown',event=>{if(event.key==='Escape')setOpen(false,true);});
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&toggle.getAttribute('aria-expanded')==='true')setOpen(false,true);});
   document.addEventListener('focusin',event=>{if(!panel.contains(event.target)&&!toggle.contains(event.target))setOpen(false);});
   matchMedia('(min-width: 961px)').addEventListener('change',()=>setOpen(false));
   window.addEventListener('pagehide',()=>setOpen(false));
   window.addEventListener('pageshow',()=>setOpen(false));
   setOpen(false);
+  const localLinks=[...document.querySelectorAll('.nav-links a[href^="#"],.mobile-menu a[href^="#"]')];
+  const targets=[...new Set(localLinks.map(a=>a.hash))].map(hash=>({hash,element:hash==='#home'?document.querySelector('.brand-hero'):document.querySelector(hash)})).filter(x=>x.element);
+  if(targets.length){
+    const observer=new IntersectionObserver(entries=>{for(const entry of entries){if(!entry.isIntersecting)continue;const active=targets.find(t=>t.element===entry.target)?.hash;localLinks.forEach(a=>{if(a.hash===active)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current');});}},{rootMargin:'-15% 0px -65% 0px',threshold:0});
+    targets.forEach(t=>observer.observe(t.element));
+  }
 })();
