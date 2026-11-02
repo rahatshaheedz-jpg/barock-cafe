@@ -1,13 +1,128 @@
+const menuToggle = document.querySelector("[data-menu-toggle]");
+const mobileMenu = document.querySelector("[data-mobile-menu]");
 const contactForm = document.querySelector("[data-contact-form]");
 const toast = document.querySelector("[data-toast]");
 const year = document.querySelector("[data-year]");
 const revealItems = document.querySelectorAll(".reveal");
 const web3FormsEndpoint = ["https://api.web3forms.com", "submit"].join("/");
 const web3FormsAccessKey = ["9a69aef0", "2ec6", "43c9", "b2c4", "f59c89d8107d"].join("-");
-const defaultCafeImage = "./assets/photography-new/coffee.webp";
+const defaultCafeImage = "./assets/site/hero-coffee.svg";
 
-// Content is available immediately; motion never gates interaction.
-document.body.classList.add('hero-ready');
+function waitForCriticalImage(image) {
+  if (!image) {
+    return Promise.resolve();
+  }
+
+  return new Promise((resolve) => {
+    let settled = false;
+
+    const finish = () => {
+      if (settled) {
+        return;
+      }
+
+      settled = true;
+      image.removeEventListener("load", handleLoad);
+      image.removeEventListener("error", finish);
+      resolve();
+    };
+
+    const decode = () => {
+      if (typeof image.decode === "function" && image.naturalWidth > 0) {
+        image.decode().catch(() => undefined).finally(finish);
+      } else {
+        finish();
+      }
+    };
+
+    const handleLoad = () => decode();
+
+    if (image.complete) {
+      decode();
+      return;
+    }
+
+    image.addEventListener("load", handleLoad, { once: true });
+    image.addEventListener("error", finish, { once: true });
+  });
+}
+
+function initHomeLoader() {
+  const loader = document.querySelector("[data-site-loader]");
+  const heroProduct = document.querySelector("[data-hero-product]");
+  const loaderLogo = document.querySelector("[data-loader-logo]");
+
+  if (!loader) {
+    document.body.classList.add("hero-ready");
+    document.documentElement.classList.remove("barock-loader-pending");
+    return;
+  }
+
+  if (document.documentElement.classList.contains("barock-loader-seen")) {
+    loader.remove();
+    document.body.classList.add("hero-ready");
+    return;
+  }
+
+  const safetyTimeoutMs = 2400;
+  let safetyTimer = 0;
+  let exitTimer = 0;
+  let finalized = false;
+
+  const safetyTimeout = new Promise((resolve) => {
+    safetyTimer = window.setTimeout(resolve, safetyTimeoutMs);
+  });
+
+  const criticalAssetsReady = Promise.all([
+    waitForCriticalImage(loaderLogo),
+    waitForCriticalImage(heroProduct),
+  ]);
+
+  const finalizeLoader = () => {
+    if (finalized) {
+      return;
+    }
+
+    finalized = true;
+    window.clearTimeout(exitTimer);
+    document.body.classList.add("hero-ready");
+    document.documentElement.classList.remove("barock-loader-pending");
+    document.documentElement.classList.add("barock-loader-seen");
+    loader.remove();
+  };
+
+  const exitLoader = () => {
+    window.clearTimeout(safetyTimer);
+    document.body.classList.add("hero-ready");
+
+    try {
+      sessionStorage.setItem("barockLoaderSeen", "true");
+    } catch (error) {
+      // The loader still exits when session storage is unavailable.
+    }
+
+    loader.addEventListener(
+      "transitionend",
+      (event) => {
+        if (event.target === loader && event.propertyName === "opacity") {
+          finalizeLoader();
+        }
+      },
+      { once: true },
+    );
+
+    window.requestAnimationFrame(() => loader.classList.add("is-exiting"));
+    exitTimer = window.setTimeout(finalizeLoader, 520);
+  };
+
+  Promise.race([criticalAssetsReady, safetyTimeout]).then(exitLoader);
+}
+
+initHomeLoader();
+
+document.addEventListener("visibilitychange", () => {
+  document.body.classList.toggle("hero-motion-paused", document.hidden);
+});
 
 year.textContent = new Date().getFullYear();
 
@@ -81,26 +196,135 @@ const revealObserver = new IntersectionObserver(
     });
   },
   {
-    rootMargin: "0px 0px -24px 0px",
-    threshold: 0.08,
+    rootMargin: "0px 0px -12% 0px",
+    threshold: 0.16,
   },
 );
 
 revealItems.forEach((item) => revealObserver.observe(item));
 
 function showToast(message) {
-  const status = contactForm.querySelector("[data-form-status]");
-  if (status) status.textContent = message;
   toast.textContent = message;
   toast.classList.add("is-visible");
   window.setTimeout(() => toast.classList.remove("is-visible"), 3600);
 }
 
+function initMobileNavigation() {
+  if (!menuToggle || !mobileMenu) {
+    return;
+  }
 
+  const links = [...mobileMenu.querySelectorAll("a")];
+  const backdrop = document.createElement("button");
+  let navState = "closed";
+  let closeTimer = 0;
+  let scrollY = 0;
+
+  backdrop.type = "button";
+  backdrop.className = "mobile-menu-backdrop";
+  backdrop.setAttribute("aria-label", "Close navigation");
+  backdrop.setAttribute("tabindex", "-1");
+  document.body.appendChild(backdrop);
+
+  links.forEach((link, index) => {
+    link.style.setProperty("--item-index", index);
+    link.style.setProperty("--reverse-index", links.length - index - 1);
+  });
+
+  const lockScroll = () => {
+    scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+    document.documentElement.classList.add("mobile-menu-open");
+    document.body.classList.add("mobile-menu-open");
+  };
+
+  const unlockScroll = () => {
+    document.documentElement.classList.remove("mobile-menu-open");
+    document.body.classList.remove("mobile-menu-open");
+    window.scrollTo(0, scrollY);
+  };
+
+  const setToggleState = (isOpen) => {
+    menuToggle.classList.toggle("is-active", isOpen);
+    menuToggle.setAttribute("aria-expanded", String(isOpen));
+    menuToggle.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
+  };
+
+  const openMenu = () => {
+    if (navState === "open" || navState === "opening") {
+      return;
+    }
+
+    window.clearTimeout(closeTimer);
+    navState = "opening";
+    lockScroll();
+    setToggleState(true);
+    mobileMenu.classList.remove("is-closing");
+    mobileMenu.classList.add("is-opening");
+    backdrop.classList.add("is-visible");
+    mobileMenu.classList.add("is-open");
+
+    window.setTimeout(() => {
+      navState = "open";
+      mobileMenu.classList.remove("is-opening");
+      links[0]?.focus({ preventScroll: true });
+    }, 360);
+  };
+
+  const closeMenu = ({ restoreFocus = true } = {}) => {
+    if (navState === "closed" || navState === "closing") {
+      return;
+    }
+
+    window.clearTimeout(closeTimer);
+    navState = "closing";
+    mobileMenu.classList.remove("is-opening", "is-open");
+    mobileMenu.classList.add("is-closing");
+    backdrop.classList.remove("is-visible");
+    setToggleState(false);
+
+    closeTimer = window.setTimeout(() => {
+      navState = "closed";
+      mobileMenu.classList.remove("is-closing");
+      unlockScroll();
+      if (restoreFocus) {
+        menuToggle.focus({ preventScroll: true });
+      }
+    }, 300);
+  };
+
+  menuToggle.addEventListener("click", () => {
+    if (navState === "open" || navState === "opening") {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+
+  mobileMenu.addEventListener("click", (event) => {
+    if (event.target.closest("a")) {
+      closeMenu({ restoreFocus: false });
+    }
+  });
+
+  backdrop.addEventListener("click", () => closeMenu());
+
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeMenu();
+    }
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 960) {
+      closeMenu({ restoreFocus: false });
+    }
+  });
+}
+
+initMobileNavigation();
 
 contactForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-  if (contactForm.getAttribute("aria-busy") === "true") return;
 
   const submitButton = contactForm.querySelector('button[type="submit"]');
   const defaultButtonText = submitButton.textContent;
@@ -122,8 +346,6 @@ contactForm.addEventListener("submit", async (event) => {
   formData.append("access_key", web3FormsAccessKey);
   formData.append("subject", "New message from Barock Cafe Website");
 
-  contactForm.setAttribute("aria-busy", "true");
-  contactForm.querySelector("[data-form-status]").textContent = "Sending your message...";
   submitButton.disabled = true;
   submitButton.textContent = "Sending...";
 
@@ -143,64 +365,7 @@ contactForm.addEventListener("submit", async (event) => {
   } catch (error) {
     showToast("Sorry, something went wrong. Please try again.");
   } finally {
-    contactForm.setAttribute("aria-busy", "false");
     submitButton.disabled = false;
     submitButton.textContent = defaultButtonText;
   }
 });
-
-const mapActivate=document.querySelector('[data-map-activate]');
-mapActivate?.addEventListener('click',()=>{const map=document.querySelector('[data-map-src]');map.src=map.dataset.mapSrc;map.hidden=false;mapActivate.hidden=true;});
-
-// Phone rails (Signature Sips, The BAROCK Experience): bleed to the screen edge and show swipe progress.
-(() => {
-  const rails = [...document.querySelectorAll('.signature-sips__grid, .experience-grid')];
-  if (!rails.length) return;
-  const phone = matchMedia('(max-width: 760px)');
-  const fit = () => rails.forEach(rail => {
-    rail.style.removeProperty('--rail-gutter');
-    if (!phone.matches) { rail.removeAttribute('tabindex'); rail.removeAttribute('role'); rail.removeAttribute('aria-label'); return; }
-    // keyboard users can scroll the rail with the arrow keys
-    rail.tabIndex = 0; rail.setAttribute('role', 'region');
-    rail.setAttribute('aria-label', rail.closest('section')?.querySelector('h2')?.textContent.trim() || 'Photos');
-    const parent = rail.parentElement.getBoundingClientRect();
-    rail.style.setProperty('--rail-gutter', Math.max(12, Math.round(parent.left)) + 'px');
-  });
-  rails.forEach(rail => {
-    const bar = rail.nextElementSibling?.classList.contains('rail-hint') ? rail.nextElementSibling : null;
-    if (!bar) return;
-    let frame = 0;
-    const update = () => {
-      frame = 0;
-      const max = rail.scrollWidth - rail.clientWidth;
-      const visible = rail.clientWidth / Math.max(rail.scrollWidth, 1);
-      const progress = max > 0 ? visible + (1 - visible) * (rail.scrollLeft / max) : 1;
-      bar.style.setProperty('--rail-progress', progress.toFixed(3));
-    };
-    rail.addEventListener('scroll', () => { if (!frame) frame = requestAnimationFrame(update); }, { passive: true });
-    addEventListener('resize', () => { if (!frame) frame = requestAnimationFrame(update); }, { passive: true });
-    update();
-  });
-  fit();
-  phone.addEventListener('change', fit);
-  addEventListener('resize', fit, { passive: true });
-})();
-
-// Glass panels: a soft Tiffany light follows the pointer (desktop only).
-(() => {
-  if (!matchMedia('(hover: hover) and (pointer: fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  document.querySelectorAll('.contact-form, .visit-details').forEach((panel) => {
-    panel.classList.add('spot');
-    let frame = 0, x = 0, y = 0;
-    panel.addEventListener('pointermove', (event) => {
-      x = event.clientX; y = event.clientY;
-      if (frame) return;
-      frame = requestAnimationFrame(() => {
-        frame = 0;
-        const box = panel.getBoundingClientRect();
-        panel.style.setProperty('--mx', `${x - box.left}px`);
-        panel.style.setProperty('--my', `${y - box.top}px`);
-      });
-    }, { passive: true });
-  });
-})();
