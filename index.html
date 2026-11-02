@@ -26,15 +26,7 @@
     <meta name="twitter:title" content="BAROCK CAFÉ | Every Moment, Perfectly Yours" />
     <meta name="twitter:description" content="A refined dining and coffee experience in Gulshan, Dhaka." />
     <meta name="twitter:image" content="https://www.barockcafe.com/barock-social-preview.png" />
-    <link
-      rel="preload" media="(min-width: 761px)" as="image"
-      href="./assets/photography-new/exterior.webp"
-      imagesrcset="./assets/photography-new/exterior-640.webp 640w, ./assets/photography-new/exterior-1280.webp 1280w, ./assets/photography-new/exterior.webp 2061w"
-      imagesizes="100vw"
-      type="image/webp"
-      fetchpriority="high"
-    />
-    <link rel="preload" as="image" media="(max-width: 760px)" href="./assets/photography-new/exterior-mobile.webp" fetchpriority="high" />
+    <link rel="preload" as="image" href="./assets/brand-photography/entrance-sign-640.webp" type="image/webp" fetchpriority="high" />
     <link rel="preload" href="./assets/fonts/ad1ed94f7583.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="./assets/fonts/345453b75612.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="./fonts.css?v=20261014-polish-v1" />
@@ -68,6 +60,7 @@
       <link rel="stylesheet" href="./refinements.css?v=20261102-tiffany-v1" />
   <noscript><style>.reveal{opacity:1!important;transform:none!important}</style></noscript>
       <link rel="stylesheet" href="./theme.css?v=20261102-tiffany-v1" />
+    <link rel="stylesheet" href="./assets/hero-tunnel/barock-hero.css?v=1" />
       <link rel="stylesheet" href="./motion.css?v=20261102-motion-v2" />
 </head>
   <body class="home-page">
@@ -114,16 +107,16 @@
         <a href="./contact.html">Contact</a>
       </nav>
 
-      <section class="brand-hero" data-brand-hero aria-labelledby="barock-hero-title">
-        <picture class="brand-hero__media"><source media="(max-width: 760px)" type="image/webp" srcset="./assets/photography-new/exterior-mobile.webp" /><img data-loader-critical src="./assets/photography-new/exterior.webp" srcset="./assets/photography-new/exterior-640.webp 640w, ./assets/photography-new/exterior-1280.webp 1280w, ./assets/photography-new/exterior.webp 2061w" sizes="100vw" width="2061" height="763" alt="BAROCK CAFÉ illuminated at night in Gulshan" loading="eager" fetchpriority="high" decoding="async" /></picture>
-        <div class="brand-hero__overlay" aria-hidden="true"></div>
-        <div class="brand-hero__content">
-          <p class="eyebrow">Gulshan-02 · Dhaka</p>
-          <h1 id="barock-hero-title">BAROCK <span>CAFÉ</span></h1>
-          <p class="brand-hero__motto">Every Moment, Perfectly Yours.</p>
-          <p class="brand-hero__intro">Coffee, cuisine and evening hospitality beneath the golden lights of BAROCK.</p>
+      <section class="barock-tunnel-host" data-brand-hero aria-labelledby="barock-hero-title">
+        <div id="barock-tunnel-hero">
+          <div class="barock-tunnel-fallback">
+            <p>Gulshan-02 · Dhaka</p>
+            <h1 id="barock-hero-title">BAROCK CAFÉ</h1>
+            <p>Every Moment, Perfectly Yours.</p>
+            <p>Coffee, cuisine and evening hospitality beneath the golden lights of BAROCK.</p>
+            <p>Daily · 8:00 AM–2:00 AM</p>
+          </div>
         </div>
-        <p class="brand-hero__hours">Daily · 8:00 AM–2:00 AM</p>
       </section>
 
       <section class="home-menu-section" aria-labelledby="home-menu-title"><div class="home-menu-embed" id="menu-book"><div class="home-menu-embed__heading"><p class="eyebrow">The Official Collection</p><h2 id="home-menu-title">Discover Our Menu</h2></div><div class="fast-menu" data-menu-viewer data-current-page="1" role="region" aria-label="BAROCK CAFÉ official menu">
@@ -335,5 +328,6 @@
   <script type="module" src="./gallery-viewer.js?v=20261014-gallery-v1"></script>
   <script defer src="./assets/vendor/gsap-3.15.0.min.js"></script>
   <script defer src="./motion.js?v=20261102-motion-v2"></script>
+  <script type="module" src="./assets/hero-tunnel/barock-hero.js?v=1"></script>
 </body>
 </html>
