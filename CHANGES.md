@@ -45,3 +45,17 @@ phone numbers, email, address, hours and links are unchanged unless listed here.
 ## To publish
 Replace the contents of the `gh-pages` branch with this folder (keep CNAME). Cache-busting
 version strings were bumped, so visitors get the new files right away.
+
+## Motion pass (motion.css, motion.js, navigation.js)
+
+Both new files are loaded on all four pages after `theme.css`. There are no new libraries, and everything is vanilla JS.
+
+- **Liquid glass nav (desktop):** a Tiffany "water drop" glides between nav links on hover and follows the section you're scrolled to. It stretches as it moves, wobbles at rest, leaves droplets behind, and sends a ripple from the click point.
+- **Kinetic fullscreen menu (phones/tablets):** replaces the small dropdown. Three teal, gold and black panels sweep in. Big Bodoni links rise and tilt into place, and each link lights its own ambient line drawing. The footer shows the real address, hours, hotline and socials. It closes with Escape, traps focus, locks scrolling and keeps the scroll-spy.
+- **Curved 3D photo reel:** a slowly turning cylinder of the café's own photos, placed under the menu, with the existing motto "Every Moment, Perfectly Yours." Photos load only near the viewport, and the reel pauses offscreen.
+- **Marquee ribbon:** a tilted teal ribbon under the hero, built from existing copy (motto, hours, Gulshan-02).
+- **Hero:** the letters of the title rise in after the loader. Gold and Tiffany dust motes drift up, and the photo has a subtle parallax.
+- **Headings:** h2 words rise line by line as they scroll into view. Photos settle from a slight zoom.
+- **Desktop extras:** a cursor ring, magnetic buttons and a scroll progress line.
+- **Performance:** only transform and opacity are animated, and loops pause offscreen. Phones get fewer motes, fewer reel cards and no big shadows. Phone full-scroll test at 4× CPU slowdown: median frame 16.7 ms (60 fps).
+- **Reduced motion:** turns all of this off.
