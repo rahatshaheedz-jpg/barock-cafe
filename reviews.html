@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Customer reviews for Barock Cafe - Every Moment, Perfectly Yours."
+    />
+    <title>Customer Reviews - Barock Cafe</title>
+    <link rel="canonical" href="https://www.barockcafe.com/reviews.html" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#050707" />
+    <meta property="og:title" content="Customer Reviews - Barock Cafe" />
+    <meta property="og:description" content="Customer reviews for Barock Cafe - Every Moment, Perfectly Yours." />
+    <meta property="og:url" content="https://www.barockcafe.com/reviews.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://www.barockcafe.com/barock-social-preview.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="BAROCK CAFÉ logo on a premium dark coffee background" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Customer Reviews - Barock Cafe" />
+    <meta name="twitter:description" content="Customer reviews for Barock Cafe - Every Moment, Perfectly Yours." />
+    <meta name="twitter:image" content="https://www.barockcafe.com/barock-social-preview.png" />
+    <link rel="preload" href="./assets/fonts/ad1ed94f7583.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="./assets/fonts/345453b75612.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="./fonts.css?v=20261014-polish-v1" />
+    
+    <link rel="stylesheet" href="./reviews-ui.css?v=20261102-tiffany-v1" />
+    <link rel="stylesheet" href="./site.css?v=20261102-tiffany-v1" />
+    <style>
+      body {
+        background: #060909;
+      }
+
+      .review-steam span {
+        animation: reviewSteam 6.4s ease-in-out infinite;
+      }
+
+      .review-steam span:nth-child(2) {
+        animation-delay: 1.1s;
+      }
+
+      .review-steam span:nth-child(3) {
+        animation-delay: 2.2s;
+      }
+
+      @keyframes reviewSteam {
+        0%,
+        100% {
+          opacity: 0.18;
+          transform: translateY(18px) translateX(0) rotate(0deg);
+        }
+
+        50% {
+          opacity: 0.62;
+        }
+
+        78% {
+          transform: translateY(-58px) translateX(18px) rotate(8deg);
+        }
+      }
+
+      .fade-card {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 700ms ease, transform 700ms ease;
+      }
+
+      .reviews-empty {
+        margin: 0;
+        padding: 28px 24px;
+        border: 1px dashed rgba(213, 177, 94, 0.35);
+        border-radius: 12px;
+        color: #aabebe;
+        line-height: 1.7;
+      }
+      .reviews-empty[hidden] { display: none; }
+      .fade-card.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    </style>
+      <link rel="stylesheet" href="./refinements.css?v=20261102-tiffany-v1" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "BAROCK CAFÉ",
+  "url": "https://www.barockcafe.com",
+  "telephone": "+8801351943077",
+  "email": "Barockcafe.dhaka@gmail.com",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "House 9/B, Road 51/53, Gulshan-02",
+    "addressLocality": "Dhaka",
+    "postalCode": "1212",
+    "addressCountry": "BD"
+  },
+  "openingHours": "Mo-Su 08:00-02:00",
+  "hasMenu": "https://www.barockcafe.com/menu.html",
+  "sameAs": [
+    "https://www.instagram.com/barock_cafe/",
+    "https://www.facebook.com/profile.php?id=61590421534188"
+  ]
+}
+    </script>
+      <link rel="stylesheet" href="./theme.css?v=20261102-tiffany-v1" />
+</head>
+  <body class="reviews-page font-body text-paper">
+    <main>
+      <header class="site-header glass-navbar">
+        <a class="brand" href="./index.html" aria-label="BAROCK CAFÉ home">
+          <img
+            src="./assets/barock-logo-160.webp"
+            srcset="./assets/barock-logo-160.webp 160w, ./assets/barock-logo-320.webp 320w"
+            sizes="96px"
+            width="160"
+            height="133"
+            loading="eager"
+            decoding="async"
+            alt="BAROCK CAFÉ"
+          />
+        </a>
+        <nav class="nav-links" aria-label="Primary navigation">
+          <a href="./index.html#home">Home</a>
+          <a href="/menu.html">Menu</a>
+          <a aria-current="page" href="./reviews.html">Reviews</a>
+          <a href="./index.html#gallery">Gallery</a>
+          <a href="./index.html#location">Location</a>
+          <a href="./index.html#contact">Contact</a>
+        </nav>
+        <a class="visit-pill glass-button" href="/menu.html">View Menu</a>
+        <button
+          class="menu-toggle"
+          type="button"
+          data-menu-toggle
+          aria-label="Open navigation"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </header>
+
+      <nav class="mobile-menu" id="mobile-menu" data-mobile-menu aria-label="Mobile navigation">
+        <a href="./index.html#home">Home</a>
+        <a href="/menu.html">Menu</a>
+        <a aria-current="page" href="./reviews.html">Reviews</a>
+        <a href="./index.html#gallery">Gallery</a>
+        <a href="./index.html#location">Location</a>
+        <a href="./index.html#contact">Contact</a>
+      </nav>
+
+      <div id="reviews-root"><div class="min-h-screen overflow-hidden bg-cafeBlack text-cream">
+        <section class="relative isolate grid min-h-[82svh] items-center overflow-hidden px-5 pb-20 pt-36 md:pt-40">
+          <div class="absolute inset-0 -z-40 bg-[url('./assets/photography-new/coffee.webp')] bg-cover bg-center opacity-55 saturate-75"></div>
+          <div class="absolute inset-0 -z-30 bg-[radial-gradient(circle_at_72%_22%,rgba(213,177,94,0.22),transparent_28%),linear-gradient(90deg,rgba(6,9,9,0.98),rgba(10,14,14,0.9)_55%,rgba(6,9,9,0.7))]"></div>
+          <div class="absolute inset-0 -z-20 bg-[linear-gradient(90deg,rgba(250,246,237,0.055)_1px,transparent_1px),linear-gradient(rgba(250,246,237,0.04)_1px,transparent_1px)] bg-[length:84px_84px]"></div>
+          <div class="mx-auto grid w-full max-w-[1180px] gap-10 md:grid-cols-[1fr_0.52fr] md:items-end">
+            <div class="animate-[fadeUp_900ms_ease_forwards]">
+              <p class="mb-4 inline-flex items-center gap-3 text-xs font-bold uppercase tracking-[0.16em] text-gold before:h-px before:w-10 before:bg-current">Barock Cafe Experience</p>
+              <h1 class="max-w-4xl font-display text-[4rem] font-semibold leading-[0.94] text-cream drop-shadow-[0_10px_30px_rgba(0,0,0,0.45)] sm:text-[6rem] lg:text-[8rem]">Customer Reviews</h1>
+              <p class="mt-6 max-w-2xl text-xl leading-8 text-secondary">Every moment, perfectly shared by our guests.</p>
+              <p class="mt-4 max-w-xl font-bold text-muted">Every Moment, Perfectly Yours</p>
+            </div>
+            <div class="rounded-[8px] border border-borderGold bg-cardBrown/90 p-6 shadow-cafe backdrop-blur-xl" data-has-reviews hidden>
+              <p class="text-xs font-bold uppercase tracking-[0.14em] text-gold">Guest sentiment</p>
+              <div class="mt-5 flex items-end gap-3"><strong class="font-display text-6xl font-semibold leading-none text-cream"><span data-count="average">0</span></strong><span class="pb-2 font-bold text-secondary">/ 5</span></div>
+              <div class="mt-4"><div class="flex gap-1" data-average-stars aria-label="0 star rating"><button type="button" disabled class="text-2xl leading-none transition duration-200 cursor-default text-[#c8b382]">★</button><button type="button" disabled class="text-2xl leading-none transition duration-200 cursor-default text-[#c8b382]">★</button><button type="button" disabled class="text-2xl leading-none transition duration-200 cursor-default text-[#c8b382]">★</button><button type="button" disabled class="text-2xl leading-none transition duration-200 cursor-default text-[#c8b382]">★</button><button type="button" disabled class="text-2xl leading-none transition duration-200 cursor-default text-[#c8b382]">★</button></div></div>
+            </div>
+          </div>
+        </section>
+        <section class="border-y border-borderGold bg-espresso px-5 py-10" data-has-reviews hidden>
+          <div class="mx-auto grid max-w-[1180px] gap-4 md:grid-cols-3"><article class="glass-card rounded-[8px] border border-borderGold bg-cardBrown/95 p-6 shadow-cafe backdrop-blur-xl"><p class="mb-3 text-xs font-bold uppercase tracking-[0.14em] text-gold">Average Rating</p><strong class="font-display text-5xl font-semibold leading-none text-cream"><span data-count="average">0</span>/5</strong><div class="mt-5 grid grid-cols-5 gap-2"><span class="h-2 rounded-full bg-gradient-to-r from-caramel to-gold shadow-[0_0_18px_rgba(212,168,117,0.22)]"></span><span class="h-2 rounded-full bg-gradient-to-r from-caramel to-gold shadow-[0_0_18px_rgba(212,168,117,0.22)]"></span><span class="h-2 rounded-full bg-gradient-to-r from-caramel to-gold shadow-[0_0_18px_rgba(212,168,117,0.22)]"></span><span class="h-2 rounded-full bg-gradient-to-r from-caramel to-gold shadow-[0_0_18px_rgba(212,168,117,0.22)]"></span><span class="h-2 rounded-full bg-gradient-to-r from-caramel to-gold shadow-[0_0_18px_rgba(212,168,117,0.22)]"></span></div></article><article class="glass-card rounded-[8px] border border-borderGold bg-cardBrown/95 p-6 shadow-cafe backdrop-blur-xl"><p class="mb-3 text-xs font-bold uppercase tracking-[0.14em] text-gold">Total Reviews</p><strong class="font-display text-5xl font-semibold leading-none text-cream"><span data-count="total">0</span></strong><div class="mt-5 grid grid-cols-5 gap-2"><span class="h-2 rounded-full bg-gradient-to-r from-caramel to-gold shadow-[0_0_18px_rgba(212,168,117,0.22)]"></span><span class="h-2 rounded-full bg-gradient-to-r from-caramel to-gold shadow-[0_0_18px_rgba(212,168,117,0.22)]"></span><span class="h-2 rounded-full bg-gradient-to-r from-caramel to-gold shadow-[0_0_18px_rgba(212,168,117,0.22)]"></span><span class="h-2 rounded-full bg-gradient-to-r from-caramel to-gold shadow-[0_0_18px_rgba(212,168,117,0.22)]"></span><span class="h-2 rounded-full bg-gradient-to-r from-caramel to-gold shadow-[0_0_18px_rgba(212,168,117,0.22)]"></span></div></article><article class="glass-card rounded-[8px] border border-borderGold bg-cardBrown/95 p-6 shadow-cafe backdrop-blur-xl"><p class="mb-3 text-xs font-bold uppercase tracking-[0.14em] text-gold">Five Star Moments</p><strong class="font-display text-5xl font-semibold leading-none text-cream"><span data-count="five">0</span></strong><div class="mt-5 grid grid-cols-5 gap-2"><span class="h-2 rounded-full bg-gradient-to-r from-caramel to-gold shadow-[0_0_18px_rgba(212,168,117,0.22)]"></span><span class="h-2 rounded-full bg-gradient-to-r from-caramel to-gold shadow-[0_0_18px_rgba(212,168,117,0.22)]"></span><span class="h-2 rounded-full bg-gradient-to-r from-caramel to-gold shadow-[0_0_18px_rgba(212,168,117,0.22)]"></span><span class="h-2 rounded-full bg-gradient-to-r from-caramel to-gold shadow-[0_0_18px_rgba(212,168,117,0.22)]"></span><span class="h-2 rounded-full bg-gradient-to-r from-caramel to-gold shadow-[0_0_18px_rgba(212,168,117,0.22)]"></span></div></article></div>
+        </section>
+        <section class="bg-[radial-gradient(circle_at_12%_8%,rgba(213,177,94,0.12),transparent_26%),#060909] px-5 py-20">
+          <div class="mx-auto grid max-w-[1180px] gap-12 lg:grid-cols-[1fr_380px]">
+            <div data-reviews-anchor>
+              <div class="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+                <div><p class="mb-3 text-xs font-bold uppercase tracking-[0.14em] text-gold">Guest notes</p><h2 class="font-display text-5xl font-semibold leading-none text-cream md:text-6xl">Reviews Grid</h2></div>
+                <p class="font-bold text-secondary" data-loading hidden>Loading reviews...</p>
+              </div>
+              <div class="grid gap-5 md:grid-cols-2" data-review-grid></div>
+              <p class="reviews-empty" data-reviews-empty>Reviews from our guests will appear here. Be the first to share your moment.</p>
+            </div>
+            <form class="glass-card h-fit rounded-[8px] border border-borderGold bg-cardBrown/95 p-6 shadow-cafe backdrop-blur-xl lg:sticky lg:top-28" data-review-form novalidate>
+              <p class="mb-3 text-xs font-bold uppercase tracking-[0.14em] text-gold">Add Review</p>
+              <h2 class="mb-5 font-display text-4xl font-semibold leading-none text-cream">Share your moment</h2>
+              <label class="mb-4 grid gap-2 text-sm font-bold text-secondary">Name<input name="name" class="min-h-12 rounded-[8px] border border-borderGold bg-cream px-4 text-cafeBlack placeholder:text-[#678988] outline-none transition focus:border-gold focus:ring-4 focus:ring-gold/20" placeholder="Your name" autocomplete="name" required maxlength="80" /></label>
+              <div class="mb-4 grid gap-2"><span class="text-sm font-bold text-secondary" id="rating-label">Rating</span><div class="flex gap-1" role="group" aria-labelledby="rating-label" data-rating-input><button type="button" data-star="1" aria-label="1 star" aria-pressed="false" class="text-2xl leading-none transition duration-200 hover:scale-125 focus:scale-125 focus:outline-none text-[#c8b382]" style="min-width:44px;min-height:44px">★</button><button type="button" data-star="2" aria-label="2 stars" aria-pressed="false" class="text-2xl leading-none transition duration-200 hover:scale-125 focus:scale-125 focus:outline-none text-[#c8b382]" style="min-width:44px;min-height:44px">★</button><button type="button" data-star="3" aria-label="3 stars" aria-pressed="false" class="text-2xl leading-none transition duration-200 hover:scale-125 focus:scale-125 focus:outline-none text-[#c8b382]" style="min-width:44px;min-height:44px">★</button><button type="button" data-star="4" aria-label="4 stars" aria-pressed="false" class="text-2xl leading-none transition duration-200 hover:scale-125 focus:scale-125 focus:outline-none text-[#c8b382]" style="min-width:44px;min-height:44px">★</button><button type="button" data-star="5" aria-label="5 stars" aria-pressed="false" class="text-2xl leading-none transition duration-200 hover:scale-125 focus:scale-125 focus:outline-none text-[#c8b382]" style="min-width:44px;min-height:44px">★</button></div></div>
+              <label class="mb-5 grid gap-2 text-sm font-bold text-secondary">Message<textarea name="message" class="min-h-36 rounded-[8px] border border-borderGold bg-cream px-4 py-3 text-cafeBlack placeholder:text-[#678988] outline-none transition focus:border-gold focus:ring-4 focus:ring-gold/20" placeholder="Write your review..." required maxlength="1200"></textarea></label>
+              <button type="submit" class="glass-button w-full rounded-full border border-gold bg-gold px-5 py-4 font-bold text-cafeBlack shadow-[0_0_0_rgba(212,168,95,0)] transition duration-300 hover:-translate-y-0.5 hover:bg-goldHover hover:shadow-[0_0_34px_rgba(212,168,95,0.35)] disabled:cursor-not-allowed disabled:opacity-70">Submit Review</button>
+              <p role="status" aria-live="polite" class="mt-4 rounded-[8px] border border-borderGold bg-espresso p-3 text-sm font-bold text-secondary" data-review-status hidden></p>
+            </form>
+          </div>
+        </section>
+      </div></div>
+    </main>
+
+    <script defer src="./reviews.js?v=20261102-tiffany-v1"></script>
+      <script defer src="./navigation.js?v=20261014-polish-v1"></script>
+  </body>
+</html>
