@@ -1,0 +1,251 @@
+/* =====================================================================================
+   BAROCK — Tiffany Noir theme
+   Black, Tiffany blue and champagne gold, with glass surfaces and spring motion.
+   Loaded last on every page. Change the palette here, in one place.
+   Glass blur runs only on desktop pointers; phones get the same look as solid tints,
+   because live blur is what makes scrolling stutter on phones.
+   ===================================================================================== */
+:root {
+  --tiffany: #81d8d0;          /* the signature Tiffany blue */
+  --tiffany-bright: #0abab5;
+  --tiffany-deep: #0b5c57;
+  --tiffany-ink: #062a28;
+  --noir: #050707;
+  --noir-2: #0a0f0f;
+  --noir-3: #111818;
+  --gold: #d6b25e;
+  --gold-light: #f1d58b;
+  --gold-deep: #a8853a;
+  --ivory: #f4efe6;
+  --mist: #b9c9c6;
+  --t-rgb: 129, 216, 208;      /* Tiffany as rgb for alpha mixes */
+  --g-rgb: 214, 178, 94;       /* gold as rgb */
+  --glass: linear-gradient(145deg, rgba(255, 255, 255, .085), rgba(255, 255, 255, .025));
+  --glass-solid: rgba(10, 16, 16, .9);
+  --glass-line: rgba(var(--t-rgb), .2);
+  --glass-shine: inset 0 1px 0 rgba(255, 255, 255, .14), inset 0 0 0 1px rgba(255, 255, 255, .03);
+  --lift: 0 24px 60px -28px rgba(0, 0, 0, .85), 0 2px 8px -2px rgba(0, 0, 0, .5);
+  --spring: cubic-bezier(.3, 1.25, .55, 1);
+  --ease-out: cubic-bezier(.22, 1, .36, 1);
+  --barock-gold: var(--gold);
+  --gold-ring: 0 0 0 3px rgba(var(--t-rgb), .28);
+}
+@supports (transition-timing-function: linear(0, 1)) {
+  :root { --spring: linear(0, .03, .1, .2, .32, .43, .54, .64, .73, .8, .87, .92, .95, .98, 1.004, 1.018, 1.026, 1.03, 1.031, 1.03, 1.028, 1.025, 1.021, 1.018, 1.014, 1.011, 1.008, 1.006, 1.004, 1.002, 1); }
+}
+
+html, body { background: var(--noir); }
+body { color: var(--ivory); }
+::selection { background: rgba(var(--t-rgb), .35); color: #fff; }
+:where(a, button, input, textarea, select, [tabindex]):focus-visible { outline: 2px solid var(--tiffany) !important; outline-offset: 3px; }
+
+/* ---------- Scroll progress: Tiffany into gold ---------- */
+.scroll-progress { background: rgba(255, 255, 255, .05); -webkit-backdrop-filter: none; backdrop-filter: none; }
+.scroll-progress__bar { background: linear-gradient(90deg, var(--tiffany-bright), var(--tiffany), var(--gold-light), var(--gold)); box-shadow: 0 0 14px rgba(var(--t-rgb), .6); }
+
+/* ---------- Navigation: liquid glass pill ---------- */
+.site-header.glass-navbar, .pf-nav {
+  background: linear-gradient(135deg, rgba(var(--t-rgb), .07), rgba(255, 255, 255, .02)), rgba(7, 11, 11, .9) !important;
+  border: 1px solid rgba(var(--t-rgb), .22) !important;
+  box-shadow: var(--glass-shine), 0 18px 50px -20px rgba(0, 0, 0, .8) !important;
+}
+@media (hover: hover) and (pointer: fine) and (min-width: 961px) {
+  .site-header.glass-navbar, .pf-nav {
+    background: linear-gradient(135deg, rgba(var(--t-rgb), .09), rgba(255, 255, 255, .025)), rgba(7, 11, 11, .55) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(1.5) !important; backdrop-filter: blur(18px) saturate(1.5) !important;
+  }
+}
+.site-header .nav-links a { position: relative; color: rgba(244, 239, 230, .78); transition: color .2s ease; }
+.site-header .nav-links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 6px; height: 2px; border-radius: 2px; background: linear-gradient(90deg, var(--tiffany), var(--gold)); transform: scaleX(0); transform-origin: 50% 50%; transition: transform .45s var(--spring); }
+.site-header .nav-links a:hover, .site-header .nav-links a[aria-current], .mobile-menu a[aria-current] { color: var(--tiffany) !important; }
+.site-header .nav-links a:hover::after, .site-header .nav-links a[aria-current]::after { transform: scaleX(1); }
+.site-header .visit-pill, .pf-instagram-top {
+  position: relative; overflow: hidden; isolation: isolate;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold) 55%, var(--gold-deep)) !important;
+  color: #0a0d0d !important; border: 1px solid rgba(255, 236, 190, .6) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 10px 26px -10px rgba(var(--g-rgb), .7) !important;
+}
+.mobile-menu {
+  background: linear-gradient(160deg, rgba(var(--t-rgb), .1), transparent 45%), rgba(7, 11, 11, .97) !important;
+  border-color: rgba(var(--t-rgb), .22) !important;
+}
+.menu-toggle { border-color: rgba(var(--t-rgb), .3) !important; }
+.menu-toggle span { background: var(--tiffany) !important; }
+
+/* ---------- Sheen sweep on gold buttons (desktop hover) ---------- */
+.site-header .visit-pill::after, .home-page .button.primary::after, .pf-instagram-top::after {
+  content: ""; position: absolute; inset: -40% -20%; z-index: -1; pointer-events: none;
+  background: linear-gradient(100deg, transparent 38%, rgba(255, 255, 255, .55) 50%, transparent 62%);
+  transform: translateX(-75%); transition: transform .9s var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .site-header .visit-pill:hover::after, .home-page .button.primary:hover::after, .pf-instagram-top:hover::after { transform: translateX(75%); }
+}
+.home-page .button.primary { isolation: isolate; overflow: hidden; background: linear-gradient(135deg, var(--gold-light), var(--gold) 55%, var(--gold-deep)) !important; color: #0a0d0d !important; border-color: rgba(255, 236, 190, .6) !important; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 16px 36px -14px rgba(var(--g-rgb), .7) !important; }
+
+/* ---------- Eyebrows: a Tiffany-to-gold light line ---------- */
+.eyebrow { color: var(--gold) !important; }
+.eyebrow::before, .eyebrow:before { background: linear-gradient(90deg, var(--tiffany), var(--gold)) !important; height: 1px; box-shadow: 0 0 10px rgba(var(--t-rgb), .6); }
+
+/* ---------- Hero ---------- */
+.brand-hero { background: var(--noir); }
+.brand-hero__overlay { background:
+  radial-gradient(60% 70% at 12% 78%, rgba(var(--t-rgb), .12), transparent 60%),
+  linear-gradient(90deg, rgba(4, 6, 6, .88), rgba(4, 6, 6, .58) 36%, rgba(4, 6, 6, .08) 70%),
+  linear-gradient(0deg, var(--noir), transparent 42%) !important; }
+@media (max-width: 760px) {
+  .brand-hero__overlay { background: linear-gradient(0deg, var(--noir), rgba(5, 7, 7, .05) 62%), radial-gradient(80% 50% at 20% 100%, rgba(var(--t-rgb), .14), transparent 70%) !important; }
+}
+.brand-hero h1 { color: var(--ivory) !important; text-shadow: 0 10px 40px rgba(0, 0, 0, .5); }
+.brand-hero h1 span { background: linear-gradient(100deg, var(--ivory) 10%, var(--tiffany) 60%, var(--gold-light)); -webkit-background-clip: text; background-clip: text; color: transparent !important; }
+.brand-hero__motto { color: var(--gold) !important; }
+.brand-hero__hours {
+  display: inline-flex !important; width: auto !important; align-self: flex-start; align-items: center; gap: 10px;
+  padding: 9px 16px 9px 12px; border-radius: 999px; font-size: 11px !important; opacity: 1 !important; letter-spacing: .14em;
+  color: var(--ivory); background: var(--glass), rgba(7, 11, 11, .55); border: 1px solid var(--glass-line); box-shadow: var(--glass-shine);
+}
+.brand-hero__hours::before { content: ""; flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--tiffany); box-shadow: 0 0 0 0 rgba(var(--t-rgb), .7); animation: barockPing 2.4s var(--ease-out) infinite; }
+@keyframes barockPing { 0% { box-shadow: 0 0 0 0 rgba(var(--t-rgb), .7); } 70%, 100% { box-shadow: 0 0 0 9px rgba(var(--t-rgb), 0); } }
+@media (hover: hover) and (pointer: fine) { .brand-hero__hours { -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); } }
+@media (prefers-reduced-motion: no-preference) {
+  .brand-hero__media img { animation: barockSettle 2.4s var(--ease-out) both; }
+}
+@keyframes barockSettle { from { transform: scale(1.06); } to { transform: scale(1); } }
+
+/* ---------- Sections: black, with Tiffany and gold light ---------- */
+.home-menu-section { background: radial-gradient(70% 45% at 50% 0%, rgba(var(--t-rgb), .1), transparent 70%), var(--noir) !important; }
+.home-page .brand-story { background: radial-gradient(50% 60% at 85% 40%, rgba(var(--g-rgb), .08), transparent 70%), var(--noir) !important; }
+.home-page .signature-sips { background: radial-gradient(55% 60% at 100% 10%, rgba(var(--t-rgb), .1), transparent 70%), linear-gradient(180deg, var(--noir), var(--noir-2)) !important; }
+.home-page .authentic-gallery.barock-salon { background: radial-gradient(70% 55% at 15% 0%, rgba(var(--t-rgb), .2), transparent 65%), linear-gradient(180deg, #072c29, var(--tiffany-ink) 40%, var(--noir)) !important; }
+.home-page .barock-experience { background: radial-gradient(50% 50% at 0% 100%, rgba(var(--g-rgb), .08), transparent 70%), var(--noir) !important; }
+.home-page .barock-visit { background: radial-gradient(45% 40% at 85% 0%, rgba(var(--t-rgb), .12), transparent 70%), linear-gradient(160deg, var(--noir-2), var(--noir) 62%) !important; }
+.home-page :is(.brand-story, .signature-sips, .barock-experience, .barock-visit) { border-top: 1px solid rgba(var(--t-rgb), .1) !important; }
+.home-page :is(.brand-story__copy h2, .signature-sips__heading h2, .salon-heading h2, .experience-heading h2, .visit-heading h2, .contact-intro h2, .home-menu-embed__heading h2) { color: var(--ivory) !important; }
+.home-page :is(.signature-sips__heading, .salon-heading, .experience-heading, .visit-heading) p:not(.eyebrow) { color: var(--mist) !important; }
+.salon-heading p:not(.eyebrow), .visit-heading > p { border-color: rgba(var(--t-rgb), .35) !important; }
+.barock-text-link { color: var(--tiffany) !important; border-color: rgba(var(--t-rgb), .45) !important; }
+
+/* ---------- Photo cards: glass frames, light sweep, Tiffany edge on hover ---------- */
+.home-page .photo-editorial {
+  position: relative; border: 1px solid rgba(var(--t-rgb), .14) !important; border-radius: 14px !important;
+  background: var(--glass), var(--noir-2) !important; box-shadow: var(--lift);
+  transition: border-color .3s ease, transform .6s var(--spring), box-shadow .4s ease !important;
+}
+.home-page .photo-editorial figcaption { position: relative; background: linear-gradient(180deg, rgba(255, 255, 255, .045), rgba(255, 255, 255, .01)); border-top: 1px solid rgba(var(--t-rgb), .12); }
+.home-page .photo-editorial figcaption span { color: var(--gold) !important; }
+.home-page .photo-editorial figcaption strong { color: var(--ivory) !important; opacity: .82; }
+.home-page .photo-editorial picture { position: relative; overflow: hidden; }
+.home-page .photo-editorial picture::after { content: ""; position: absolute; inset: -30% -60%; pointer-events: none; background: linear-gradient(100deg, transparent 42%, rgba(255, 255, 255, .18) 50%, transparent 58%); transform: translateX(-60%); transition: transform 1.2s var(--ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  .home-page .photo-editorial:hover, .home-page .photo-editorial.reveal.is-visible:hover { border-color: rgba(var(--t-rgb), .55) !important; transform: translateY(-4px); box-shadow: 0 30px 70px -30px rgba(0, 0, 0, .9), 0 0 0 1px rgba(var(--t-rgb), .12), 0 0 40px -10px rgba(var(--t-rgb), .35); }
+  .home-page .photo-editorial:hover picture::after { transform: translateX(60%); }
+  .home-page .photo-editorial:hover img { transform: scale(1.04) !important; }
+}
+.home-page .photo-editorial img { transition: transform .9s var(--ease-out) !important; }
+
+/* ---------- Menu viewer: glass controls, Tiffany active tab ---------- */
+.fast-menu { --menu-gold: var(--gold); --menu-cream: var(--ivory); }
+.fast-menu button, .fast-menu__actions a { background: var(--glass), rgba(10, 16, 16, .75) !important; border: 1px solid rgba(var(--t-rgb), .22) !important; color: var(--ivory) !important; border-radius: 999px !important; box-shadow: var(--glass-shine); transition: border-color .2s ease, background-color .2s ease, transform .45s var(--spring) !important; }
+.fast-menu__categories button[aria-current="page"] { background: linear-gradient(135deg, var(--tiffany), #5fc6bd) !important; color: #052422 !important; border-color: var(--tiffany) !important; box-shadow: 0 8px 22px -10px rgba(var(--t-rgb), .8) !important; }
+@media (hover: hover) and (pointer: fine) { .fast-menu button:not(:disabled):not([aria-current="page"]):hover, .fast-menu__actions a:hover { border-color: var(--tiffany) !important; } }
+.fast-menu__controls output { color: var(--tiffany) !important; }
+.fast-menu__surface { background: radial-gradient(80% 60% at 50% 0%, rgba(var(--t-rgb), .12), transparent 70%), rgba(6, 12, 12, .9) !important; border: 1px solid rgba(var(--t-rgb), .22) !important; border-radius: 18px !important; box-shadow: var(--glass-shine), 0 40px 90px -40px rgba(0, 0, 0, .9), 0 0 60px -30px rgba(var(--t-rgb), .4) !important; }
+.fast-menu__frame { border-radius: 10px; }
+.fast-menu__gesture, .fast-menu__notice { color: var(--mist) !important; }
+.menu-book-page, .menu-book-hero { background: radial-gradient(60% 40% at 50% 10%, rgba(var(--t-rgb), .1), transparent 70%), var(--noir) !important; }
+.menu-book-intro p, .menu-book-contact { color: var(--mist) !important; }
+
+/* ---------- Location: the Tiffany box ---------- */
+.visit-stage { border: 1px solid rgba(var(--t-rgb), .3) !important; box-shadow: 0 50px 100px -50px rgba(0, 0, 0, .9), 0 0 80px -40px rgba(var(--t-rgb), .35); }
+.visit-details {
+  background: radial-gradient(90% 70% at 100% 0%, rgba(255, 255, 255, .1), transparent 60%), linear-gradient(150deg, #0e6a64, var(--tiffany-deep) 45%, #073d3a) !important;
+  border-color: rgba(var(--t-rgb), .4) !important;
+}
+.visit-details .visit-label { color: var(--gold-light) !important; }
+.visit-details strong { color: #fff !important; }
+.visit-details > p:not(.visit-label) { color: #d9efec !important; }
+.visit-monogram { color: rgba(255, 255, 255, .08) !important; }
+.map-activate {
+  background: radial-gradient(120% 90% at 50% 40%, rgba(var(--t-rgb), .14), transparent 60%),
+              repeating-linear-gradient(0deg, rgba(var(--t-rgb), .06) 0 1px, transparent 1px 44px),
+              repeating-linear-gradient(90deg, rgba(var(--t-rgb), .06) 0 1px, transparent 1px 44px), #061a19 !important;
+  color: var(--gold) !important;
+}
+.map-activate::before { border-color: var(--tiffany) !important; box-shadow: inset 0 0 0 9px #061a19, inset 0 0 0 30px var(--tiffany) !important; }
+.map-activate span:last-child { border-color: rgba(var(--t-rgb), .45) !important; color: var(--tiffany); }
+
+/* ---------- Contact: glass panel and glass fields ---------- */
+.home-page .contact-form {
+  position: relative; padding: clamp(22px, 3vw, 34px) !important; border-radius: 20px;
+  background: var(--glass), rgba(8, 13, 13, .7); border: 1px solid var(--glass-line); box-shadow: var(--glass-shine), var(--lift);
+}
+.home-page .contact-form label { color: var(--gold) !important; }
+.home-page .contact-form :is(input, textarea), .reviews-page :is(input, textarea) {
+  background: rgba(255, 255, 255, .045) !important; color: var(--ivory) !important;
+  border: 1px solid rgba(var(--t-rgb), .2) !important; border-radius: 12px !important;
+  transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease !important;
+}
+.home-page .contact-form :is(input, textarea)::placeholder { color: rgba(185, 201, 198, .55) !important; }
+.home-page .contact-form :is(input, textarea):focus, .reviews-page :is(input, textarea):focus { border-color: var(--tiffany) !important; background: rgba(var(--t-rgb), .06) !important; box-shadow: var(--gold-ring) !important; }
+.contact-links a { border-color: rgba(var(--t-rgb), .18) !important; }
+.contact-links a span { color: var(--gold) !important; }
+.socials a { background: var(--glass); border: 1px solid rgba(var(--t-rgb), .28) !important; color: var(--ivory) !important; box-shadow: var(--glass-shine); transition: border-color .2s ease, color .2s ease, transform .45s var(--spring) !important; }
+@media (hover: hover) and (pointer: fine) {
+  .socials a:hover { border-color: var(--tiffany) !important; color: var(--tiffany) !important; transform: translateY(-2px); }
+  .home-page .contact-form, .visit-stage { -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+}
+
+/* ---------- Spotlight that follows the pointer on glass panels (desktop) ---------- */
+.spot { --mx: 50%; --my: 0%; }
+.spot::before { content: ""; position: absolute; inset: 0; z-index: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .35s ease; background: radial-gradient(22rem circle at var(--mx) var(--my), rgba(var(--t-rgb), .14), transparent 60%); }
+.spot:hover::before { opacity: 1; }
+.spot > :not(.visit-monogram) { position: relative; z-index: 1; }
+
+/* ---------- Footer ---------- */
+.footer { background: radial-gradient(50% 80% at 50% 0%, rgba(var(--t-rgb), .1), transparent 70%), var(--noir) !important; border-top: 1px solid rgba(var(--t-rgb), .25) !important; }
+.footer h3 { color: var(--gold) !important; }
+.footer p, .footer li, .footer li a { color: var(--mist) !important; }
+.footer li a:hover { color: var(--tiffany) !important; }
+.footer-bottom { border-top-color: rgba(var(--t-rgb), .14) !important; color: rgba(185, 201, 198, .7) !important; }
+.footer-grid > div:first-child img { border-color: rgba(var(--t-rgb), .25) !important; }
+
+/* ---------- Toast ---------- */
+.toast { background: var(--glass), rgba(7, 11, 11, .94) !important; border: 1px solid rgba(var(--t-rgb), .35) !important; color: var(--ivory) !important; border-radius: 14px !important; }
+
+/* ---------- Phone rails ---------- */
+.rail-hint i { background: rgba(var(--t-rgb), .2) !important; }
+.rail-hint i::after { background: linear-gradient(90deg, var(--tiffany), var(--gold)) !important; }
+
+/* ---------- Reveals: slightly springier arrival ---------- */
+.home-page .reveal { transition: opacity .6s var(--ease-out), transform .8s var(--spring) !important; transform: translateY(18px); }
+.home-page .reveal.is-visible { transform: none; }
+.home-page .reveal-group > .reveal:nth-child(2) { transition-delay: 70ms !important; }
+.home-page .reveal-group > .reveal:nth-child(3) { transition-delay: 140ms !important; }
+.home-page .reveal-group > .reveal:nth-child(4) { transition-delay: 210ms !important; }
+
+/* ---------- Reviews page ---------- */
+.reviews-page .glass-card { background: var(--glass), rgba(8, 13, 13, .82) !important; border-color: rgba(var(--t-rgb), .22) !important; }
+.reviews-page .reviews-empty { border-color: rgba(var(--t-rgb), .35) !important; color: var(--mist) !important; }
+.reviews-page [data-rating-input] button { border-radius: 10px !important; }
+.reviews-page section:first-child > div:nth-child(2) { background: radial-gradient(circle at 72% 22%, rgba(var(--t-rgb), .18), transparent 30%), linear-gradient(90deg, rgba(5, 7, 7, .98), rgba(8, 12, 12, .9) 55%, rgba(5, 7, 7, .7)) !important; }
+
+/* ---------- Perfectfully Yours ---------- */
+.pf-page h1 { color: var(--ivory) !important; }
+.pf-subtitle { color: var(--gold) !important; }
+.pf-form, .pf-panel { border-color: rgba(var(--t-rgb), .22) !important; }
+.pf-time-grid span { border-color: rgba(var(--t-rgb), .2) !important; }
+.pf-time-grid strong { color: var(--tiffany) !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-hero__hours::before, .brand-hero__media img { animation: none !important; }
+  .home-page .photo-editorial, .home-page .photo-editorial img, .home-page .reveal { transition: none !important; transform: none !important; }
+}
+
+/* Contact form as a glass card (overrides the earlier transparent, single-rule layout). */
+.home-page .contact-atelier .contact-form {
+  border: 1px solid var(--glass-line) !important; border-radius: 22px !important;
+  padding: clamp(22px, 3vw, 36px) !important;
+  background: radial-gradient(70% 50% at 100% 0%, rgba(var(--t-rgb), .1), transparent 70%), var(--glass), rgba(8, 13, 13, .72) !important;
+  box-shadow: var(--glass-shine), var(--lift) !important;
+}
+@media (hover: hover) and (pointer: fine) { .home-page .contact-atelier .contact-form { -webkit-backdrop-filter: blur(14px) !important; backdrop-filter: blur(14px) !important; } }

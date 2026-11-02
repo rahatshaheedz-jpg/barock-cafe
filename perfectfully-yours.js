@@ -1,7 +1,7 @@
 const revealItems = document.querySelectorAll(".reveal");
 const form = document.querySelector("[data-pf-form]");
 const toast = document.querySelector("[data-pf-toast]");
-const defaultCafeImage = "./assets/site/hero-coffee.svg";
+const defaultCafeImage = "./assets/photography-new/coffee.webp";
 const web3FormsEndpoint = "https://api.web3forms.com/submit";
 const web3FormsAccessKey = ["9a69aef0", "2ec6", "43c9", "b2c4", "f59c89d8107d"].join("-");
 
@@ -103,7 +103,7 @@ form.addEventListener("submit", async (event) => {
 
   const formData = new FormData(form);
   formData.append("access_key", web3FormsAccessKey);
-  formData.append("subject", "New opening notification request from Barock Cafe Website");
+  formData.append("subject", "New BAROCK CAFE guest-list request");
 
   submitButton.disabled = true;
   submitButton.textContent = "Sending...";
@@ -120,7 +120,7 @@ form.addEventListener("submit", async (event) => {
     }
 
     form.reset();
-    showToast("Thank you. We will notify you when Perfectfully Yours opens.");
+    showToast("Thank you. You are now connected with BAROCK CAFE.");
   } catch (error) {
     showToast("Sorry, something went wrong. Please try again.");
   } finally {
