@@ -24,7 +24,7 @@
 
   /* ---------------- Marquee ribbon (home) ---------------- */
   if (isHome) {
-    const hero = $('.brand-hero');
+    const hero = $('[data-brand-hero]');
     const words = ['Every Moment, Perfectly Yours', 'Coffee', 'Cuisine & Evening Hospitality', 'Gulshan-02 · Dhaka', 'Beneath the Golden Lights', 'Daily 8:00 AM – 2:00 AM'];
     if (hero) {
       const group = `<div class="m-marquee__group">${words.map((w) => `<span class="m-marquee__item">${w}</span>`).join('')}</div>`;
