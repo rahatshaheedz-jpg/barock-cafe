@@ -9,6 +9,7 @@ const appRoot = fileURLToPath(new URL(".", import.meta.url));
 export default defineConfig({
   root: appRoot,
   plugins: [react(), tailwindcss()],
+  define: { "process.env.NODE_ENV": JSON.stringify("production") },
   resolve: {
     alias: { "@": resolve(appRoot, "src") },
   },

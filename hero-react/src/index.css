@@ -1,7 +1,7 @@
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css" layer(utilities);
 
-.barock-tunnel-fallback {
+.barock-marquee-fallback {
   display: grid;
   min-height: 100svh;
   align-content: center;
@@ -9,12 +9,20 @@
   color: #f2ead7;
   background: radial-gradient(circle at 50% 38%, rgba(17, 105, 98, .38), transparent 46%), #050707;
 }
-.barock-tunnel-fallback h1 { margin: 0; color: #f2ead7; font: 700 clamp(3rem, 8vw, 7rem)/.96 Georgia, serif; }
-.barock-tunnel-fallback p { max-width: 34rem; color: #d8c692; font: italic 1.25rem/1.5 Georgia, serif; }
+.barock-marquee-fallback h1 { margin: 0; color: #f2ead7; font: 700 clamp(3rem, 8vw, 7rem)/.96 Georgia, serif; }
+.barock-marquee-fallback p { max-width: 34rem; color: #d8c692; font: italic 1.25rem/1.5 Georgia, serif; }
 
-.barock-tunnel-stage .barock-tunnel__eyebrow { margin: 0 0 1rem; color: #d4b65f; font: 600 .75rem/1.4 ui-monospace, monospace; letter-spacing: .34em; text-transform: uppercase; }
-.barock-tunnel-stage .barock-tunnel__title { max-width: none; margin: 0; color: transparent; font: 600 clamp(3rem, 7.5vw, 7.5rem)/.92 Georgia, serif; letter-spacing: -.035em; background-image: linear-gradient(180deg, #f4eedf, #dce8df 55%, #81c7ba); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.barock-tunnel-stage .barock-tunnel__tagline { margin: 1.25rem 0 0; color: #d4b65f; font: italic clamp(1.15rem, 2vw, 1.5rem)/1.4 Georgia, serif; }
-.barock-tunnel-stage .barock-tunnel__description { max-width: 36ch; margin: 1rem 0 0; color: #e4e0d6; font: 400 clamp(.875rem, 1.2vw, 1rem)/1.65 var(--font-body, sans-serif); }
-.barock-tunnel-stage .barock-tunnel__hours { margin: 1.5rem 0 0; padding: .5rem 1rem; border: 1px solid rgba(210, 236, 225, .25); border-radius: 999px; background: rgba(0,0,0,.3); color: #f4eedf; font: 600 .68rem/1.4 ui-monospace, monospace; letter-spacing: .16em; }
-@media (max-width: 520px) { .barock-tunnel-stage .barock-tunnel__title { font-size: clamp(2.8rem, 12vw, 4.5rem); } .barock-tunnel-stage .barock-tunnel__eyebrow { letter-spacing: .25em; } }
+.barock-marquee-hero { min-height: 100svh; color: #f4eedf; background: radial-gradient(ellipse at 50% 32%, rgba(17,105,98,.26), transparent 62%), #050707; }
+.barock-marquee__copy { width: min(100%, 900px); margin-top: -5vh; }
+.barock-marquee-hero .barock-marquee__tagline { margin: 0 0 1rem; border: 1px solid rgba(213,177,94,.38); background: rgba(6,15,14,.7); color: #d4b65f; font: 600 .75rem/1.4 ui-monospace, monospace; letter-spacing: .18em; text-transform: uppercase; }
+.barock-marquee-hero .barock-marquee__title { max-width: none; margin: 0; color: #f4eedf; font: 600 clamp(3.2rem, 8vw, 7rem)/.96 Georgia, serif; letter-spacing: -.035em; text-wrap: balance; }
+.barock-marquee-hero .barock-marquee__description { max-width: 36rem; margin: 1.5rem 0 0; color: #e4e0d6; font: 400 clamp(.95rem, 1.4vw, 1.15rem)/1.65 var(--font-body, sans-serif); }
+.barock-marquee-hero .barock-marquee__button { margin-top: 2rem; border: 1px solid rgba(255,237,188,.62); background: linear-gradient(135deg,#f0d792,#bd994c); color: #111614; text-decoration: none; box-shadow: 0 10px 30px rgba(0,0,0,.28); }
+.barock-marquee__gallery { mask-image: linear-gradient(to bottom, transparent, black 20%, black 84%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 20%, black 84%, transparent); }
+.barock-marquee__gallery img { display: block; border: 1px solid rgba(240,211,142,.18); }
+@media (max-width: 520px) {
+  .barock-marquee__copy { margin-top: -8vh; }
+  .barock-marquee-hero .barock-marquee__title { font-size: clamp(2.7rem, 11.5vw, 4rem); }
+  .barock-marquee-hero .barock-marquee__tagline { font-size: .63rem; letter-spacing: .12em; }
+  .barock-marquee__gallery { height: 30%; }
+}
