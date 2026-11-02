@@ -1,422 +1,223 @@
-const { useEffect, useMemo, useRef, useState } = React;
-
+// Customer reviews: the page is plain HTML; this script only adds data and interaction.
+// Online reviews use Supabase once the two values below are filled in. Until then the page
+// shows its empty state and the form explains how to reach BAROCK, exactly as before.
 const SUPABASE_URL = "PASTE_SUPABASE_URL_HERE";
 const SUPABASE_ANON_KEY = "PASTE_SUPABASE_ANON_KEY_HERE";
+const SUPABASE_SCRIPT = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js";
 const defaultCafeImage = "./assets/photography-new/coffee.webp";
 
 const supabaseIsConfigured =
-  SUPABASE_URL !== "PASTE_SUPABASE_URL_HERE" &&
-  SUPABASE_ANON_KEY !== "PASTE_SUPABASE_ANON_KEY_HERE";
+  SUPABASE_URL !== "PASTE_SUPABASE_URL_HERE" && SUPABASE_ANON_KEY !== "PASTE_SUPABASE_ANON_KEY_HERE";
 
-const supabaseClient = supabaseIsConfigured
-  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-  : null;
+const grid = document.querySelector("[data-review-grid]");
+const empty = document.querySelector("[data-reviews-empty]");
+const loading = document.querySelector("[data-loading]");
+const anchor = document.querySelector("[data-reviews-anchor]");
+const form = document.querySelector("[data-review-form]");
+const statusBox = document.querySelector("[data-review-status]");
+const ratingGroup = document.querySelector("[data-rating-input]");
+const ratingButtons = [...ratingGroup.querySelectorAll("[data-star]")];
+const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let rating = 0;
+let clientPromise = null;
 
-const fallbackReviews = [];
-
-function formatDate(value) {
-  return new Intl.DateTimeFormat("en", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  }).format(new Date(value));
+function getClient() {
+  if (!supabaseIsConfigured) return Promise.resolve(null);
+  clientPromise ||= new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = SUPABASE_SCRIPT;
+    script.async = true;
+    script.onload = () => resolve(window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY));
+    script.onerror = () => { clientPromise = null; reject(new Error("Reviews service unavailable")); };
+    document.head.append(script);
+  });
+  return clientPromise;
 }
 
-function Stars({ rating, interactive = false, onChange, hoveredRating, onHover }) {
-  return React.createElement(
-    "div",
-    { className: "flex gap-1", "aria-label": `${rating} star rating` },
-    [1, 2, 3, 4, 5].map((star) => {
-      const isActive = star <= (hoveredRating || rating);
-      return React.createElement(
-        "button",
-        {
-          key: star,
-          type: "button",
-          disabled: !interactive,
-          onClick: interactive ? () => onChange(star) : undefined,
-          onMouseEnter: interactive ? () => onHover(star) : undefined,
-          onMouseLeave: interactive ? () => onHover(0) : undefined,
-          className: [
-            "text-2xl leading-none transition duration-200",
-            interactive ? "hover:scale-125 focus:scale-125 focus:outline-none" : "cursor-default",
-            isActive ? "text-gold drop-shadow-[0_0_12px_rgba(212,168,95,0.62)]" : "text-[#C7AA83]",
-          ].join(" "),
-          "aria-label": interactive ? `${star} stars` : undefined,
-          "aria-pressed": interactive ? rating === star : undefined,
-          style: interactive ? {minWidth:44,minHeight:44} : undefined,
-        },
-        "\u2605",
-      );
-    }),
-  );
+const formatDate = (value) =>
+  new Intl.DateTimeFormat("en", { month: "short", day: "numeric", year: "numeric" }).format(new Date(value));
+
+function starRow(value) {
+  const row = document.createElement("div");
+  row.className = "flex gap-1";
+  row.setAttribute("aria-label", `${value} star rating`);
+  for (let star = 1; star <= 5; star += 1) {
+    const item = document.createElement("button");
+    item.type = "button";
+    item.disabled = true;
+    item.textContent = "★";
+    item.className = [
+      "text-2xl leading-none transition duration-200 cursor-default",
+      star <= value ? "text-gold drop-shadow-[0_0_12px_rgba(212,168,95,0.62)]" : "text-[#c8b382]",
+    ].join(" ");
+    row.append(item);
+  }
+  return row;
 }
 
-function CountUp({ value, suffix = "" }) {
-  const [current, setCurrent] = useState(0);
-
-  useEffect(() => {
-    let frame;
-    const duration = 900;
-    const start = performance.now();
-
-    function tick(now) {
-      const progress = Math.min((now - start) / duration, 1);
-      setCurrent(Number((value * progress).toFixed(value % 1 ? 1 : 0)));
-
-      if (progress < 1) {
-        frame = requestAnimationFrame(tick);
-      }
-    }
-
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [value]);
-
-  return React.createElement(React.Fragment, null, current, suffix);
+function paintStars(row, value) {
+  [...row.children].forEach((item, index) => {
+    const on = index < value;
+    item.classList.toggle("text-gold", on);
+    item.classList.toggle("drop-shadow-[0_0_12px_rgba(212,168,95,0.62)]", on);
+    item.classList.toggle("text-[#c8b382]", !on);
+  });
 }
 
-function ReviewCard({ review }) {
-  return React.createElement(
-    "article",
-    {
-      className:
-        "fade-card glass-card rounded-[8px] border border-borderGold bg-cardBrown/95 p-6 shadow-cafe backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-gold hover:shadow-softCafe",
-    },
-    React.createElement(
-      "div",
-      { className: "mb-5 flex items-start justify-between gap-4" },
-      React.createElement(
-        "div",
-        null,
-        React.createElement("h3", { className: "font-display text-3xl font-semibold leading-[1.05] text-cream" }, review.name),
-        React.createElement("p", { className: "mt-2 text-sm font-bold text-muted" }, formatDate(review.created_at)),
-      ),
-      React.createElement(Stars, { rating: review.rating }),
-    ),
-    React.createElement("p", { className: "text-[1rem] leading-7 text-secondary" }, review.message),
-  );
+function countUp(element, value, suffix = "") {
+  const decimals = value % 1 ? 1 : 0;
+  if (reducedMotion) { element.textContent = value.toFixed(decimals) + suffix; return; }
+  const start = performance.now();
+  const tick = (now) => {
+    const progress = Math.min((now - start) / 900, 1);
+    element.textContent = (value * progress).toFixed(decimals) + suffix;
+    if (progress < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
 }
 
-function ReviewsApp() {
-  const [reviews, setReviews] = useState(fallbackReviews);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [status, setStatus] = useState("");
-  const [form, setForm] = useState({ name: "", message: "", rating: 0 });
-  const [hoveredRating, setHoveredRating] = useState(0);
-  const cardsRef = useRef(null);
+const fadeObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) { entry.target.classList.add("is-visible"); fadeObserver.unobserve(entry.target); }
+  });
+}, { threshold: 0.14 });
 
-  const totalReviews = reviews.length;
-  const averageRating = useMemo(() => {
-    if (!reviews.length) return 0;
-    const total = reviews.reduce((sum, review) => sum + Number(review.rating), 0);
-    return Number((total / reviews.length).toFixed(1));
-  }, [reviews]);
+function render(reviews) {
+  const total = reviews.length;
+  const average = total ? Number((reviews.reduce((sum, r) => sum + Number(r.rating), 0) / total).toFixed(1)) : 0;
+  const five = reviews.filter((r) => Number(r.rating) === 5).length;
 
-  const fiveStarCount = reviews.filter((review) => Number(review.rating) === 5).length;
-
-  async function fetchReviews() {
-    setIsLoading(true);
-
-    if (!supabaseClient) {
-      setReviews(fallbackReviews);
-      setIsLoading(false);
-      return;
-    }
-
-    const { data, error } = await supabaseClient
-      .from("reviews")
-      .select("id,name,rating,message,created_at")
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      setStatus("Could not load reviews right now.");
-    } else {
-      setReviews(data || []);
-    }
-
-    setIsLoading(false);
+  document.querySelectorAll("[data-has-reviews]").forEach((el) => { el.hidden = total === 0; });
+  empty.hidden = total > 0;
+  if (total) {
+    document.querySelectorAll('[data-count="average"]').forEach((el) => countUp(el, average));
+    document.querySelectorAll('[data-count="total"]').forEach((el) => countUp(el, total));
+    document.querySelectorAll('[data-count="five"]').forEach((el) => countUp(el, five));
+    const averageStars = document.querySelector("[data-average-stars]");
+    paintStars(averageStars, Math.round(average));
+    averageStars.setAttribute("aria-label", `${Math.round(average)} star rating`);
   }
 
-  useEffect(() => {
-    fetchReviews();
-  }, []);
+  grid.replaceChildren(...reviews.map((review) => {
+    const card = document.createElement("article");
+    card.className = "fade-card glass-card rounded-[8px] border border-borderGold bg-cardBrown/95 p-6 shadow-cafe backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-gold hover:shadow-softCafe";
+    const top = document.createElement("div");
+    top.className = "mb-5 flex items-start justify-between gap-4";
+    const who = document.createElement("div");
+    const name = document.createElement("h3");
+    name.className = "font-display text-3xl font-semibold leading-[1.05] text-cream";
+    name.textContent = review.name;
+    const date = document.createElement("p");
+    date.className = "mt-2 text-sm font-bold text-muted";
+    date.textContent = formatDate(review.created_at);
+    who.append(name, date);
+    top.append(who, starRow(Number(review.rating)));
+    const message = document.createElement("p");
+    message.className = "text-[1rem] leading-7 text-secondary";
+    message.textContent = review.message;
+    card.append(top, message);
+    fadeObserver.observe(card);
+    return card;
+  }));
+}
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.14 },
-    );
+function setStatus(message) {
+  statusBox.textContent = message;
+  statusBox.hidden = !message;
+}
 
-    document.querySelectorAll(".fade-card").forEach((card) => observer.observe(card));
-    return () => observer.disconnect();
-  }, [reviews]);
-
-  function updateForm(field, value) {
-    setForm((current) => ({ ...current, [field]: value }));
+async function fetchReviews() {
+  if (!supabaseIsConfigured) { render([]); return; }
+  loading.hidden = false;
+  try {
+    const client = await getClient();
+    const { data, error } = await client.from("reviews").select("id,name,rating,message,created_at").order("created_at", { ascending: false });
+    if (error) throw error;
+    render(data || []);
+  } catch {
+    render([]);
+    setStatus("Could not load reviews right now.");
+  } finally {
+    loading.hidden = true;
   }
+}
 
-  async function submitReview(event) {
+// Rating input: click, hover preview, and arrow keys.
+function setRating(value) {
+  rating = value;
+  ratingButtons.forEach((button, index) => button.setAttribute("aria-pressed", String(index + 1 === value)));
+  paintStars(ratingGroup, value);
+}
+ratingButtons.forEach((button, index) => {
+  button.addEventListener("click", () => setRating(index + 1));
+  button.addEventListener("mouseenter", () => paintStars(ratingGroup, index + 1));
+  button.addEventListener("keydown", (event) => {
+    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
     event.preventDefault();
-    setStatus("");
+    const next = Math.max(1, Math.min(5, (rating || index + 1) + (event.key === "ArrowRight" ? 1 : -1)));
+    setRating(next);
+    ratingButtons[next - 1].focus();
+  });
+});
+ratingGroup.addEventListener("mouseleave", () => paintStars(ratingGroup, rating));
 
-    if (!form.name.trim() || !form.message.trim() || !form.rating) {
-      setStatus("Please add your name, rating, and review message.");
-      return;
-    }
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  setStatus("");
+  const name = form.elements.name.value.trim();
+  const message = form.elements.message.value.trim();
+  if (!name || !message || !rating) { setStatus("Please add your name, rating, and review message."); return; }
+  if (!supabaseIsConfigured) { setStatus("Online reviews are currently unavailable. Please contact us at 01351943077."); return; }
 
-    if (!supabaseClient) {
-      setStatus("Online reviews are currently unavailable. Please contact us at 01351943077.");
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    const { error } = await supabaseClient.from("reviews").insert({
-      name: form.name.trim(),
-      rating: form.rating,
-      message: form.message.trim(),
-    });
-
-    if (error) {
-      setStatus("Sorry, your review could not be submitted. Please try again.");
-    } else {
-      setStatus("Thank you! Your review has been submitted.");
-      setForm({ name: "", message: "", rating: 0 });
-      await fetchReviews();
-      cardsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-
-    setIsSubmitting(false);
+  const submit = form.querySelector('button[type="submit"]');
+  submit.disabled = true;
+  submit.textContent = "Submitting...";
+  try {
+    const client = await getClient();
+    const { error } = await client.from("reviews").insert({ name, rating, message });
+    if (error) throw error;
+    setStatus("Thank you! Your review has been submitted.");
+    form.reset();
+    setRating(0);
+    await fetchReviews();
+    anchor.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+  } catch {
+    setStatus("Sorry, your review could not be submitted. Please try again.");
+  } finally {
+    submit.disabled = false;
+    submit.textContent = "Submit Review";
   }
+});
 
-  return React.createElement(
-    "div",
-    { className: "min-h-screen overflow-hidden bg-cafeBlack text-cream" },
-    React.createElement(
-      "section",
-      { className: "relative isolate grid min-h-[82svh] items-center overflow-hidden px-5 pb-20 pt-36 md:pt-40" },
-      React.createElement("div", {
-        className:
-          "absolute inset-0 -z-40 bg-[url('./assets/photography-new/coffee.webp')] bg-cover bg-center opacity-55 saturate-75",
-      }),
-      React.createElement("div", {
-        className:
-          "absolute inset-0 -z-30 bg-[radial-gradient(circle_at_72%_22%,rgba(212,168,95,0.22),transparent_28%),linear-gradient(90deg,rgba(11,7,5,0.98),rgba(18,12,8,0.9)_55%,rgba(11,7,5,0.7))]",
-      }),
-      React.createElement("div", {
-        className:
-          "absolute inset-0 -z-20 bg-[linear-gradient(90deg,rgba(255,247,232,0.055)_1px,transparent_1px),linear-gradient(rgba(255,247,232,0.04)_1px,transparent_1px)] bg-[length:84px_84px]",
-      }),
-      React.createElement(
-        "div",
-        { className: "review-steam absolute right-[10%] top-[28%] -z-10 hidden h-80 w-64 md:block", "aria-hidden": "true" },
-        React.createElement("span", { className: "absolute bottom-0 left-[22%] h-44 w-px rounded-full bg-gradient-to-t from-transparent via-cream/55 to-transparent" }),
-        React.createElement("span", { className: "absolute bottom-0 left-[48%] h-60 w-px rounded-full bg-gradient-to-t from-transparent via-cream/55 to-transparent" }),
-        React.createElement("span", { className: "absolute bottom-0 left-[72%] h-52 w-px rounded-full bg-gradient-to-t from-transparent via-cream/55 to-transparent" }),
-      ),
-      React.createElement(
-        "div",
-        { className: "mx-auto grid w-full max-w-[1180px] gap-10 md:grid-cols-[1fr_0.52fr] md:items-end" },
-        React.createElement(
-          "div",
-          { className: "animate-[fadeUp_900ms_ease_forwards]" },
-          React.createElement("p", { className: "mb-4 inline-flex items-center gap-3 text-xs font-bold uppercase tracking-[0.16em] text-gold before:h-px before:w-10 before:bg-current" }, "Barock Cafe Experience"),
-          React.createElement("h1", { className: "max-w-4xl font-display text-[4rem] font-semibold leading-[0.94] text-cream drop-shadow-[0_10px_30px_rgba(0,0,0,0.45)] sm:text-[6rem] lg:text-[8rem]" }, "Customer Reviews"),
-          React.createElement("p", { className: "mt-6 max-w-2xl text-xl leading-8 text-secondary" }, "Every moment, perfectly shared by our guests."),
-          React.createElement("p", { className: "mt-4 max-w-xl font-bold text-muted" }, "Every Moment, Perfectly Yours"),
-        ),
-        React.createElement(
-          "div",
-          { className: "rounded-[8px] border border-borderGold bg-cardBrown/90 p-6 shadow-cafe backdrop-blur-xl" },
-          React.createElement("p", { className: "text-xs font-bold uppercase tracking-[0.14em] text-gold" }, "Guest sentiment"),
-          React.createElement("div", { className: "mt-5 flex items-end gap-3" },
-            React.createElement("strong", { className: "font-display text-6xl font-semibold leading-none text-cream" }, React.createElement(CountUp, { value: averageRating })),
-            React.createElement("span", { className: "pb-2 font-bold text-secondary" }, "/ 5")
-          ),
-          React.createElement("div", { className: "mt-4" }, React.createElement(Stars, { rating: Math.round(averageRating) })),
-        ),
-      ),
-    ),
-    React.createElement(
-      "section",
-      { className: "border-y border-borderGold bg-espresso px-5 py-10" },
-      React.createElement(
-        "div",
-        { className: "mx-auto grid max-w-[1180px] gap-4 md:grid-cols-3" },
-        React.createElement(StatCard, { label: "Average Rating", value: averageRating, suffix: "/5" }),
-        React.createElement(StatCard, { label: "Total Reviews", value: totalReviews }),
-        React.createElement(StatCard, { label: "Five Star Moments", value: fiveStarCount }),
-      ),
-    ),
-    React.createElement(
-      "section",
-      { className: "bg-[radial-gradient(circle_at_12%_8%,rgba(212,168,95,0.12),transparent_26%),#0B0705] px-5 py-20" },
-      React.createElement(
-        "div",
-        { className: "mx-auto grid max-w-[1180px] gap-12 lg:grid-cols-[1fr_380px]" },
-        React.createElement(
-          "div",
-          { ref: cardsRef },
-          React.createElement("div", { className: "mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end" },
-            React.createElement("div", null,
-              React.createElement("p", { className: "mb-3 text-xs font-bold uppercase tracking-[0.14em] text-gold" }, "Guest notes"),
-              React.createElement("h2", { className: "font-display text-5xl font-semibold leading-none text-cream md:text-6xl" }, "Reviews Grid")
-            ),
-            isLoading ? React.createElement("p", { className: "font-bold text-secondary" }, "Loading reviews...") : null
-          ),
-          React.createElement(
-            "div",
-            { className: "grid gap-5 md:grid-cols-2" },
-            reviews.map((review) => React.createElement(ReviewCard, { key: review.id, review })),
-          ),
-        ),
-        React.createElement(
-          "form",
-          {
-            onSubmit: submitReview,
-            className:
-              "glass-card h-fit rounded-[8px] border border-borderGold bg-cardBrown/95 p-6 shadow-cafe backdrop-blur-xl lg:sticky lg:top-28",
-          },
-          React.createElement("p", { className: "mb-3 text-xs font-bold uppercase tracking-[0.14em] text-gold" }, "Add Review"),
-          React.createElement("h2", { className: "mb-5 font-display text-4xl font-semibold leading-none text-cream" }, "Share your moment"),
-          React.createElement("label", { className: "mb-4 grid gap-2 text-sm font-bold text-secondary" },
-            "Name",
-            React.createElement("input", {
-              value: form.name,
-              onChange: (event) => updateForm("name", event.target.value),
-              className: "min-h-12 rounded-[8px] border border-borderGold bg-cream px-4 text-cafeBlack placeholder:text-[#8B7A65] outline-none transition focus:border-gold focus:ring-4 focus:ring-gold/20",
-              placeholder: "Your name",
-              autoComplete: "name",
-              required: true,
-              maxLength: 80,
-            })
-          ),
-          React.createElement("div", { className: "mb-4 grid gap-2" },
-            React.createElement("span", { className: "text-sm font-bold text-secondary" }, "Rating"),
-            React.createElement(Stars, {
-              rating: form.rating,
-              interactive: true,
-              hoveredRating,
-              onHover: setHoveredRating,
-              onChange: (rating) => updateForm("rating", rating),
-            })
-          ),
-          React.createElement("label", { className: "mb-5 grid gap-2 text-sm font-bold text-secondary" },
-            "Message",
-            React.createElement("textarea", {
-              value: form.message,
-              onChange: (event) => updateForm("message", event.target.value),
-              className: "min-h-36 rounded-[8px] border border-borderGold bg-cream px-4 py-3 text-cafeBlack placeholder:text-[#8B7A65] outline-none transition focus:border-gold focus:ring-4 focus:ring-gold/20",
-              placeholder: "Write your review...",
-              required: true,
-              maxLength: 1200,
-            })
-          ),
-          React.createElement(
-            "button",
-            {
-              type: "submit",
-              disabled: isSubmitting,
-              className:
-                "glass-button w-full rounded-full border border-gold bg-gold px-5 py-4 font-bold text-cafeBlack shadow-[0_0_0_rgba(212,168,95,0)] transition duration-300 hover:-translate-y-0.5 hover:bg-goldHover hover:shadow-[0_0_34px_rgba(212,168,95,0.35)] disabled:cursor-not-allowed disabled:opacity-70",
-            },
-            isSubmitting ? "Submitting..." : "Submit Review",
-          ),
-          status ? React.createElement("p", { role: "status", "aria-live": "polite", className: "mt-4 rounded-[8px] border border-borderGold bg-espresso p-3 text-sm font-bold text-secondary" }, status) : null,
-        ),
-      ),
-    ),
-  );
-}
+fetchReviews();
 
-function StatCard({ label, value, suffix = "" }) {
-  return React.createElement(
-    "article",
-    { className: "glass-card rounded-[8px] border border-borderGold bg-cardBrown/95 p-6 shadow-cafe backdrop-blur-xl" },
-    React.createElement("p", { className: "mb-3 text-xs font-bold uppercase tracking-[0.14em] text-gold" }, label),
-    React.createElement("strong", { className: "font-display text-5xl font-semibold leading-none text-cream" }, React.createElement(CountUp, { value, suffix })),
-    React.createElement(
-      "div",
-      { className: "mt-5 grid grid-cols-5 gap-2" },
-      [1, 2, 3, 4, 5].map((item) =>
-        React.createElement("span", {
-          key: item,
-          className: "h-2 rounded-full bg-gradient-to-r from-caramel to-gold shadow-[0_0_18px_rgba(212,168,117,0.22)]",
-        }),
-      ),
-    ),
-  );
-}
-
-const root = ReactDOM.createRoot(document.getElementById("reviews-root"));
-root.render(React.createElement(ReviewsApp));
-
-const menuToggle = document.querySelector("[data-menu-toggle]");
-const mobileMenu = document.querySelector("[data-mobile-menu]");
-
-function initScrollProgress() {
+// Shared page chrome: scroll progress bar and header state.
+(() => {
   const progress = document.createElement("div");
   progress.className = "scroll-progress";
   progress.setAttribute("aria-hidden", "true");
   const bar = document.createElement("span");
   bar.className = "scroll-progress__bar";
-  progress.appendChild(bar);
+  progress.append(bar);
   document.body.prepend(progress);
-  let progressFrame = 0;
-
-  const updateProgress = () => {
-    progressFrame = 0;
-    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-    const percentage = scrollable > 0 ? window.scrollY / scrollable : 0;
-    bar.style.transform = `scaleX(${Math.min(1, Math.max(0, percentage))})`;
-    document.querySelector(".site-header")?.classList.toggle("is-scrolled", window.scrollY > 18);
+  const header = document.querySelector(".site-header");
+  let frame = 0;
+  const update = () => {
+    frame = 0;
+    const scrollable = document.documentElement.scrollHeight - innerHeight;
+    bar.style.transform = `scaleX(${Math.min(1, Math.max(0, scrollable > 0 ? scrollY / scrollable : 0))})`;
+    header?.classList.toggle("is-scrolled", scrollY > 18);
   };
-  const queueProgressUpdate = () => {
-    if (!progressFrame) {
-      progressFrame = window.requestAnimationFrame(updateProgress);
-    }
-  };
+  const queue = () => { if (!frame) frame = requestAnimationFrame(update); };
+  update();
+  addEventListener("scroll", queue, { passive: true });
+  addEventListener("resize", queue, { passive: true });
+})();
 
-  updateProgress();
-  window.addEventListener("scroll", queueProgressUpdate, { passive: true });
-  window.addEventListener("resize", queueProgressUpdate);
-}
-
-initScrollProgress();
-
-function initImageFallbacks() {
-  document.querySelectorAll("img").forEach((image) => {
-    if (image.dataset.fallbackListener === "true") {
-      return;
-    }
-
-    image.dataset.fallbackListener = "true";
-    image.addEventListener(
-      "error",
-      () => {
-        if (image.dataset.fallbackApplied === "true") {
-          return;
-        }
-
-        image.dataset.fallbackApplied = "true";
-        image.src = defaultCafeImage;
-      },
-      { once: true },
-    );
-
-    if (image.complete && image.naturalWidth === 0) {
-      image.dispatchEvent(new Event("error"));
-    }
-  });
-}
-
-initImageFallbacks();
+document.querySelectorAll("img").forEach((image) => {
+  image.addEventListener("error", () => {
+    if (image.dataset.fallbackApplied === "true") return;
+    image.dataset.fallbackApplied = "true";
+    image.src = defaultCafeImage;
+  }, { once: true });
+});

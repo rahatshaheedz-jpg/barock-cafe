@@ -1,11 +1,11 @@
 :root {
-  --barock-lacquer: #070504;
-  --barock-espresso: #120b08;
-  --barock-cream: #fff7e8;
-  --barock-muted: #d8c3a5;
-  --barock-gold: #d4a85f;
-  --barock-gold-light: #f1c879;
-  --barock-teal: #17a9a1;
+  --barock-lacquer: #040606;
+  --barock-espresso: #0a0e0e;
+  --barock-cream: #faf6ed;
+  --barock-muted: #d9c9a4;
+  --barock-gold: #d5b15e;
+  --barock-gold-light: #f2cd78;
+  --barock-teal: #1ba59a;
 }
 
 html.barock-loader-pending,
@@ -21,9 +21,9 @@ html.barock-loader-pending body { overflow: hidden; }
   overflow: hidden;
   padding: 24px;
   background:
-    radial-gradient(circle at 50% 45%, rgba(10, 128, 120, 0.16), transparent 25%),
-    radial-gradient(circle at 50% 100%, rgba(212, 168, 95, 0.12), transparent 35%),
-    #050403;
+    radial-gradient(circle at 50% 45%, rgba(19, 119, 110, 0.16), transparent 25%),
+    radial-gradient(circle at 50% 100%, rgba(213, 177, 94, 0.12), transparent 35%),
+    #030404;
   color: var(--barock-cream);
   opacity: 1;
   visibility: visible;
@@ -43,7 +43,7 @@ html.barock-loader-pending body { overflow: hidden; }
   top: 50%;
   width: min(34vw, 420px);
   height: min(74vh, 720px);
-  border: 1px solid rgba(212, 168, 95, 0.18);
+  border: 1px solid rgba(213, 177, 94, 0.18);
   content: "";
   transform: translateY(-50%);
 }
@@ -65,7 +65,7 @@ html.barock-loader-pending body { overflow: hidden; }
   top: 9%;
   bottom: 9%;
   width: 1px;
-  background: linear-gradient(transparent, rgba(212, 168, 95, 0.5), transparent);
+  background: linear-gradient(transparent, rgba(213, 177, 94, 0.5), transparent);
   opacity: 0.7;
 }
 
@@ -91,7 +91,7 @@ html.barock-loader-pending body { overflow: hidden; }
   width: clamp(154px, 17vw, 210px);
   aspect-ratio: 1;
   place-items: center;
-  filter: drop-shadow(0 0 28px rgba(22, 169, 161, 0.18));
+  filter: drop-shadow(0 0 28px rgba(27, 164, 153, 0.18));
 }
 
 .site-loader__progress {
@@ -109,14 +109,14 @@ html.barock-loader-pending body { overflow: hidden; }
   stroke-width: 1.4;
 }
 
-.site-loader__progress-track { stroke: rgba(255, 247, 232, 0.12); }
+.site-loader__progress-track { stroke: rgba(250, 246, 237, 0.12); }
 
 .site-loader__progress-value {
   stroke: var(--barock-gold-light);
   stroke-dasharray: 100;
   stroke-dashoffset: calc(100 - var(--loader-progress, 0));
   stroke-linecap: round;
-  filter: drop-shadow(0 0 5px rgba(212, 168, 95, 0.8));
+  filter: drop-shadow(0 0 5px rgba(213, 177, 94, 0.8));
   transition: stroke-dashoffset 180ms ease;
 }
 
@@ -179,9 +179,9 @@ html.barock-loader-pending body { overflow: hidden; }
 .brand-hero__overlay {
   z-index: -2;
   background:
-    linear-gradient(90deg, rgba(5, 4, 3, 0.72) 0%, rgba(5, 4, 3, 0.38) 45%, rgba(5, 4, 3, 0.18) 100%),
-    linear-gradient(0deg, #070504 0%, rgba(5, 3, 2, 0.82) 16%, transparent 58%),
-    linear-gradient(180deg, rgba(5, 3, 2, 0.42), transparent 28%);
+    linear-gradient(90deg, rgba(3, 4, 4, 0.72) 0%, rgba(3, 4, 4, 0.38) 45%, rgba(3, 4, 4, 0.18) 100%),
+    linear-gradient(0deg, #040606 0%, rgba(3, 4, 4, 0.82) 16%, transparent 58%),
+    linear-gradient(180deg, rgba(3, 4, 4, 0.42), transparent 28%);
 }
 
 .brand-hero__content {
@@ -210,7 +210,7 @@ html.barock-loader-pending body { overflow: hidden; }
   font-size: 0.46em;
   line-height: 1.05;
   letter-spacing: 0.2em;
-  -webkit-text-stroke: 1px rgba(241, 200, 121, 0.9);
+  -webkit-text-stroke: 1px rgba(242, 205, 120, 0.9);
 }
 
 .brand-hero__motto {
@@ -224,7 +224,7 @@ html.barock-loader-pending body { overflow: hidden; }
 .brand-hero__intro {
   max-width: 550px;
   margin: 14px 0 0;
-  color: #ebdcc4;
+  color: #e2dccd;
   font-size: clamp(1rem, 1.4vw, 1.15rem);
   line-height: 1.75;
 }
@@ -235,7 +235,7 @@ html.barock-loader-pending body { overflow: hidden; }
   align-items: center;
   gap: 10px;
   padding: 7px 0;
-  border-bottom: 1px solid rgba(212, 168, 95, 0.48);
+  border-bottom: 1px solid rgba(213, 177, 94, 0.48);
   color: var(--barock-cream);
   font-weight: 700;
   text-decoration: none;
@@ -254,7 +254,7 @@ html.barock-loader-pending body { overflow: hidden; }
   position: static;
   width: min(1280px, 100%);
   margin: 30px auto 0;
-  color: rgba(255, 247, 232, 0.82);
+  color: rgba(250, 246, 237, 0.82);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -270,9 +270,9 @@ html.barock-loader-pending body { overflow: hidden; }
   width: min(41vw, 570px);
   aspect-ratio: 1;
   place-items: center;
-  border: 1px solid rgba(212, 168, 95, 0.18);
+  border: 1px solid rgba(213, 177, 94, 0.18);
   border-radius: 50%;
-  color: rgba(212, 168, 95, 0.08);
+  color: rgba(213, 177, 94, 0.08);
   font-family: "Bodoni Moda", serif;
   font-size: clamp(12rem, 30vw, 28rem);
   line-height: 1;
@@ -327,8 +327,8 @@ html.barock-loader-pending body { overflow: hidden; }
 
 .brand-story {
   padding: clamp(88px, 11vw, 160px) 28px;
-  background: linear-gradient(110deg, rgba(22, 169, 161, 0.06), transparent 35%), #f1e7d7;
-  color: #21140f;
+  background: linear-gradient(110deg, rgba(27, 164, 153, 0.06), transparent 35%), #ebe7dd;
+  color: #121a1a;
 }
 
 .brand-story__layout {
@@ -351,7 +351,7 @@ html.barock-loader-pending body { overflow: hidden; }
   position: absolute;
   z-index: 1;
   inset: 18px;
-  border: 1px solid rgba(212, 168, 95, 0.64);
+  border: 1px solid rgba(213, 177, 94, 0.64);
   content: "";
   pointer-events: none;
 }
@@ -376,21 +376,21 @@ html.barock-loader-pending body { overflow: hidden; }
   letter-spacing: 0;
 }
 
-.brand-story__copy h2 { color: #21140f; }
+.brand-story__copy h2 { color: #121a1a; }
 
 .brand-story__copy > p:not(.eyebrow) {
   max-width: 630px;
   margin: 28px 0;
-  color: #695a4d;
+  color: #4e6867;
   font-size: clamp(1.05rem, 1.5vw, 1.22rem);
   line-height: 1.85;
 }
 
-.brand-story .barock-text-link { color: #21140f; }
+.brand-story .barock-text-link { color: #121a1a; }
 
 .signature-sips {
   padding: clamp(90px, 11vw, 160px) 28px;
-  background: radial-gradient(circle at 85% 15%, rgba(22, 169, 161, 0.14), transparent 26%), linear-gradient(180deg, #100b08, #070504);
+  background: radial-gradient(circle at 85% 15%, rgba(27, 164, 153, 0.14), transparent 26%), linear-gradient(180deg, #090d0d, #040606);
   color: var(--barock-cream);
 }
 
@@ -423,8 +423,8 @@ html.barock-loader-pending body { overflow: hidden; }
   min-width: 0;
   margin: 0;
   overflow: hidden;
-  background: #140d09;
-  border: 1px solid rgba(216, 177, 106, 0.22);
+  background: #0b1010;
+  border: 1px solid rgba(217, 183, 105, 0.22);
   box-shadow: 0 24px 58px rgba(0, 0, 0, 0.28);
 }
 
@@ -467,11 +467,11 @@ html.barock-loader-pending body { overflow: hidden; }
 
 .authentic-gallery.barock-salon {
   padding: clamp(90px, 11vw, 160px) 28px;
-  background: radial-gradient(circle at 20% 20%, rgba(22, 169, 161, 0.14), transparent 30%), linear-gradient(155deg, #071d1b, #080504 70%);
+  background: radial-gradient(circle at 20% 20%, rgba(27, 164, 153, 0.14), transparent 30%), linear-gradient(155deg, #071d1b, #050707 70%);
 }
 
 .authentic-gallery.barock-salon::before {
-  background: linear-gradient(90deg, rgba(212, 168, 95, 0.04) 1px, transparent 1px);
+  background: linear-gradient(90deg, rgba(213, 177, 94, 0.04) 1px, transparent 1px);
   background-size: 12.5% 100%;
   opacity: 0.7;
 }
@@ -488,7 +488,7 @@ html.barock-loader-pending body { overflow: hidden; }
   min-width: 0;
   margin: 0;
   overflow: hidden;
-  background: #0b0806;
+  background: #060909;
 }
 
 .authentic-gallery__scene--grand { grid-row: 1 / 3; }
@@ -509,7 +509,7 @@ html.barock-loader-pending body { overflow: hidden; }
 .authentic-gallery__scene::after {
   position: absolute;
   inset: 0;
-  background: linear-gradient(0deg, rgba(5, 3, 2, 0.86), transparent 52%);
+  background: linear-gradient(0deg, rgba(3, 4, 4, 0.86), transparent 52%);
   content: "";
 }
 
@@ -576,7 +576,7 @@ html.barock-loader-pending body { overflow: hidden; }
   .brand-hero__media img { object-position: 56% center; }
 
   .brand-hero__overlay {
-    background: linear-gradient(0deg, #070504 0%, rgba(5, 3, 2, 0.78) 24%, rgba(5, 3, 2, 0.3) 78%), linear-gradient(90deg, rgba(5, 3, 2, 0.3), transparent);
+    background: linear-gradient(0deg, #040606 0%, rgba(3, 4, 4, 0.78) 24%, rgba(3, 4, 4, 0.3) 78%), linear-gradient(90deg, rgba(3, 4, 4, 0.3), transparent);
   }
 
   .brand-hero__content {
@@ -723,17 +723,17 @@ html.barock-loader-pending body { overflow: hidden; }
 }
 
 /* Supplied BAROCK photography: scoped to the requested image sections. */
-.brand-story { background: #0d0b09; color: var(--barock-cream); }
+.brand-story { background: #080c0c; color: var(--barock-cream); }
 .brand-story__copy h2 { color: var(--barock-cream); }
 .brand-story__copy > p:not(.eyebrow) { color: var(--barock-muted); }
 .brand-story .barock-text-link { color: var(--barock-gold); }
-.brand-story__portrait { aspect-ratio: 771 / 913; border: 1px solid rgba(203,164,93,.4); border-radius: 6px; box-shadow: none; }
+.brand-story__portrait { aspect-ratio: 771 / 913; border: 1px solid rgba(204,170,92,.4); border-radius: 6px; box-shadow: none; }
 .brand-story__portrait::before { content: none; }
 .brand-story__portrait picture { display: block; height: 100%; }
 .signature-sips__grid { grid-template-columns: repeat(4,minmax(0,1fr)); grid-template-rows: auto; gap: 16px; }
 .authentic-gallery__grid { grid-template-columns: repeat(2,minmax(0,1fr)); grid-template-rows: repeat(3,minmax(0,400px)); gap: 16px; }
 .authentic-gallery__scene--grand { grid-row: span 2; }
-.photo-editorial { display: flex; flex-direction: column; min-width: 0; min-height: 0; margin: 0; border: 1px solid transparent; border-radius: 6px; overflow: hidden; box-shadow: none; background: #11100e; transition: border-color 550ms ease; }
+.photo-editorial { display: flex; flex-direction: column; min-width: 0; min-height: 0; margin: 0; border: 1px solid transparent; border-radius: 6px; overflow: hidden; box-shadow: none; background: #0d1010; transition: border-color 550ms ease; }
 .photo-editorial picture { display: block; flex: 1; min-height: 0; overflow: hidden; width: 100%; }
 .photo-editorial img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; transition: transform 550ms cubic-bezier(.2,.8,.2,1),filter 550ms ease; }
 .photo-editorial::after { content: none; }
@@ -741,9 +741,9 @@ html.barock-loader-pending body { overflow: hidden; }
 .photo-editorial figcaption span { display: block; margin: 0 0 4px; color: var(--barock-gold); font-size: .65rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
 .photo-editorial figcaption strong { color: var(--barock-muted); font: inherit; font-size: .75rem; font-weight: 400; }
 .signature-sip.photo-editorial picture { aspect-ratio: 3/4; flex: auto; }
-.photo-editorial:hover { border-color: rgba(94,197,190,.65); }
+.photo-editorial:hover { border-color: rgba(94,197,188,.65); }
 .photo-editorial:hover img { transform: scale(1.025); filter: brightness(1.05); }
-.barock-experience { padding: clamp(80px,9vw,130px) 28px; background: #080705; color: var(--barock-cream); }
+.barock-experience { padding: clamp(80px,9vw,130px) 28px; background: #050707; color: var(--barock-cream); }
 .experience-heading { max-width: 800px; margin-bottom: 42px; }
 .experience-heading h2 { margin: 0; font-family: var(--font-display); font-size: clamp(3rem,6.2vw,6.4rem); font-weight: 600; line-height: .98; }
 .experience-heading > p:last-child { max-width: 600px; color: var(--barock-muted); line-height: 1.7; margin-top: 24px; }
@@ -775,5 +775,5 @@ html.barock-loader-pending body { overflow: hidden; }
 }
 .brand-hero__media { overflow: hidden; }
 @media (max-width: 760px) {
- .brand-hero__overlay { background: linear-gradient(0deg,#070504 0%,rgba(5,4,3,.6) 22%,rgba(5,4,3,.25) 80%),linear-gradient(90deg,rgba(5,4,3,.4),transparent); }
+ .brand-hero__overlay { background: linear-gradient(0deg,#040606 0%,rgba(3,4,4,.6) 22%,rgba(3,4,4,.25) 80%),linear-gradient(90deg,rgba(3,4,4,.4),transparent); }
 }

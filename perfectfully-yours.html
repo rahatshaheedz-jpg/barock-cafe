@@ -8,33 +8,35 @@
       content="Perfectfully Yours by BAROCK CAFÉ - a refined dining and coffee experience at House 9/B, Road 51/53, Gulshan-02, Dhaka -1212."
     />
     <title>Perfectfully Yours | BAROCK CAFÉ</title>
-    <link rel="canonical" href="https://barockcafe.com/perfectfully-yours.html" />
+    <link rel="canonical" href="https://www.barockcafe.com/perfectfully-yours.html" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <meta name="theme-color" content="#0B0705" />
+    <meta name="theme-color" content="#050707" />
     <meta property="og:title" content="Perfectfully Yours | BAROCK CAFÉ" />
     <meta property="og:description" content="A refined dining and coffee experience in the heart of Gulshan." />
-    <meta property="og:url" content="https://barockcafe.com/perfectfully-yours.html" />
+    <meta property="og:url" content="https://www.barockcafe.com/perfectfully-yours.html" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://barockcafe.com/barock-social-preview.png" />
+    <meta property="og:image" content="https://www.barockcafe.com/barock-social-preview.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="BAROCK CAFÉ logo on a premium dark coffee background" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Perfectfully Yours | BAROCK CAFÉ" />
     <meta name="twitter:description" content="A refined dining and coffee experience in the heart of Gulshan." />
-    <meta name="twitter:image" content="https://barockcafe.com/barock-social-preview.png" />
+    <meta name="twitter:image" content="https://www.barockcafe.com/barock-social-preview.png" />
     <link rel="preload" as="image" href="./assets/photography-new/coffee.webp" type="image/webp" fetchpriority="high" />
+    <link rel="preload" href="./assets/fonts/ad1ed94f7583.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="./assets/fonts/345453b75612.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="./fonts.css?v=20261014-polish-v1" />
-    <link rel="stylesheet" href="./site.css?v=20261014-polish-v1" />
+    <link rel="stylesheet" href="./site.css?v=20261102-tiffany-v1" />
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Restaurant",
   "name": "BAROCK CAFÉ",
-  "url": "https://barockcafe.com",
+  "url": "https://www.barockcafe.com",
   "telephone": "+8801351943077",
   "email": "Barockcafe.dhaka@gmail.com",
   "address": {
@@ -45,13 +47,28 @@
     "addressCountry": "BD"
   },
   "openingHours": "Mo-Su 08:00-02:00",
-  "hasMenu": "https://barockcafe.com/menu.html",
+  "hasMenu": "https://www.barockcafe.com/menu.html",
   "sameAs": [
-    "https://www.instagram.com/barock_cafe/"
+    "https://www.instagram.com/barock_cafe/",
+    "https://www.facebook.com/profile.php?id=61590421534188"
   ]
 }
     </script>
-  </head>
+    <style>
+      /* Layout fixes: centre the floating nav without a transform (the reveal animation resets transforms),
+         and let the single-column phone layout shrink to the screen instead of to its longest word. */
+      .pf-nav { left: 0; right: 0; margin-inline: auto; }
+      .pf-nav.reveal, .pf-nav.reveal.is-visible { transform: none; }
+      .pf-shell { grid-template-columns: minmax(0, 1.05fr) minmax(0, .62fr); }
+      .pf-form-row > * { min-width: 0; }
+      @media (max-width: 900px) {
+        .pf-shell { grid-template-columns: minmax(0, 1fr); }
+        .pf-copy h1 { font-size: clamp(2.6rem, 14.5vw, 5.2rem); overflow-wrap: break-word; }
+        .pf-subtitle { font-size: clamp(1.4rem, 6.4vw, 2rem); }
+      }
+    </style>
+      <link rel="stylesheet" href="./theme.css?v=20261102-tiffany-v1" />
+</head>
   <body>
     <main class="pf-page">
       <section class="pf-hero">

@@ -151,3 +151,56 @@ contactForm.addEventListener("submit", async (event) => {
 
 const mapActivate=document.querySelector('[data-map-activate]');
 mapActivate?.addEventListener('click',()=>{const map=document.querySelector('[data-map-src]');map.src=map.dataset.mapSrc;map.hidden=false;mapActivate.hidden=true;});
+
+// Phone rails (Signature Sips, The BAROCK Experience): bleed to the screen edge and show swipe progress.
+(() => {
+  const rails = [...document.querySelectorAll('.signature-sips__grid, .experience-grid')];
+  if (!rails.length) return;
+  const phone = matchMedia('(max-width: 760px)');
+  const fit = () => rails.forEach(rail => {
+    rail.style.removeProperty('--rail-gutter');
+    if (!phone.matches) { rail.removeAttribute('tabindex'); rail.removeAttribute('role'); rail.removeAttribute('aria-label'); return; }
+    // keyboard users can scroll the rail with the arrow keys
+    rail.tabIndex = 0; rail.setAttribute('role', 'region');
+    rail.setAttribute('aria-label', rail.closest('section')?.querySelector('h2')?.textContent.trim() || 'Photos');
+    const parent = rail.parentElement.getBoundingClientRect();
+    rail.style.setProperty('--rail-gutter', Math.max(12, Math.round(parent.left)) + 'px');
+  });
+  rails.forEach(rail => {
+    const bar = rail.nextElementSibling?.classList.contains('rail-hint') ? rail.nextElementSibling : null;
+    if (!bar) return;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const max = rail.scrollWidth - rail.clientWidth;
+      const visible = rail.clientWidth / Math.max(rail.scrollWidth, 1);
+      const progress = max > 0 ? visible + (1 - visible) * (rail.scrollLeft / max) : 1;
+      bar.style.setProperty('--rail-progress', progress.toFixed(3));
+    };
+    rail.addEventListener('scroll', () => { if (!frame) frame = requestAnimationFrame(update); }, { passive: true });
+    addEventListener('resize', () => { if (!frame) frame = requestAnimationFrame(update); }, { passive: true });
+    update();
+  });
+  fit();
+  phone.addEventListener('change', fit);
+  addEventListener('resize', fit, { passive: true });
+})();
+
+// Glass panels: a soft Tiffany light follows the pointer (desktop only).
+(() => {
+  if (!matchMedia('(hover: hover) and (pointer: fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('.contact-form, .visit-details').forEach((panel) => {
+    panel.classList.add('spot');
+    let frame = 0, x = 0, y = 0;
+    panel.addEventListener('pointermove', (event) => {
+      x = event.clientX; y = event.clientY;
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const box = panel.getBoundingClientRect();
+        panel.style.setProperty('--mx', `${x - box.left}px`);
+        panel.style.setProperty('--my', `${y - box.top}px`);
+      });
+    }, { passive: true });
+  });
+})();
