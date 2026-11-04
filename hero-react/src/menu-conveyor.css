@@ -10,3 +10,19 @@
 [data-dish-dialog]{z-index:10000;}
 
 #menu-conveyor h2 { color: var(--color-foreground); }
+
+@media (max-width: 767px) {
+  .menu-book-page:has(.phone-liquid-menu) .menu-toggle { display:none; }
+  .phone-liquid-menu { position:fixed; z-index:999; bottom:calc(12px + env(safe-area-inset-bottom)); left:50%; transform:translateX(-50%); max-width:92vw; max-height:78dvh; overflow:auto; background:#103c30; color:#fff; box-shadow:0 5px 24px #0006; }
+  .phone-liquid-menu button,.phone-liquid-menu a { display:flex; align-items:center; min-height:44px; padding:0 20px; color:inherit; }
+  .phone-liquid-menu button { width:100%; justify-content:space-between; border:0; background:#b7dfce; color:#103c30; font:inherit; cursor:pointer; }
+  .phone-menu-links { overflow:hidden; }
+  .phone-menu-links a { justify-content:center; }
+  .phone-menu-links a[aria-current] { color:#edcc84; }
+  .phone-liquid-menu :focus-visible { outline:2px solid currentColor; outline-offset:-4px; }
+  body:has(.phone-liquid-menu) { padding-bottom:calc(64px + env(safe-area-inset-bottom)); }
+}
+@media (max-width: 767px) {
+  #menu-conveyor h2 { font-size:clamp(1.6rem,7vw,2.4rem); line-height:1.12; }
+  #menu-conveyor [data-control] { min-width:44px; min-height:44px; }
+}
