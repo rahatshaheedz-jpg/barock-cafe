@@ -116,7 +116,7 @@
 
 const phoneNavViewport = matchMedia("(max-width: 767px)");
 function loadPhoneNavigation() {
-  if (phoneNavViewport.matches) import("./assets/phone-menu.js").catch(() => {});
+  if (phoneNavViewport.matches) import("./assets/phone-menu.js?v=iphone-tap-1").catch(() => {});
 }
 loadPhoneNavigation();
 phoneNavViewport.addEventListener("change", loadPhoneNavigation);
