@@ -182,3 +182,19 @@ html.kinetic-open .site-header { z-index: 95; }
   .m-char, .m-words .m-w > span, .m-img img { opacity: 1 !important; transform: none !important; transition: none !important; }
   .kinetic *, .kinetic__layers i, .liquid-drop, .m-tab-pill, .fast-menu__categories.is-animated button { transition-duration: .01ms !important; transition-delay: 0s !important; }
 }
+
+/* Matte navigation capsule */
+.site-header.glass-navbar {
+  background: #104638 !important;
+  border: 0 !important;
+  border-radius: 999px;
+  box-shadow: 0 8px 22px rgba(3, 29, 20, .25) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+.site-header .nav-links a { color: #f5faf4 !important; }
+.site-header .nav-links a:is(:hover, [aria-current], .is-target) { color: #f5faf4 !important; }
+.site-header .nav-links .liquid-drop { background: #b8dcc8; box-shadow: none; }
+.site-header .nav-links.is-liquid a.is-target { color: #103c2d !important; }
+.site-header .liquid-drop__body, .site-header .liquid-ripple, .site-header .liquid-droplet { display: none; }
+.site-header .nav-links:not(.is-liquid) a[aria-current] { background: #b8dcc8 !important; color: #103c2d !important; border-radius: 999px; }

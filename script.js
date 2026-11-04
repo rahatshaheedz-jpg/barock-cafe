@@ -98,7 +98,7 @@ function showToast(message) {
 
 
 
-contactForm.addEventListener("submit", async (event) => {
+contactForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
   if (contactForm.getAttribute("aria-busy") === "true") return;
 
