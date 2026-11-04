@@ -183,14 +183,21 @@ html.kinetic-open .site-header { z-index: 95; }
   .kinetic *, .kinetic__layers i, .liquid-drop, .m-tab-pill, .fast-menu__categories.is-animated button { transition-duration: .01ms !important; transition-delay: 0s !important; }
 }
 
-/* Matte navigation capsule */
+/* Frosted emerald navigation capsule */
 .site-header.glass-navbar {
   background: #104638 !important;
-  border: 0 !important;
+  border: 1px solid rgba(210, 240, 224, .20) !important;
   border-radius: 999px;
-  box-shadow: 0 8px 22px rgba(3, 29, 20, .25) !important;
+  box-shadow: inset 0 1px 0 rgba(247, 255, 250, .12), 0 8px 22px rgba(3, 29, 20, .25) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
+}
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .site-header.glass-navbar {
+    background: linear-gradient(165deg, rgba(211, 239, 222, .10), transparent 55%), rgba(12, 55, 43, .72) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(135%) !important;
+    backdrop-filter: blur(18px) saturate(135%) !important;
+  }
 }
 .site-header .nav-links a { color: #f5faf4 !important; }
 .site-header .nav-links a:is(:hover, [aria-current], .is-target) { color: #f5faf4 !important; }

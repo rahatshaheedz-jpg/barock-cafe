@@ -1,0 +1,12 @@
+@layer theme, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+@source "./components/ui/sushi-conveyor-menu.tsx";
+@theme {
+ --color-background:#103c30; --color-foreground:#faf4e6; --color-muted:#245444; --color-muted-foreground:#d2d9cb; --color-card:#153c31; --color-border:#647766; --color-ring:#edcc84;
+ --color-chart-1:#98ceb3; --color-chart-2:#e0bc74; --color-chart-3:#cc9472; --color-chart-4:#b8a0bf; --color-chart-5:#91bbc5;
+}
+#menu-conveyor {position:relative;width:min(100%,1200px);margin:0 auto 2rem;}
+[data-dish-dialog]{z-index:10000;}
+
+#menu-conveyor h2 { color: var(--color-foreground); }
