@@ -29,7 +29,7 @@ export default function FloatingMenu({ links }: { links: HTMLAnchorElement[] }) 
   }, [open]);
 
   return <motion.nav ref={panel} className="phone-liquid-menu" aria-label="Mobile navigation"
-    onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false); }}
+    onBlur={event => { if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) setOpen(false); }}
     initial={false} animate={{ width: open ? 280 : 56, borderRadius: open ? 32 : 72 }}
     transition={{ duration: reduced ? 0 : 0.4, ease: [0.22, 1, 0.36, 1] }}>
     <button ref={toggle} aria-expanded={open} aria-controls="phone-nav-links" onClick={() => setOpen(!open)}>
