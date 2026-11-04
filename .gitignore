@@ -1,0 +1,19 @@
+# Local secrets and credentials
+.env
+.env.*
+!.env.example
+.npmrc
+!.npmrc.example
+credentials*.json
+service-account*.json
+*-service-account*.json
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Local dependencies and OS files
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
