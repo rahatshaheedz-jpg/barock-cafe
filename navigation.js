@@ -113,3 +113,10 @@
     targets.forEach((t) => observer.observe(t.element));
   }
 })();
+
+const phoneNavViewport = matchMedia("(max-width: 767px)");
+function loadPhoneNavigation() {
+  if (phoneNavViewport.matches) import("./assets/phone-menu.js").catch(() => {});
+}
+loadPhoneNavigation();
+phoneNavViewport.addEventListener("change", loadPhoneNavigation);

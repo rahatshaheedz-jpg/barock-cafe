@@ -284,7 +284,7 @@ export function SushiConveyorMenu({
     if (!size.stage || count === 0) return null;
     const span = halfSpan(makeGeo(1000, count, 100, kb)) / 100;
     const cap = wide ? 150 : clamp(size.section * 0.143, 96, 150);
-    const fit = (size.stage - 8) / (2 * span);
+    const fit = (size.stage - (narrow ? 40 : 8)) / (2 * span);
     return makeGeo(size.stage, count, Math.max(1, Math.floor(Math.min(fit, cap))), kb);
   }, [size.stage, size.section, count, kb, wide]);
 
