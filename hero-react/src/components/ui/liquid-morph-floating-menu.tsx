@@ -30,16 +30,17 @@ export default function FloatingMenu({ links }: { links: HTMLAnchorElement[] }) 
 
   return <motion.nav ref={panel} className="phone-liquid-menu" aria-label="Mobile navigation"
     onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false); }}
-    initial={false} animate={{ width: open ? 280 : 150, borderRadius: open ? 32 : 72 }}
+    initial={false} animate={{ width: open ? 280 : 56, borderRadius: open ? 32 : 72 }}
     transition={{ duration: reduced ? 0 : 0.4, ease: [0.22, 1, 0.36, 1] }}>
+    <button ref={toggle} aria-expanded={open} aria-controls="phone-nav-links" onClick={() => setOpen(!open)}>
+      <span className="sr-only">Menu</span><span aria-hidden="true">{open ? "×" : "☰"}</span>
+    </button>
     <motion.div className="phone-menu-links" id="phone-nav-links" inert={!open}
       initial={false} animate={{ height: open ? "auto" : 0, opacity: open ? 1 : 0 }}
       transition={{ duration: reduced ? 0 : 0.35 }}>
       {links.map((link, i) => <a ref={i === 0 ? first : undefined} key={link.href} href={link.href}
         aria-current={link.hasAttribute("aria-current") ? "page" : undefined}>{link.textContent}</a>)}
     </motion.div>
-    <button ref={toggle} aria-expanded={open} aria-controls="phone-nav-links" onClick={() => setOpen(!open)}>
-      Menu <span aria-hidden="true">{open ? "×" : "☰"}</span>
-    </button>
+
   </motion.nav>;
 }
