@@ -252,7 +252,7 @@
   const bar = document.createElement('div');
   bar.className = 'm-progress';
   bar.setAttribute('aria-hidden', 'true');
-  document.body.append(bar);
+  if (!$('.scroll-progress')) document.body.append(bar);
 
   /* ---------------- Hero: letters, gold dust, parallax ---------------- */
   const hero = $('.brand-hero');
@@ -337,7 +337,7 @@
       if (heroContent && !phone) { heroContent.style.transform = `translate3d(0,${(y * -.12).toFixed(1)}px,0)`; heroContent.style.opacity = String(Math.max(0, 1 - y / (innerHeight * .85))); }
     }
   };
-  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  if (bar.isConnected || heroMedia) addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
   onScroll();
 
   /* ---------------- Heading word reveals ---------------- */
@@ -458,3 +458,17 @@
     });
   }
 })();
+
+const marqueeGallery = document.querySelector(".barock-marquee__gallery");
+if (marqueeGallery) new IntersectionObserver(([entry]) => {
+  marqueeGallery.classList.toggle("is-playing", entry.isIntersecting);
+}).observe(marqueeGallery);
+
+// Offscreen glass surfaces need no backdrop sampling.
+const glassSurfaces = document.querySelectorAll(".glass-button, .button, .socials a, .contact-links a, .contact-form input, .contact-form textarea");
+if ("IntersectionObserver" in window) {
+  const glassObserver = new IntersectionObserver(entries => {
+    for (const entry of entries) entry.target.classList.toggle("glass-offscreen", !entry.isIntersecting);
+  }, { rootMargin: "120px" });
+  glassSurfaces.forEach(element => glassObserver.observe(element));
+}

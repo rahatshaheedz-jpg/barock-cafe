@@ -22,6 +22,6 @@ export default defineConfig({
       fileName: "menu-conveyor",
       cssFileName: "menu-conveyor",
     },
-    rollupOptions: { output: { inlineDynamicImports: true } },
+    rollupOptions: { output: { inlineDynamicImports: false } },
   },
 });

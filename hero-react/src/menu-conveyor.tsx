@@ -18,3 +18,25 @@ const items = dishes.map(([id, name, price]) => ({
 }));
 const mount = document.getElementById("menu-conveyor");
 if (mount) createRoot(mount).render(<SushiConveyorMenu items={items} legend={{}} eyebrow="From the BAROCK kitchen" heading="Appetizers & sandwiches" caption="Pick a plate to explore a dish." />);
+
+const coffeeMount = document.getElementById("coffee-pour");
+if (coffeeMount) {
+  const loadCoffee = async () => {
+    try {
+      const { CoffeePourMenu, DEFAULT_COFFEE_ITEMS } = await import("./components/ui/coffee-pour-menu");
+      createRoot(coffeeMount).render(<CoffeePourMenu items={DEFAULT_COFFEE_ITEMS.map(item => ({ ...item, subtitle: undefined }))} />);
+    } catch {
+      const retry = document.createElement("button");
+      retry.textContent = "Load coffee preview";
+      retry.className = "button";
+      retry.addEventListener("click", loadCoffee, { once: true });
+      coffeeMount.replaceChildren(retry);
+    }
+  };
+  const observer = new IntersectionObserver(entries => {
+    if (!entries.some(entry => entry.isIntersecting)) return;
+    observer.disconnect();
+    void loadCoffee();
+  }, { rootMargin: "200px" });
+  observer.observe(coffeeMount);
+}

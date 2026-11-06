@@ -19,6 +19,7 @@ function initScrollProgress() {
   bar.className = "scroll-progress__bar";
   progress.appendChild(bar);
   document.body.prepend(progress);
+  const header = document.querySelector(".site-header");
   let progressFrame = 0;
 
   const updateProgress = () => {
@@ -26,7 +27,7 @@ function initScrollProgress() {
     const scrollable = document.documentElement.scrollHeight - window.innerHeight;
     const percentage = scrollable > 0 ? window.scrollY / scrollable : 0;
     bar.style.transform = `scaleX(${Math.min(1, Math.max(0, percentage))})`;
-    document.querySelector(".site-header")?.classList.toggle("is-scrolled", window.scrollY > 18);
+    header?.classList.toggle("is-scrolled", window.scrollY > 18);
   };
   const queueProgressUpdate = () => {
     if (!progressFrame) {

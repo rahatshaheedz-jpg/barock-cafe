@@ -205,3 +205,8 @@ html.kinetic-open .site-header { z-index: 95; }
 .site-header .nav-links.is-liquid a.is-target { color: #103c2d !important; }
 .site-header .liquid-drop__body, .site-header .liquid-ripple, .site-header .liquid-droplet { display: none; }
 .site-header .nav-links:not(.is-liquid) a[aria-current] { background: #b8dcc8 !important; color: #103c2d !important; border-radius: 999px; }
+
+.glass-offscreen {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}

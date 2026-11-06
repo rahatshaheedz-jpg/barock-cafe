@@ -11,3 +11,10 @@
 }
 
 .phone-liquid-menu .sr-only {position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+
+.phone-liquid-menu {width:56px;border-radius:32px;transition:width .25s ease;}
+.phone-liquid-menu.expanded {width:280px;}
+.phone-menu-links {display:grid;grid-template-rows:0fr;visibility:hidden;transition:grid-template-rows .25s ease;}
+.phone-menu-links > div {min-height:0;overflow:hidden;}
+.expanded .phone-menu-links {grid-template-rows:1fr;visibility:visible;}
+@media(prefers-reduced-motion:reduce){.phone-liquid-menu,.phone-menu-links{transition:none;}}
