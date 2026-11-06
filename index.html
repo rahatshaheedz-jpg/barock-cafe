@@ -26,7 +26,6 @@
     <meta name="twitter:title" content="BAROCK CAFÉ | Every Moment, Perfectly Yours" />
     <meta name="twitter:description" content="A refined dining and coffee experience in Gulshan, Dhaka." />
     <meta name="twitter:image" content="https://www.barockcafe.com/barock-social-preview.png" />
-    <link rel="preload" as="image" href="./assets/brand-photography/entrance-sign-640.webp" type="image/webp" fetchpriority="high" />
     <link rel="preload" href="./assets/fonts/ad1ed94f7583.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="./assets/fonts/345453b75612.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="./fonts.css?v=20261014-polish-v1" />
@@ -60,9 +59,9 @@
       <link rel="stylesheet" href="./refinements.css?v=20261102-tiffany-v1" />
   <noscript><style>.reveal{opacity:1!important;transform:none!important}</style></noscript>
       <link rel="stylesheet" href="./theme.css?v=20261102-tiffany-v1" />
-    <link rel="stylesheet" href="./assets/hero-tunnel/barock-hero.css?v=3" />
-      <link rel="stylesheet" href="./motion.css?v=20261102-motion-v2" />
-<link rel="stylesheet" href="./phone-menu.css" media="(max-width: 767px)">
+    <link rel="stylesheet" href="./assets/hero-tunnel/barock-hero.css?v=perf-20261106" />
+      <link rel="stylesheet" href="./motion.css?v=perf-20261106" />
+<link rel="stylesheet" href="./phone-menu.css?v=perf-20261106" media="(max-width: 767px)">
   </head>
   <body class="home-page">
     <main>
@@ -110,13 +109,74 @@
 
       <div class="barock-marquee-host" data-brand-hero>
         <div id="barock-marquee-hero">
-          <div class="barock-marquee-fallback">
-            <p>Gulshan-02 · Dhaka</p>
-            <h1 id="barock-hero-title">BAROCK CAFÉ</h1>
-            <p>Every Moment, Perfectly Yours.</p>
-            <p>Coffee, cuisine and evening hospitality beneath the golden lights of BAROCK.</p>
-            <p>Daily · 8:00 AM–2:00 AM</p>
-          </div>
+<section class="barock-marquee-hero relative flex h-[100svh] min-h-[620px] w-full flex-col items-center justify-center overflow-hidden px-4 text-center" aria-labelledby="barock-hero-title">
+<div aria-hidden="true" class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_32%,rgba(17,105,98,.38),transparent_62%)]">
+</div>
+<div class="barock-marquee__copy z-10 flex flex-col items-center">
+<div class="barock-marquee__tagline mb-4 inline-block rounded-full px-4 py-1.5 text-sm font-medium backdrop-blur-sm">BAROCK CAFÉ · GULSHAN-02, DHAKA</div>
+<h1 id="barock-hero-title" class="barock-marquee__title font-bold tracking-tight">Every Moment,<br>Perfectly Yours.</h1>
+<p class="barock-marquee__description mt-6 max-w-xl text-lg">Coffee, cuisine and evening hospitality beneath the golden lights of BAROCK.</p>
+<div>
+<a href="./menu.html" class="barock-marquee__button mt-8 inline-flex items-center justify-center rounded-full px-8 py-3 font-semibold">Explore Our Menu</a>
+</div>
+</div>
+<div class="barock-marquee__gallery absolute bottom-0 left-0 h-1/3 w-full md:h-2/5" role="group" aria-label="BAROCK CAFÉ photo highlights">
+<div class="flex w-max">
+<div class="flex shrink-0 gap-4 pr-4" aria-hidden="false">
+<div class="relative aspect-[3/4] h-48 flex-shrink-0 select-none md:h-64" style="rotate: -2deg;">
+<img fetchpriority="high" alt="Illuminated BAROCK CAFÉ entrance at night" draggable="false" loading="eager" decoding="async" class="h-full w-full rounded-2xl object-cover shadow-md shadow-black/40" width="640" height="480" sizes="(max-width: 767px) 144px, 192px" srcset="./assets/brand-photography/entrance-sign-marquee-320.webp 320w, ./assets/brand-photography/entrance-sign-640.webp 640w" src="./assets/brand-photography/entrance-sign-640.webp">
+</div>
+<div class="relative aspect-[3/4] h-48 flex-shrink-0 select-none md:h-64" style="rotate: 3deg;">
+<img alt="BAROCK CAFÉ teal bar and espresso counter" draggable="false" loading="eager" decoding="async" class="h-full w-full rounded-2xl object-cover shadow-md shadow-black/40" width="640" height="360" sizes="(max-width: 767px) 144px, 192px" srcset="./assets/brand-photography/bar-counter-marquee-320.webp 320w, ./assets/brand-photography/bar-counter-640.webp 640w" src="./assets/brand-photography/bar-counter-640.webp">
+</div>
+<div class="relative aspect-[3/4] h-48 flex-shrink-0 select-none md:h-64" style="rotate: -2deg;">
+<img alt="BAROCK barista preparing a drink" draggable="false" loading="eager" decoding="async" class="h-full w-full rounded-2xl object-cover shadow-md shadow-black/40" width="640" height="360" sizes="(max-width: 767px) 144px, 192px" srcset="./assets/brand-photography/barista-marquee-320.webp 320w, ./assets/brand-photography/barista-640.webp 640w" src="./assets/brand-photography/barista-640.webp">
+</div>
+<div class="relative aspect-[3/4] h-48 flex-shrink-0 select-none md:h-64" style="rotate: 3deg;">
+<img alt="Cappuccino served at BAROCK CAFÉ" draggable="false" loading="lazy" decoding="async" class="h-full w-full rounded-2xl object-cover shadow-md shadow-black/40" width="640" height="853" sizes="(max-width: 767px) 144px, 192px" srcset="./assets/brand-photography/cappuccino-marquee-320.webp 320w, ./assets/brand-photography/cappuccino-640.webp 640w" src="./assets/brand-photography/cappuccino-640.webp">
+</div>
+<div class="relative aspect-[3/4] h-48 flex-shrink-0 select-none md:h-64" style="rotate: -2deg;">
+<img alt="BAROCK CAFÉ terrace beneath the trees" draggable="false" loading="lazy" decoding="async" class="h-full w-full rounded-2xl object-cover shadow-md shadow-black/40" width="640" height="480" sizes="(max-width: 767px) 144px, 192px" srcset="./assets/brand-photography/terrace-marquee-320.webp 320w, ./assets/brand-photography/terrace-640.webp 640w" src="./assets/brand-photography/terrace-640.webp">
+</div>
+<div class="relative aspect-[3/4] h-48 flex-shrink-0 select-none md:h-64" style="rotate: 3deg;">
+<img alt="BAROCK signature Goldie drink" draggable="false" loading="lazy" decoding="async" class="h-full w-full rounded-2xl object-cover shadow-md shadow-black/40" width="640" height="1138" sizes="(max-width: 767px) 144px, 192px" srcset="./assets/brand-photography/goldie-marquee-320.webp 320w, ./assets/brand-photography/goldie-640.webp 640w" src="./assets/brand-photography/goldie-640.webp">
+</div>
+<div class="relative aspect-[3/4] h-48 flex-shrink-0 select-none md:h-64" style="rotate: -2deg;">
+<img alt="A green sparkling refresher at BAROCK" draggable="false" loading="lazy" decoding="async" class="h-full w-full rounded-2xl object-cover shadow-md shadow-black/40" width="640" height="1138" sizes="(max-width: 767px) 144px, 192px" srcset="./assets/brand-photography/green-refresher-marquee-320.webp 320w, ./assets/brand-photography/green-refresher-640.webp 640w" src="./assets/brand-photography/green-refresher-640.webp">
+</div>
+<div class="relative aspect-[3/4] h-48 flex-shrink-0 select-none md:h-64" style="rotate: 3deg;">
+<img alt="BAROCK CAFÉ glowing in Gulshan after dark" draggable="false" loading="lazy" decoding="async" class="h-full w-full rounded-2xl object-cover shadow-md shadow-black/40" width="640" height="237" sizes="(max-width: 767px) 144px, 192px" srcset="./assets/photography-new/exterior-marquee-320.webp 320w, ./assets/photography-new/exterior-640.webp 640w" src="./assets/photography-new/exterior-640.webp">
+</div>
+</div>
+<div class="flex shrink-0 gap-4 pr-4" aria-hidden="true">
+<div class="relative aspect-[3/4] h-48 flex-shrink-0 select-none md:h-64" style="rotate: -2deg;">
+<img alt="" aria-hidden="true" draggable="false" loading="lazy" decoding="async" class="h-full w-full rounded-2xl object-cover shadow-md shadow-black/40" width="640" height="480" sizes="(max-width: 767px) 144px, 192px" srcset="./assets/brand-photography/entrance-sign-marquee-320.webp 320w, ./assets/brand-photography/entrance-sign-640.webp 640w" src="./assets/brand-photography/entrance-sign-640.webp">
+</div>
+<div class="relative aspect-[3/4] h-48 flex-shrink-0 select-none md:h-64" style="rotate: 3deg;">
+<img alt="" aria-hidden="true" draggable="false" loading="lazy" decoding="async" class="h-full w-full rounded-2xl object-cover shadow-md shadow-black/40" width="640" height="360" sizes="(max-width: 767px) 144px, 192px" srcset="./assets/brand-photography/bar-counter-marquee-320.webp 320w, ./assets/brand-photography/bar-counter-640.webp 640w" src="./assets/brand-photography/bar-counter-640.webp">
+</div>
+<div class="relative aspect-[3/4] h-48 flex-shrink-0 select-none md:h-64" style="rotate: -2deg;">
+<img alt="" aria-hidden="true" draggable="false" loading="lazy" decoding="async" class="h-full w-full rounded-2xl object-cover shadow-md shadow-black/40" width="640" height="360" sizes="(max-width: 767px) 144px, 192px" srcset="./assets/brand-photography/barista-marquee-320.webp 320w, ./assets/brand-photography/barista-640.webp 640w" src="./assets/brand-photography/barista-640.webp">
+</div>
+<div class="relative aspect-[3/4] h-48 flex-shrink-0 select-none md:h-64" style="rotate: 3deg;">
+<img alt="" aria-hidden="true" draggable="false" loading="lazy" decoding="async" class="h-full w-full rounded-2xl object-cover shadow-md shadow-black/40" width="640" height="853" sizes="(max-width: 767px) 144px, 192px" srcset="./assets/brand-photography/cappuccino-marquee-320.webp 320w, ./assets/brand-photography/cappuccino-640.webp 640w" src="./assets/brand-photography/cappuccino-640.webp">
+</div>
+<div class="relative aspect-[3/4] h-48 flex-shrink-0 select-none md:h-64" style="rotate: -2deg;">
+<img alt="" aria-hidden="true" draggable="false" loading="lazy" decoding="async" class="h-full w-full rounded-2xl object-cover shadow-md shadow-black/40" width="640" height="480" sizes="(max-width: 767px) 144px, 192px" srcset="./assets/brand-photography/terrace-marquee-320.webp 320w, ./assets/brand-photography/terrace-640.webp 640w" src="./assets/brand-photography/terrace-640.webp">
+</div>
+<div class="relative aspect-[3/4] h-48 flex-shrink-0 select-none md:h-64" style="rotate: 3deg;">
+<img alt="" aria-hidden="true" draggable="false" loading="lazy" decoding="async" class="h-full w-full rounded-2xl object-cover shadow-md shadow-black/40" width="640" height="1138" sizes="(max-width: 767px) 144px, 192px" srcset="./assets/brand-photography/goldie-marquee-320.webp 320w, ./assets/brand-photography/goldie-640.webp 640w" src="./assets/brand-photography/goldie-640.webp">
+</div>
+<div class="relative aspect-[3/4] h-48 flex-shrink-0 select-none md:h-64" style="rotate: -2deg;">
+<img alt="" aria-hidden="true" draggable="false" loading="lazy" decoding="async" class="h-full w-full rounded-2xl object-cover shadow-md shadow-black/40" width="640" height="1138" sizes="(max-width: 767px) 144px, 192px" srcset="./assets/brand-photography/green-refresher-marquee-320.webp 320w, ./assets/brand-photography/green-refresher-640.webp 640w" src="./assets/brand-photography/green-refresher-640.webp">
+</div>
+<div class="relative aspect-[3/4] h-48 flex-shrink-0 select-none md:h-64" style="rotate: 3deg;">
+<img alt="" aria-hidden="true" draggable="false" loading="lazy" decoding="async" class="h-full w-full rounded-2xl object-cover shadow-md shadow-black/40" width="640" height="237" sizes="(max-width: 767px) 144px, 192px" srcset="./assets/photography-new/exterior-marquee-320.webp 320w, ./assets/photography-new/exterior-640.webp 640w" src="./assets/photography-new/exterior-640.webp">
+</div>
+</div>
+</div>
+</div>
+</section>
         </div>
       </div>
 
@@ -324,12 +384,12 @@
     <div class="toast" data-toast aria-hidden="true">
       Thanks. Your message is ready for BAROCK CAFÉ.
     </div>
-    <script defer src="./script.js?v=20261102-form-guard-v1"></script>
-      <script defer src="./navigation.js?v=iphone-tap-1"></script>
+    <script defer src="./script.js?v=perf-20261106"></script>
+      <script defer src="./navigation.js?v=perf-20261106"></script>
   <script defer src="./menu-book-core.js?v=20261104-menu-v1"></script>
   <script type="module" src="./gallery-viewer.js?v=20261014-gallery-v1"></script>
   <script defer src="./assets/vendor/gsap-3.15.0.min.js"></script>
-  <script defer src="./motion.js?v=20261102-motion-v2"></script>
-  <script type="module" src="./assets/hero-tunnel/barock-hero.js?v=3"></script>
+  <script defer src="./motion.js?v=perf-20261106"></script>
+
 </body>
 </html>

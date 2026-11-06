@@ -15,3 +15,12 @@
   #menu-conveyor h2 { font-size:clamp(1.6rem,7vw,2.4rem); line-height:1.12; }
   #menu-conveyor [data-control] { min-width:44px; min-height:44px; }
 }
+
+@source "./components/ui/coffee-pour-menu.tsx";
+.coffee-pour-section { width:min(100%,1000px); margin:3rem auto; }
+#coffee-pour {min-height:500px;}
+@media(max-width:639px){#coffee-pour{min-height:600px;}}
+
+.coffee-pour-section h2 { color:var(--paper,#faf4e6); font-size:clamp(2rem,5vw,3rem); line-height:1.1; text-align:center; }
+#coffee-pour button { border:0; background:transparent; box-shadow:none; font-family:inherit; cursor:pointer; }
+#coffee-pour [role="radio"]:focus-visible { outline:2px solid #f1d58b; outline-offset:2px; }
