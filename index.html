@@ -391,5 +391,17 @@
   <script defer src="./assets/vendor/gsap-3.15.0.min.js"></script>
   <script defer src="./motion.js?v=perf-20261106"></script>
 
+<script type="module">
+  const menu = document.querySelector('[data-menu-viewer]');
+  if (menu) {
+    const observer = new IntersectionObserver(async entries => {
+      if (!entries.some(entry => entry.isIntersecting)) return;
+      observer.disconnect();
+      try { await import('./assets/menu-conveyor/menu-conveyor.js?v=journal-home-20261115'); }
+      catch { /* The original PDF viewer remains available if loading fails. */ }
+    }, { rootMargin: '200px' });
+    observer.observe(menu);
+  }
+</script>
 </body>
 </html>

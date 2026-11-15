@@ -41,7 +41,7 @@ if (coffeeMount) {
   observer.observe(coffeeMount);
 }
 
-if (location.pathname.endsWith("menu.html")) {
+if (document.querySelector("[data-menu-viewer]")) {
  const fallback = document.querySelector<HTMLElement>("[data-menu-viewer]");
  if(fallback) {
  const observer = new IntersectionObserver(async entries => {
