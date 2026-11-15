@@ -148,36 +148,38 @@ if (header && mobileLinks) {
     if (!links.contains(document.activeElement)) lens.classList.remove("visible");
   });
   let menuMotion = null;
-  function setOpen(open) {
+  function setOpen(open, immediate = false) {
+    if (!immediate && (button.getAttribute("aria-expanded") === "true") === open) return;
     const wasExpanded = panel.classList.contains("expanded");
     const currentTransform = getComputedStyle(panel).transform;
     const currentOpacity = getComputedStyle(panel).opacity;
     const interrupted = menuMotion !== null;
     menuMotion?.cancel();
     menuMotion = null;
-    panel.classList.remove("menu-in-motion");
+    panel.classList.remove("menu-in-motion", "menu-closing");
     button.setAttribute("aria-expanded", String(open));
     button.setAttribute("aria-label", open ? "Close menu" : "Open menu");
     links.toggleAttribute("inert", !open);
     backdrop.classList.toggle("visible", open);
     if (!open) lens.classList.remove("visible");
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches || (!open && !wasExpanded)) {
+    if (immediate || matchMedia("(prefers-reduced-motion: reduce)").matches || (!open && !wasExpanded)) {
       panel.classList.toggle("expanded", open);
       return;
     }
     panel.classList.add("expanded");
     const collapsed = `scale(${46 / panel.offsetWidth}, ${46 / panel.offsetHeight})`;
     panel.classList.add("menu-in-motion");
+    panel.classList.toggle("menu-closing", !open);
     const animation = panel.animate([
       { transform: interrupted ? currentTransform : open ? collapsed : "scale(1)", opacity: interrupted ? currentOpacity : open ? .6 : 1 },
       { transform: open ? "scale(1)" : collapsed, opacity: open ? 1 : .6 }
-    ], { duration: open ? 420 : 280, easing: "cubic-bezier(.16,1,.3,1)", fill: "both" });
+    ], { duration: open ? 420 : 200, easing: open ? "cubic-bezier(.16,1,.3,1)" : "cubic-bezier(.4,0,.8,.6)", fill: "both" });
     menuMotion = animation;
     animation.onfinish = () => {
       if (menuMotion !== animation) return;
       panel.classList.toggle("expanded", open);
       animation.cancel();
-      panel.classList.remove("menu-in-motion");
+      panel.classList.remove("menu-in-motion", "menu-closing");
       menuMotion = null;
     };
   }
@@ -189,7 +191,7 @@ if (header && mobileLinks) {
     if (event.key === "Escape") { setOpen(false); button.focus(); }
   });
   function syncPhone() {
-    setOpen(false);
+    setOpen(false, true);
     if (phoneViewport.matches) {
       header.before(backdrop);
       header.append(panel);
@@ -206,5 +208,5 @@ if (header && mobileLinks) {
   }
   syncPhone();
   phoneViewport.addEventListener("change", syncPhone);
-  addEventListener("pageshow", () => setOpen(false));
+  addEventListener("pageshow", () => setOpen(false, true));
 }
