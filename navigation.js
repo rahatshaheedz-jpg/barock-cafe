@@ -122,7 +122,7 @@ if (header && mobileLinks) {
   const panel = document.createElement("nav");
   panel.className = "phone-liquid-menu";
   panel.setAttribute("aria-label", "Mobile navigation");
-  panel.innerHTML = '<button type="button" aria-label="Menu" aria-expanded="false" aria-controls="phone-nav-links"><span>Menu</span><span class="phone-menu-icon" aria-hidden="true"><i></i><i></i></span></button><div class="phone-menu-links" id="phone-nav-links" inert><div></div></div>';
+  panel.innerHTML = '<button type="button" aria-label="Menu" aria-expanded="false" aria-controls="phone-nav-links"><span class="phone-menu-icon" aria-hidden="true"><i></i><i></i></span></button><div class="phone-menu-links" id="phone-nav-links" inert><div></div></div>';
   const button = panel.querySelector("button");
   const links = panel.lastElementChild;
   panel.prepend(button);
