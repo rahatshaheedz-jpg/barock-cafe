@@ -1,6 +1,6 @@
 @media (max-width:767px) {
  .site-header.has-phone-liquid-menu .menu-toggle {display:none}
- .phone-liquid-menu {position:absolute;top:7px;right:8px;z-index:1000;width:46px;box-sizing:border-box;max-width:calc(100vw - 32px);border-radius:72px;background:linear-gradient(135deg,#d5fff329,#103c3066 55%,#b7dfce14);color:#e4fff5;border:1px solid #d9fff580;backdrop-filter:blur(20px) saturate(155%);-webkit-backdrop-filter:blur(20px) saturate(155%);overflow:hidden;box-shadow:inset 0 1px 2px #ffffff99,inset 0 -1px 1px #caffef26,0 8px 32px #0004;transition:width .32s cubic-bezier(.22,1,.36,1),border-radius .32s cubic-bezier(.22,1,.36,1);isolation:isolate}
+ .phone-liquid-menu {position:absolute;top:7px;right:8px;z-index:1000;width:46px;box-sizing:border-box;max-width:calc(100vw - 32px);border-radius:72px;background:linear-gradient(135deg,#d5fff329,#103c3066 55%,#b7dfce14);color:#e4fff5;border:1px solid #d9fff580;backdrop-filter:blur(12px) saturate(140%);-webkit-backdrop-filter:blur(12px) saturate(140%);overflow:hidden;box-shadow:inset 0 1px 2px #ffffff99,inset 0 -1px 1px #caffef26,0 8px 32px #0004;transform-origin:top right;isolation:isolate}
  .phone-liquid-menu::before {content:"";position:absolute;z-index:-1;left:-50%;bottom:-20%;transform:translateY(100%);width:200%;height:200%;border-radius:50%;background:radial-gradient(ellipse at 35% 20%,#d3fff533,transparent 52%),linear-gradient(160deg,#103c3055,#071e1866);transition:transform .4s cubic-bezier(.22,1,.36,1)}
  .phone-liquid-menu.expanded {width:280px;border-radius:32px;color:#f4efe6}
  .phone-liquid-menu.expanded::before {transform:translateY(0)}
@@ -10,12 +10,12 @@
  .phone-menu-icon i+i {transform:translateY(3px)}
  .expanded .phone-menu-icon i {transform:rotate(45deg)}
  .expanded .phone-menu-icon i+i {transform:rotate(-45deg)}
- .phone-menu-links {display:grid;grid-template-rows:0fr;visibility:hidden;transition:grid-template-rows .32s cubic-bezier(.22,1,.36,1),visibility .32s}
+ .phone-menu-links {display:grid;grid-template-rows:0fr;visibility:hidden;transition:none}
  .phone-menu-links>div {min-height:0;overflow:hidden}
  .expanded .phone-menu-links {grid-template-rows:1fr;visibility:visible}
  .phone-menu-links a {display:flex;align-items:center;justify-content:center;min-height:44px;font-family:var(--font-body);font-size:19px;font-weight:500;letter-spacing:.015em;line-height:1.35;text-transform:none;color:#f4efe6;opacity:0;transform:translateY(8px);transition:opacity .3s,transform .4s;text-decoration:none}
  .expanded .phone-menu-links>div {padding:8px 0 18px;max-height:calc(80dvh - 72px);overflow:auto}
- .expanded .phone-menu-links a {opacity:1;transform:none;transition-delay:.08s}
+ .expanded .phone-menu-links a {opacity:1;transform:none;transition-delay:0s}
  .phone-menu-links a[aria-current] {color:#edcc84}
  .phone-liquid-menu :focus-visible {outline:2px solid #edcc84;outline-offset:-3px}
 }
@@ -26,8 +26,14 @@
  .phone-menu-backdrop.visible{opacity:1;visibility:visible;pointer-events:auto}
  .phone-menu-links a{position:relative;isolation:isolate;margin:2px 14px;border-radius:999px}
  .phone-menu-links>div{position:relative;isolation:isolate}
- .phone-menu-lens{position:absolute;top:0;left:14px;right:14px;z-index:0;border-radius:999px;box-sizing:border-box;background:linear-gradient(135deg,#e3fff53b,#b1e8d414 50%,#ffffff22);border:1px solid #e3fff55c;box-shadow:inset 0 1px 2px #ffffff88,inset 0 -1px 2px #c7fff633,0 4px 12px #0003;backdrop-filter:blur(8px) saturate(150%);-webkit-backdrop-filter:blur(8px) saturate(150%);opacity:0;transform:translateY(0);transition:opacity .2s,transform .35s cubic-bezier(.175,.885,.32,1.275);pointer-events:none}
+ .phone-menu-lens{position:absolute;top:0;left:14px;right:14px;z-index:0;border-radius:999px;box-sizing:border-box;background:linear-gradient(135deg,#e3fff53b,#b1e8d414 50%,#ffffff22);border:1px solid #e3fff55c;box-shadow:inset 0 1px 2px #ffffff88,inset 0 -1px 2px #c7fff633,0 4px 12px #0003;opacity:0;transform:translateY(0);transition:opacity .2s,transform .35s cubic-bezier(.175,.885,.32,1.275);pointer-events:none}
  .phone-menu-lens.visible{opacity:1}
  .phone-menu-links a{z-index:1}
 }
 @media(prefers-reduced-motion:reduce){.phone-menu-backdrop,.phone-menu-lens{transition:none}}
+
+/* Size settles once; only transform/opacity animate during opening. */
+@media(max-width:767px) and (prefers-reduced-motion:no-preference){
+ .phone-liquid-menu.expanded{animation:phone-menu-pop .22s cubic-bezier(.2,.8,.2,1)}
+ @keyframes phone-menu-pop{from{transform:translateY(-4px) scale(.96);opacity:.7}to{transform:none;opacity:1}}
+}
