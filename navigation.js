@@ -155,6 +155,7 @@ if (header && mobileLinks) {
     const interrupted = menuMotion !== null;
     menuMotion?.cancel();
     menuMotion = null;
+    panel.classList.remove("menu-in-motion");
     button.setAttribute("aria-expanded", String(open));
     button.setAttribute("aria-label", open ? "Close menu" : "Open menu");
     links.toggleAttribute("inert", !open);
@@ -166,6 +167,7 @@ if (header && mobileLinks) {
     }
     panel.classList.add("expanded");
     const collapsed = `scale(${46 / panel.offsetWidth}, ${46 / panel.offsetHeight})`;
+    panel.classList.add("menu-in-motion");
     const animation = panel.animate([
       { transform: interrupted ? currentTransform : open ? collapsed : "scale(1)", opacity: interrupted ? currentOpacity : open ? .6 : 1 },
       { transform: open ? "scale(1)" : collapsed, opacity: open ? 1 : .6 }
@@ -175,6 +177,7 @@ if (header && mobileLinks) {
       if (menuMotion !== animation) return;
       panel.classList.toggle("expanded", open);
       animation.cancel();
+      panel.classList.remove("menu-in-motion");
       menuMotion = null;
     };
   }
