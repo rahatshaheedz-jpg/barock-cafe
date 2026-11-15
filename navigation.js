@@ -125,7 +125,7 @@ if (header && mobileLinks) {
   panel.innerHTML = '<button type="button" aria-label="Menu" aria-expanded="false" aria-controls="phone-nav-links"><span>Menu</span><span class="phone-menu-icon" aria-hidden="true"><i></i><i></i></span></button><div class="phone-menu-links" id="phone-nav-links" inert><div></div></div>';
   const button = panel.querySelector("button");
   const links = panel.lastElementChild;
-  panel.append(button);
+  panel.prepend(button);
   for (const link of mobileLinks.querySelectorAll("a")) links.firstElementChild.append(link.cloneNode(true));
   function setOpen(open) {
     button.setAttribute("aria-expanded", String(open));
@@ -143,7 +143,7 @@ if (header && mobileLinks) {
   function syncPhone() {
     setOpen(false);
     if (phoneViewport.matches) {
-      document.body.append(panel);
+      header.append(panel);
       header.classList.add("has-phone-liquid-menu");
       document.addEventListener("pointerdown", closeOutside);
       document.addEventListener("focusin", closeOutside);
