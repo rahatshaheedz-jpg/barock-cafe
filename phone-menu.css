@@ -43,3 +43,10 @@
  .phone-liquid-menu.menu-in-motion{backdrop-filter:none;-webkit-backdrop-filter:none;will-change:transform,opacity;background-color:#103c30c9}
  .phone-liquid-menu.menu-in-motion::before{transition:none}
 }
+
+@media(max-width:767px){
+ /* Hide the shrinking text before the panel reaches icon size. */
+ .phone-liquid-menu.menu-closing .phone-menu-links{opacity:0;transition:opacity 90ms linear}
+ .phone-liquid-menu.menu-closing .phone-menu-icon i{transform:translateY(-3px)}
+ .phone-liquid-menu.menu-closing .phone-menu-icon i+i{transform:translateY(3px)}
+}
