@@ -210,3 +210,10 @@ html.kinetic-open .site-header { z-index: 95; }
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
 }
+
+/* Pause decorative CSS loops while the document cannot be seen. */
+.document-hidden *, .document-hidden *::before, .document-hidden *::after {animation-play-state:paused !important}
+@media (prefers-reduced-motion:no-preference) {
+ .button,.phone-liquid-menu button,.jsc-btn {transition:transform 180ms cubic-bezier(.2,.8,.2,1),opacity 180ms;touch-action:manipulation}
+ .button:active,.phone-liquid-menu button:active,.jsc-btn:active {transform:scale(.96)}
+}
