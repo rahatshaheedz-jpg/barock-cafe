@@ -1,0 +1,22 @@
+/* Frosted controls: preserve existing form and navigation semantics. */
+.button.primary.liquid-action,
+[data-review-form] button[type="submit"],
+[data-review-form] [data-star],
+#coffee-pour [role="radio"][aria-checked="true"]>span:first-child {
+ background:linear-gradient(135deg,rgba(213,255,240,.22),rgba(22,68,56,.48) 50%,rgba(183,223,206,.12)) !important;
+ border:1px solid rgba(217,255,245,.42);border-radius:999px;clip-path:none;
+ box-shadow:inset 0 1px 2px #ffffff70,inset 0 -1px 1px #caffef33,0 8px 24px #0003;
+ backdrop-filter:blur(12px) saturate(140%);-webkit-backdrop-filter:blur(12px) saturate(140%);
+ color:#f4efe6 !important;
+}
+.button.primary.liquid-action::before,.button.primary.liquid-action::after{display:none}
+.button.primary.liquid-action:hover{background-color:#b7dfce18;color:#fff}
+.button.primary.liquid-action:focus-visible{outline:2px solid #edcc84;outline-offset:4px}
+#coffee-pour [role="radio"]{border-radius:24px}
+#coffee-pour [role="radio"][aria-checked="true"]>span:first-child{border-radius:24px}
+
+form[data-review-form]{background:linear-gradient(145deg,#c9ffed1f,#103c3059 55%,#ffffff08)!important;border:1px solid #dcfff13d;border-radius:26px;box-shadow:inset 0 1px 2px #ffffff55,inset 0 -1px 1px #caffef22,0 16px 36px #0003;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+[data-review-form] input,[data-review-form] textarea{background:#e1fff00a!important;border:1px solid #d8fff03d;border-radius:16px;box-shadow:inset 0 1px 2px #ffffff26;color:#f4efe6}
+[data-review-form] [data-star]{border-radius:14px;transition:transform .18s,background-color .18s}
+[data-review-form] [data-star][aria-pressed="true"]{color:#f1d58b!important;background-color:#b7dfce22!important}
+[data-review-form] :is(input,textarea,button):focus-visible{outline:2px solid #edcc84;outline-offset:3px}

@@ -37,3 +37,9 @@
  .phone-liquid-menu.expanded::before{transition:none}
  .phone-menu-links a{transition:opacity .16s;transform:none}
 }
+
+/* Avoid re-sampling a nested backdrop through the scaling surface every frame. */
+@media(max-width:767px){
+ .phone-liquid-menu.menu-in-motion{backdrop-filter:none;-webkit-backdrop-filter:none;will-change:transform,opacity;background-color:#103c30c9}
+ .phone-liquid-menu.menu-in-motion::before{transition:none}
+}
