@@ -472,3 +472,8 @@ if ("IntersectionObserver" in window) {
   }, { rootMargin: "120px" });
   glassSurfaces.forEach(element => glassObserver.observe(element));
 }
+
+// Background tabs need no decorative animation frames.
+const syncMotionVisibility = () => document.documentElement.classList.toggle('document-hidden', document.hidden);
+document.addEventListener('visibilitychange', syncMotionVisibility);
+syncMotionVisibility();

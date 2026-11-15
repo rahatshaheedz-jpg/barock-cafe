@@ -130,12 +130,30 @@ if (header && mobileLinks) {
   const links = panel.lastElementChild;
   panel.prepend(button);
   for (const link of mobileLinks.querySelectorAll("a")) links.firstElementChild.append(link.cloneNode(true));
+  const lens = document.createElement("span");
+  lens.className = "phone-menu-lens";
+  lens.setAttribute("aria-hidden", "true");
+  links.firstElementChild.prepend(lens);
+  function moveLens(event) {
+    const link = event.target.closest("a");
+    if (!link || !links.contains(link)) return;
+    lens.style.transform = `translateY(${link.offsetTop}px)`;
+    lens.style.height = `${link.offsetHeight}px`;
+    lens.classList.add("visible");
+  }
+  links.addEventListener("pointerover", moveLens);
+  links.addEventListener("pointerdown", moveLens);
+  links.addEventListener("focusin", moveLens);
+  links.addEventListener("pointerleave", () => {
+    if (!links.contains(document.activeElement)) lens.classList.remove("visible");
+  });
   function setOpen(open) {
     button.setAttribute("aria-expanded", String(open));
     button.setAttribute("aria-label", open ? "Close menu" : "Open menu");
     links.toggleAttribute("inert", !open);
     panel.classList.toggle("expanded", open);
     backdrop.classList.toggle("visible", open);
+    if (!open) lens.classList.remove("visible");
   }
   button.addEventListener("click", () => setOpen(!panel.classList.contains("expanded")));
   function closeOutside(event) {
