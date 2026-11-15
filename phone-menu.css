@@ -32,23 +32,8 @@
 }
 @media(prefers-reduced-motion:reduce){.phone-menu-backdrop,.phone-menu-lens{transition:none}}
 
-/* Size settles once; only transform/opacity animate during opening. */
-@media(max-width:767px) and (prefers-reduced-motion:no-preference){
- .phone-liquid-menu.expanded{animation:phone-menu-liquid .58s cubic-bezier(.22,1,.36,1)}
- @keyframes phone-menu-liquid{
-  0%{clip-path:inset(0 0 calc(100% - 44px) calc(100% - 44px) round 23px)}
-  55%{clip-path:inset(0 0 12% 8% round 48px)}
-  100%{clip-path:inset(0 round 32px)}
- }
-}
-
-@media(max-width:767px) and (prefers-reduced-motion:no-preference){
- .expanded .phone-menu-links a{animation:phone-link-enter .38s cubic-bezier(.16,1,.3,1) both}
- .expanded .phone-menu-links a:nth-of-type(1){animation-delay:160ms}
- .expanded .phone-menu-links a:nth-of-type(2){animation-delay:190ms}
- .expanded .phone-menu-links a:nth-of-type(3){animation-delay:220ms}
- .expanded .phone-menu-links a:nth-of-type(4){animation-delay:250ms}
- .expanded .phone-menu-links a:nth-of-type(5){animation-delay:280ms}
- .expanded .phone-menu-links a:nth-of-type(6){animation-delay:310ms}
- @keyframes phone-link-enter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+/* Geometry is fixed during the reversible Web Animation; only transform and opacity change. */
+@media(max-width:767px){
+ .phone-liquid-menu.expanded::before{transition:none}
+ .phone-menu-links a{transition:opacity .16s;transform:none}
 }

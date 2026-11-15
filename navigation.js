@@ -147,15 +147,38 @@ if (header && mobileLinks) {
   links.addEventListener("pointerleave", () => {
     if (!links.contains(document.activeElement)) lens.classList.remove("visible");
   });
+  let menuMotion = null;
   function setOpen(open) {
+    const wasExpanded = panel.classList.contains("expanded");
+    const currentTransform = getComputedStyle(panel).transform;
+    const currentOpacity = getComputedStyle(panel).opacity;
+    const interrupted = menuMotion !== null;
+    menuMotion?.cancel();
+    menuMotion = null;
     button.setAttribute("aria-expanded", String(open));
     button.setAttribute("aria-label", open ? "Close menu" : "Open menu");
     links.toggleAttribute("inert", !open);
-    panel.classList.toggle("expanded", open);
     backdrop.classList.toggle("visible", open);
     if (!open) lens.classList.remove("visible");
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches || (!open && !wasExpanded)) {
+      panel.classList.toggle("expanded", open);
+      return;
+    }
+    panel.classList.add("expanded");
+    const collapsed = `scale(${46 / panel.offsetWidth}, ${46 / panel.offsetHeight})`;
+    const animation = panel.animate([
+      { transform: interrupted ? currentTransform : open ? collapsed : "scale(1)", opacity: interrupted ? currentOpacity : open ? .6 : 1 },
+      { transform: open ? "scale(1)" : collapsed, opacity: open ? 1 : .6 }
+    ], { duration: open ? 420 : 280, easing: "cubic-bezier(.16,1,.3,1)", fill: "both" });
+    menuMotion = animation;
+    animation.onfinish = () => {
+      if (menuMotion !== animation) return;
+      panel.classList.toggle("expanded", open);
+      animation.cancel();
+      menuMotion = null;
+    };
   }
-  button.addEventListener("click", () => setOpen(!panel.classList.contains("expanded")));
+  button.addEventListener("click", () => setOpen(button.getAttribute("aria-expanded") !== "true"));
   function closeOutside(event) {
     if (!panel.contains(event.target) && panel.classList.contains("expanded")) setOpen(false);
   }
