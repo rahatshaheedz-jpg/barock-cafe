@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import SushiConveyorMenu from "./components/ui/sushi-conveyor-menu";
 import "./menu-conveyor.css";
@@ -52,7 +53,13 @@ if (document.querySelector("[data-menu-viewer]")) {
  const page=(n:number)=>`./assets/menu-current/page-${String(n).padStart(2,"0")}.webp`;
  const spreads=[{label:"Page 1 of 20",rightImage:page(1)},...Array.from({length:9},(_,i)=>({label:`Pages ${i*2+2}–${i*2+3} of 20`,leftImage:page(i*2+2),rightImage:page(i*2+3)})),{label:"Page 20 of 20",leftImage:page(20)}];
  const mount=document.createElement("div");mount.className="menu-journal-desktop";fallback.before(mount);
- createRoot(mount).render(<Journal spreads={spreads} title="BAROCK Menu" meta="20 original pages · Swipe to browse" height="min(850px, 90svh)" autoPlay={false}/>);
+ function ResponsiveJournal() {
+ const [phone, setPhone] = useState(matchMedia("(max-width: 767px)").matches);
+ useEffect(() => { const mq=matchMedia("(max-width: 767px)");const update=()=>setPhone(mq.matches);mq.addEventListener("change",update);return()=>mq.removeEventListener("change",update); },[]);
+ const pages=phone ? Array.from({length:20},(_,i)=>({label:`Page ${i+1} of 20`,image:page(i+1)})) : spreads;
+ return <Journal key={String(phone)} spreads={pages} title="BAROCK Menu" meta="20 original pages · Swipe to browse" height="min(850px, 90svh)" autoPlay={false}/>;
+ }
+ createRoot(mount).render(<ResponsiveJournal/>);
  fallback.hidden=true; fallback.style.display="none";
  const download=fallback.querySelector("a[download]");if(download){const link=download.cloneNode(true) as HTMLElement;link.classList.add("menu-journal-desktop");mount.after(link);}
  } catch { /* Preserve the PDF viewer when loading fails. */ }

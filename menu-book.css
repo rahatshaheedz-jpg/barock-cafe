@@ -44,9 +44,3 @@
  .menu-book-intro { margin-bottom:24px; }
  .menu-book-contact span { display:block; height:4px; overflow:hidden; }
 }
-
-/* Phones use the full-width single-page reader so the PDF stays readable. */
-@media (max-width: 767px) {
-  .menu-journal-desktop { display: none !important; }
-  [data-menu-viewer][hidden] { display: block !important; }
-}
