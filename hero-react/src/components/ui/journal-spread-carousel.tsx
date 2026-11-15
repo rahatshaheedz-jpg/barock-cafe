@@ -69,7 +69,7 @@ export function clamp(v: number, lo: number, hi: number): number {
 
 /** Spread shape for a stage: 5:4 on wide stages, taller pages on a portrait phone. */
 export function spreadAspect(stageW: number, stageH: number): number {
-  return 1
+  return stageW < 640 ? 0.5 : 1
 }
 
 /** Spread width for a stage, keeping room for the side stacks. */
@@ -534,7 +534,7 @@ export default function JournalSpreadCarousel({
       aria-label={title}
       onKeyDown={onKeyDown}
     >
-      <style>{CSS + `.jsc-root{background:#0a211b;color:#f4efe6}.jsc-page{background:#0a211b}.jsc-menu-page{width:100%;height:100%;object-fit:contain;padding:4px;box-sizing:border-box}.jsc-bar{align-items:center}.jsc-btn{background:#164438;color:#f1d58b}.jsc-btn:disabled{opacity:.4}.jsc-floor{background:#050e0b}`}</style>
+      <style>{CSS + `.jsc-root{background:#0a211b;color:#f4efe6}.jsc-page{background:#0a211b}.jsc-menu-page{width:100%;height:100%;object-fit:contain;padding:4px;box-sizing:border-box}.jsc-bar{align-items:center}.jsc-btn{background:#164438;color:#f1d58b}.jsc-btn:disabled{opacity:.4}.jsc-floor{background:#050e0b}.jsc-bg{object-fit:contain}@media(max-width:767px){.jsc-root{height:calc(188vw + 200px)!important;max-height:none}.jsc-stage{margin-top:100px}.jsc-head{white-space:normal;width:95%}}`}</style>
 <div className="jsc-top"><div className="jsc-head"><h2>{title}</h2><p>{pagesLabel}</p></div></div>
       <div
         ref={stageRef}
@@ -571,7 +571,7 @@ export default function JournalSpreadCarousel({
                     className="jsc-page"
                     data-side={side}
                   >
-                    {(side === "l" ? s.leftImage : s.rightImage) && <img className="jsc-menu-page" src={side === "l" ? s.leftImage : s.rightImage} alt={s.label} loading="lazy" draggable={false} />}
+                    {s.image ? <Sheet spread={s} /> : null}{(side === "l" ? s.leftImage : s.rightImage) && <img className="jsc-menu-page" src={side === "l" ? s.leftImage : s.rightImage} alt={s.label} loading="lazy" draggable={false} />}
                     <div className="jsc-gutter" />
                     <div className="jsc-shade" />
                   </div>

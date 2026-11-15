@@ -1,1 +1,1 @@
-import "./menu-conveyor-BDMFRXyt.js";
+import "./menu-conveyor-Bp-_dwpU.js";
