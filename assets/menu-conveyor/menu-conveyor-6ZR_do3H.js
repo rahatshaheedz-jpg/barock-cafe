@@ -12699,7 +12699,7 @@ const Ec = document.getElementById("coffee-pour");
 if (Ec) {
   const T = async () => {
     try {
-      const { CoffeePourMenu: p, DEFAULT_COFFEE_ITEMS: r } = await import("./coffee-pour-menu-CIyafN0Y.js");
+      const { CoffeePourMenu: p, DEFAULT_COFFEE_ITEMS: r } = await import("./coffee-pour-menu-DUg3azC-.js");
       os.createRoot(Ec).render(/* @__PURE__ */ N.jsx(p, { items: r.map((C) => ({ ...C, subtitle: void 0 })) }));
     } catch {
       const p = document.createElement("button");
@@ -12710,14 +12710,14 @@ if (Ec) {
   }, { rootMargin: "200px" });
   H.observe(Ec);
 }
-if (location.pathname.endsWith("menu.html")) {
+if (document.querySelector("[data-menu-viewer]")) {
   const T = document.querySelector("[data-menu-viewer]");
   if (T) {
     const H = new IntersectionObserver(async (p) => {
       if (p.some((r) => r.isIntersecting)) {
         H.disconnect();
         try {
-          const { default: r } = await import("./journal-spread-carousel-B8-nTHxy.js"), C = (L) => `./assets/menu-current/page-${String(L).padStart(2, "0")}.webp`, K = [{ label: "Page 1 of 20", rightImage: C(1) }, ...Array.from({ length: 9 }, (L, at) => ({ label: `Pages ${at * 2 + 2}–${at * 2 + 3} of 20`, leftImage: C(at * 2 + 2), rightImage: C(at * 2 + 3) })), { label: "Page 20 of 20", leftImage: C(20) }], bt = document.createElement("div");
+          const { default: r } = await import("./journal-spread-carousel-DyjD3VQy.js"), C = (L) => `./assets/menu-current/page-${String(L).padStart(2, "0")}.webp`, K = [{ label: "Page 1 of 20", rightImage: C(1) }, ...Array.from({ length: 9 }, (L, at) => ({ label: `Pages ${at * 2 + 2}–${at * 2 + 3} of 20`, leftImage: C(at * 2 + 2), rightImage: C(at * 2 + 3) })), { label: "Page 20 of 20", leftImage: C(20) }], bt = document.createElement("div");
           T.before(bt), os.createRoot(bt).render(/* @__PURE__ */ N.jsx(r, { spreads: K, title: "BAROCK Menu", meta: "20 original pages · Swipe to browse", height: "min(850px, 90svh)", autoPlay: !1 })), T.hidden = !0, T.style.display = "none";
           const P = T.querySelector("a[download]");
           P && bt.after(P.cloneNode(!0));
