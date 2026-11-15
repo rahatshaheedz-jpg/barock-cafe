@@ -123,6 +123,9 @@ if (header && mobileLinks) {
   panel.className = "phone-liquid-menu";
   panel.setAttribute("aria-label", "Mobile navigation");
   panel.innerHTML = '<button type="button" aria-label="Menu" aria-expanded="false" aria-controls="phone-nav-links"><span class="phone-menu-icon" aria-hidden="true"><i></i><i></i></span></button><div class="phone-menu-links" id="phone-nav-links" inert><div></div></div>';
+  const backdrop = document.createElement("div");
+  backdrop.className = "phone-menu-backdrop";
+  backdrop.setAttribute("aria-hidden", "true");
   const button = panel.querySelector("button");
   const links = panel.lastElementChild;
   panel.prepend(button);
@@ -132,6 +135,7 @@ if (header && mobileLinks) {
     button.setAttribute("aria-label", open ? "Close menu" : "Open menu");
     links.toggleAttribute("inert", !open);
     panel.classList.toggle("expanded", open);
+    backdrop.classList.toggle("visible", open);
   }
   button.addEventListener("click", () => setOpen(!panel.classList.contains("expanded")));
   function closeOutside(event) {
@@ -143,12 +147,14 @@ if (header && mobileLinks) {
   function syncPhone() {
     setOpen(false);
     if (phoneViewport.matches) {
+      header.before(backdrop);
       header.append(panel);
       header.classList.add("has-phone-liquid-menu");
       document.addEventListener("pointerdown", closeOutside);
       document.addEventListener("focusin", closeOutside);
     } else {
       panel.remove();
+      backdrop.remove();
       header.classList.remove("has-phone-liquid-menu");
       document.removeEventListener("pointerdown", closeOutside);
       document.removeEventListener("focusin", closeOutside);
