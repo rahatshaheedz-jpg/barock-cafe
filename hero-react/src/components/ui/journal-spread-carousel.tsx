@@ -76,7 +76,7 @@ export function spreadAspect(stageW: number, stageH: number): number {
 export function spreadWidth(stageW: number, stageH: number): number {
   if (stageW <= 0 || stageH <= 0) return 0
   const narrow = stageW < 640
-  return Math.round(Math.min(stageW * (narrow ? 0.94 : 0.72), stageH * 0.9 * spreadAspect(stageW, stageH), 980))
+  return Math.round(Math.min(stageW * (narrow ? 0.94 : 0.80), stageH * 0.9 * spreadAspect(stageW, stageH), 980))
 }
 
 /**
@@ -535,7 +535,7 @@ export default function JournalSpreadCarousel({
       onKeyDown={onKeyDown}
     >
       <style>{CSS + `.jsc-root{background:#0a211b;color:#f4efe6}.jsc-page{background:#0a211b}.jsc-menu-page{width:100%;height:100%;object-fit:contain;padding:4px;box-sizing:border-box}.jsc-bar{align-items:center}.jsc-btn{background:#164438;color:#f1d58b}.jsc-btn:disabled{opacity:.4}.jsc-floor{background:#050e0b}.jsc-bg{object-fit:contain}@media(max-width:767px){.jsc-root{height:calc(188vw + 200px)!important;max-height:none}.jsc-stage{margin-top:100px}.jsc-head{white-space:normal;width:95%}}`}</style>
-<div className="jsc-top"><div className="jsc-head"><h2>{title}</h2><p>{pagesLabel}</p></div></div>
+<div className="jsc-top"><div className="jsc-head"><h2 className="jsc-title">{title}</h2><p>{pagesLabel}</p></div></div>
       <div
         ref={stageRef}
         className="jsc-stage"

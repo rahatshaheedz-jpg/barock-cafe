@@ -57,7 +57,7 @@ if (document.querySelector("[data-menu-viewer]")) {
  const [phone, setPhone] = useState(matchMedia("(max-width: 767px)").matches);
  useEffect(() => { const mq=matchMedia("(max-width: 767px)");const update=()=>setPhone(mq.matches);mq.addEventListener("change",update);return()=>mq.removeEventListener("change",update); },[]);
  const pages=phone ? Array.from({length:20},(_,i)=>({label:`Page ${i+1} of 20`,image:page(i+1)})) : spreads;
- return <Journal key={String(phone)} spreads={pages} title="BAROCK Menu" meta="20 original pages · Swipe to browse" height="min(850px, 90svh)" autoPlay={false}/>;
+ return <Journal key={String(phone)} spreads={pages} title="BAROCK Menu" meta="20 original pages · Swipe to browse" height="clamp(940px, 85vw, 1160px)" autoPlay={false}/>;
  }
  createRoot(mount).render(<ResponsiveJournal/>);
  fallback.hidden=true; fallback.style.display="none";
