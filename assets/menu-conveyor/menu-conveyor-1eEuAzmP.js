@@ -12699,7 +12699,7 @@ const Ec = document.getElementById("coffee-pour");
 if (Ec) {
   const E = async () => {
     try {
-      const { CoffeePourMenu: N, DEFAULT_COFFEE_ITEMS: r } = await import("./coffee-pour-menu-Bsjjke4O.js");
+      const { CoffeePourMenu: N, DEFAULT_COFFEE_ITEMS: r } = await import("./coffee-pour-menu-D1tf5JI4.js");
       os.createRoot(Ec).render(/* @__PURE__ */ p.jsx(N, { items: r.map((U) => ({ ...U, subtitle: void 0 })) }));
     } catch {
       const N = document.createElement("button");
@@ -12723,10 +12723,10 @@ if (document.querySelector("[data-menu-viewer]")) {
               const H = matchMedia("(max-width: 767px)"), bt = () => C(H.matches);
               return H.addEventListener("change", bt), () => H.removeEventListener("change", bt);
             }, []);
-            const T = F ? Array.from({ length: 20 }, (H, bt) => ({ label: `Page ${bt + 1} of 20`, image: L(bt + 1) })) : Ot;
-            return /* @__PURE__ */ p.jsx(U, { spreads: T, title: "BAROCK Menu", meta: "20 original pages · Swipe to browse", height: "clamp(940px, 85vw, 1160px)", autoPlay: !1 }, String(F));
+            const T = F ? Array.from({ length: 22 }, (H, bt) => ({ label: `Page ${bt + 1} of 22`, image: L(bt + 1) })) : Ot;
+            return /* @__PURE__ */ p.jsx(U, { spreads: T, title: "BAROCK Menu", meta: "22 original pages · Swipe to browse", height: "clamp(940px, 85vw, 1160px)", autoPlay: !1 }, String(F));
           };
-          const { default: U } = await import("./journal-spread-carousel-OnRMSsmV.js"), L = (F) => `./assets/menu-current/page-${String(F).padStart(2, "0")}.webp`, Ot = [{ label: "Page 1 of 20", rightImage: L(1) }, ...Array.from({ length: 9 }, (F, C) => ({ label: `Pages ${C * 2 + 2}–${C * 2 + 3} of 20`, leftImage: L(C * 2 + 2), rightImage: L(C * 2 + 3) })), { label: "Page 20 of 20", leftImage: L(20) }], I = document.createElement("div");
+          const { default: U } = await import("./journal-spread-carousel-B8OA-xED.js"), L = (F) => `./assets/menu-current/page-${String(F).padStart(2, "0")}.webp?v=20261116-menu-v2`, Ot = [{ label: "Page 1 of 22", rightImage: L(1) }, ...Array.from({ length: 10 }, (F, C) => ({ label: `Pages ${C * 2 + 2}–${C * 2 + 3} of 22`, leftImage: L(C * 2 + 2), rightImage: L(C * 2 + 3) })), { label: "Page 22 of 22", leftImage: L(22) }], I = document.createElement("div");
           I.className = "menu-journal-desktop", E.before(I), os.createRoot(I).render(/* @__PURE__ */ p.jsx(r, {})), E.hidden = !0, E.style.display = "none";
           const V = E.querySelector("a[download]");
           if (V) {

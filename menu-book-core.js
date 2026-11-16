@@ -1,9 +1,9 @@
 (() => {
   'use strict';
   // Labels are transcribed from headings in the official PDF, in PDF order.
-  const labels = ['Cover', 'Our story', 'Coffee & hot chocolate', 'Iced coffee & tea', 'Iced tea, matcha & frappe', 'Smoothies, milkshakes & mocktails', 'Signature mocktails', 'Beverages', 'Juices, kids zone & soup', 'Salads & appetizers', 'Appetizers & sandwiches', 'Burgers, fajitas & alambre', 'Pizza', 'Pasta', 'Seafood & chicken', 'Straight from the butcher', 'Desserts', 'Desserts continued', 'Breakfast', 'Back cover'];
+  const labels = ["Cover", "Our story", "Coffee & hot chocolate", "Iced coffee & tea", "Iced tea & matcha", "Frappe & smoothies", "Milkshakes & signature mocktails", "Signature mocktails", "Beverages", "Juices & kids zone", "Soup & salads", "Appetizers", "Appetizers & sandwiches", "Burgers, fajitas & alambre", "Pizza", "Pasta", "Seafood & chicken", "Straight from the butcher", "Desserts", "Desserts continued", "Breakfast", "Back cover"];
   const count = labels.length;
-  const version = '20261104-menu-v1';
+  const version = '20261116-menu-v2';
   document.querySelectorAll('[data-menu-viewer]').forEach(viewer => {
     const surface = viewer.querySelector('[data-menu-surface]');
     const frame = viewer.querySelector('[data-menu-frame]');

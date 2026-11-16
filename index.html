@@ -30,7 +30,7 @@
     <link rel="preload" href="./assets/fonts/345453b75612.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="./fonts.css?v=20261014-polish-v1" />
     <link rel="stylesheet" href="./site.css?v=20261102-tiffany-v1" />
-    <link rel="stylesheet" href="./menu-book.css?v=journal-large-all-20261115" />
+    <link rel="stylesheet" href="./menu-book.css?v=menu-new-20261116" />
     <link rel="stylesheet" href="./home-intro.css?v=20261102-tiffany-v1" />
 
     <script type="application/ld+json">
@@ -186,10 +186,10 @@
   <div class="fast-menu__main">
     <div class="fast-menu__controls" aria-label="Menu navigation">
       <button type="button" data-menu-previous aria-label="Previous menu page" disabled>&larr; <span>Previous</span></button>
-      <output data-menu-status aria-live="polite" aria-atomic="true">01 / 20</output>
+      <output data-menu-status aria-live="polite" aria-atomic="true">01 / 22</output>
       <button type="button" data-menu-next aria-label="Next menu page"><span>Next</span> &rarr;</button>
     </div>
-    <div class="fast-menu__surface" data-menu-surface tabindex="0" role="group" aria-label="Official menu page 1 of 20">
+    <div class="fast-menu__surface" data-menu-surface tabindex="0" role="group" aria-label="Official menu page 1 of 22">
       <div class="fast-menu__frame" data-menu-frame></div>
     </div>
     <div class="fast-menu__controls fast-menu__controls--bottom" aria-label="More menu navigation">
@@ -198,8 +198,8 @@
       <button type="button" data-menu-next aria-label="Next menu page">Next &rarr;</button>
     </div>
     <p class="fast-menu__notice" data-menu-notice role="status"></p><button class="fast-menu__retry" data-menu-retry type="button" hidden>Retry page</button>
-    <div class="fast-menu__actions"><a href="./assets/menu-current/barock-cafe-menu.pdf?v=20261104-menu-v1" download="BAROCK-CAFE-Menu.pdf">Download PDF</a><button type="button" data-menu-fullscreen>Fullscreen</button></div>
-    <noscript><p><a href="./assets/menu-current/barock-cafe-menu.pdf?v=20261104-menu-v1">Read the complete official menu PDF</a></p></noscript>
+    <div class="fast-menu__actions"><a href="./assets/menu-current/barock-cafe-menu.pdf?v=20261116-menu-v2" download="BAROCK-CAFE-Menu.pdf">Download PDF</a><button type="button" data-menu-fullscreen>Fullscreen</button></div>
+    <noscript><p><a href="./assets/menu-current/barock-cafe-menu.pdf?v=20261116-menu-v2">Read the complete official menu PDF</a></p></noscript>
   </div>
 </div></div></section>
 
@@ -387,7 +387,7 @@
     </div>
     <script defer src="./script.js?v=perf-20261106"></script>
       <script defer src="./navigation.js?v=nav-close-fix-20261115"></script>
-  <script defer src="./menu-book-core.js?v=20261104-menu-v1"></script>
+  <script defer src="./menu-book-core.js?v=20261116-menu-v2"></script>
   <script type="module" src="./gallery-viewer.js?v=20261014-gallery-v1"></script>
   <script defer src="./assets/vendor/gsap-3.15.0.min.js"></script>
   <script defer src="./motion.js?v=motion-refine-20261115"></script>
@@ -398,7 +398,7 @@
     const observer = new IntersectionObserver(async entries => {
       if (!entries.some(entry => entry.isIntersecting)) return;
       observer.disconnect();
-      try { await import('./assets/menu-conveyor/menu-conveyor.js?v=journal-large-all-20261115'); }
+      try { await import('./assets/menu-conveyor/menu-conveyor.js?v=menu-new-20261116'); }
       catch { /* The original PDF viewer remains available if loading fails. */ }
     }, { rootMargin: '200px' });
     observer.observe(menu);
