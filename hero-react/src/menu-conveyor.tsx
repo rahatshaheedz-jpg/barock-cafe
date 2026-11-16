@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import SushiConveyorMenu from "./components/ui/sushi-conveyor-menu";
 import "./menu-conveyor.css";
@@ -49,17 +48,9 @@ if (document.querySelector("[data-menu-viewer]")) {
  if(!entries.some(e=>e.isIntersecting)) return;
  observer.disconnect();
  try {
- const {default: Journal} = await import("./components/ui/journal-spread-carousel");
- const page=(n:number)=>`./assets/menu-current/page-${String(n).padStart(2,"0")}.webp?v=20261116-menu-v2`;
- const spreads=[{label:"Page 1 of 22",rightImage:page(1)},...Array.from({length:10},(_,i)=>({label:`Pages ${i*2+2}–${i*2+3} of 22`,leftImage:page(i*2+2),rightImage:page(i*2+3)})),{label:"Page 22 of 22",leftImage:page(22)}];
+ const {default: BookSlider} = await import("./components/ui/book-slider");
  const mount=document.createElement("div");mount.className="menu-journal-desktop";fallback.before(mount);
- function ResponsiveJournal() {
- const [phone, setPhone] = useState(matchMedia("(max-width: 767px)").matches);
- useEffect(() => { const mq=matchMedia("(max-width: 767px)");const update=()=>setPhone(mq.matches);mq.addEventListener("change",update);return()=>mq.removeEventListener("change",update); },[]);
- const pages=phone ? Array.from({length:22},(_,i)=>({label:`Page ${i+1} of 22`,image:page(i+1)})) : spreads;
- return <Journal key={String(phone)} spreads={pages} title="BAROCK Menu" meta="22 original pages · Swipe to browse" height="clamp(940px, 85vw, 1160px)" autoPlay={false}/>;
- }
- createRoot(mount).render(<ResponsiveJournal/>);
+ createRoot(mount).render(<BookSlider/>);
  fallback.hidden=true; fallback.style.display="none";
  const download=fallback.querySelector("a[download]");if(download){const link=download.cloneNode(true) as HTMLElement;link.classList.add("menu-journal-desktop");mount.after(link);}
  } catch { /* Preserve the PDF viewer when loading fails. */ }
