@@ -12704,7 +12704,7 @@ const Ec = document.getElementById("coffee-pour");
 if (Ec) {
   const T = async () => {
     try {
-      const { CoffeePourMenu: N, DEFAULT_COFFEE_ITEMS: r } = await import("./coffee-pour-menu-uSgfQ_Bd.js");
+      const { CoffeePourMenu: N, DEFAULT_COFFEE_ITEMS: r } = await import("./coffee-pour-menu-kKHWVDop.js");
       os.createRoot(Ec).render(/* @__PURE__ */ O.jsx(N, { items: r.map((H) => ({ ...H, subtitle: void 0 })) }));
     } catch {
       const N = document.createElement("button");
@@ -12729,7 +12729,7 @@ if (document.querySelector("[data-menu-viewer]")) {
               return E.addEventListener("change", q), () => E.removeEventListener("change", q);
             }, []), /* @__PURE__ */ O.jsx(R.Suspense, { fallback: /* @__PURE__ */ O.jsx("p", { role: "status", children: "Loading menu…" }), children: tt ? /* @__PURE__ */ O.jsx(K, { spreads: xt, title: "BAROCK Menu", meta: "22 original pages · Swipe to browse", height: "clamp(940px, 85vw, 1160px)", autoPlay: !1 }) : /* @__PURE__ */ O.jsx(H, {}) });
           };
-          const H = R.lazy(() => import("./book-slider-krmlNhfB.js")), K = R.lazy(() => import("./journal-spread-carousel-cW8SISW9.js")), xt = Array.from({ length: 22 }, (tt, C) => ({ label: `Page ${C + 1} of 22`, image: `./assets/menu-current/page-${String(C + 1).padStart(2, "0")}.webp?v=20261116-menu-v2` })), W = document.createElement("div");
+          const H = R.lazy(() => import("./book-slider-CHdqPVV0.js")), K = R.lazy(() => import("./journal-spread-carousel-BVK6kLcY.js")), xt = Array.from({ length: 22 }, (tt, C) => ({ label: `Page ${C + 1} of 22`, image: `./assets/menu-current/page-${String(C + 1).padStart(2, "0")}.webp?v=20261116-menu-v2` })), W = document.createElement("div");
           W.className = "menu-journal-desktop", T.before(W), os.createRoot(W).render(/* @__PURE__ */ O.jsx(r, {})), T.hidden = !0, T.style.display = "none";
           const L = T.querySelector("a[download]");
           if (L) {

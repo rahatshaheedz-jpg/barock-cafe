@@ -259,11 +259,11 @@ function Icon({ name }: { name: string }) {
   }
 }
 
-function Sheet({ spread }: { spread: JournalSpread }) {
+function Sheet({ spread, active = false }: { spread: JournalSpread; active?: boolean }) {
   return (
     <div className="jsc-sheet" style={{ background: spread.paper }}>
       {spread.image ? (
-        <img className="jsc-bg" src={spread.image} alt="" draggable={false} decoding="async" style={{ maxWidth: "none", objectPosition: spread.imagePosition }} />
+        <img className="jsc-bg" fetchPriority={active ? "high" : "low"} src={spread.image} alt="" draggable={false} decoding="async" style={{ maxWidth: "none", objectPosition: spread.imagePosition }} />
       ) : null}
       {spread.prints?.map((p, k) => (
         <figure
@@ -571,7 +571,7 @@ export default function JournalSpreadCarousel({
                     className={"jsc-page" + (s.image ? " jsc-phone-half" : "")}
                     data-side={side}
                   >
-                    {s.image ? <Sheet spread={s} /> : null}{(side === "l" ? s.leftImage : s.rightImage) && <img className="jsc-menu-page" src={side === "l" ? s.leftImage : s.rightImage} alt={s.label} loading="lazy" draggable={false} />}
+                    {s.image && Math.abs(i - index) <= 2 ? <Sheet spread={s} active={i === index} /> : null}{(side === "l" ? s.leftImage : s.rightImage) && <img className="jsc-menu-page" src={side === "l" ? s.leftImage : s.rightImage} alt={s.label} loading="lazy" draggable={false} />}
                     {!s.image && <div className="jsc-gutter" />}
                     {!s.image && <div className="jsc-shade" />}
                   </div>
