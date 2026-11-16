@@ -1,4 +1,4 @@
-import { R as k, r as x, j as P } from "./menu-conveyor-CQdf0FSA.js";
+import { R as k, r as x, j as P } from "./menu-conveyor-BsIqgjGc.js";
 var A = { exports: {} }, F = A.exports, E;
 function _() {
   return E || (E = 1, (function(d, v) {
