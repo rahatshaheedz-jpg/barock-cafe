@@ -30,7 +30,7 @@
     <link rel="preload" href="./assets/fonts/345453b75612.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="./fonts.css?v=20261014-polish-v1" />
     <link rel="stylesheet" href="./site.css?v=20261102-tiffany-v1" />
-    <link rel="stylesheet" href="./menu-book.css?v=menu-new-20261116" />
+    <link rel="stylesheet" href="./menu-book.css?v=menu-flat-phone-20261116" />
     <link rel="stylesheet" href="./home-intro.css?v=20261102-tiffany-v1" />
 
     <script type="application/ld+json">
@@ -398,7 +398,7 @@
     const observer = new IntersectionObserver(async entries => {
       if (!entries.some(entry => entry.isIntersecting)) return;
       observer.disconnect();
-      try { await import('./assets/menu-conveyor/menu-conveyor.js?v=menu-new-20261116'); }
+      try { await import('./assets/menu-conveyor/menu-conveyor.js?v=menu-flat-phone-20261116'); }
       catch { /* The original PDF viewer remains available if loading fails. */ }
     }, { rootMargin: '200px' });
     observer.observe(menu);

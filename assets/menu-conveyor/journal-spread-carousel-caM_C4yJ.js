@@ -1,4 +1,4 @@
-import { r as i, j as n } from "./menu-conveyor-1eEuAzmP.js";
+import { r as i, j as n } from "./menu-conveyor-txJrY6K7.js";
 const f = 5, X = 80, U = 174;
 function m(s, a, l) {
   return s < a ? a : s > l ? l : s;
@@ -82,27 +82,27 @@ function pe({
   const o = s.length, x = m(Math.round(L), 0, Math.max(0, o - 1)), [p, Y] = i.useState(x), [D, Z] = i.useState(!1), [I, E] = i.useState(!1), S = i.useRef(null), V = i.useRef(null), F = i.useRef([]), M = i.useRef([]), W = i.useRef(0), b = i.useRef(x), h = i.useRef(x), A = i.useRef(null), y = i.useRef(0), w = i.useRef(null), z = i.useRef(!1), Q = i.useRef(!1), J = i.useRef(R);
   J.current = R;
   const k = i.useCallback(() => {
-    const t = W.current;
-    if (t)
-      for (let e = 0; e < F.current.length; e++) {
-        const r = F.current[e];
+    const e = W.current;
+    if (e)
+      for (let t = 0; t < F.current.length; t++) {
+        const r = F.current[t];
         if (!r) continue;
-        const c = se(e - b.current, t);
+        const c = se(t - b.current, e);
         if (c.hidden) {
           r.style.visibility = "hidden";
           continue;
         }
         r.style.visibility = "visible", r.style.opacity = String(c.opacity), r.style.transform = "translate3d(" + c.x.toFixed(2) + "px,0," + c.z.toFixed(2) + "px)";
-        const u = M.current[e * 2], N = M.current[e * 2 + 1];
+        const u = M.current[t * 2], N = M.current[t * 2 + 1];
         u && (u.style.transform = "rotateY(" + c.left.toFixed(2) + "deg)", u.style.setProperty("--jsc-s", c.shadeLeft.toFixed(3))), N && (N.style.transform = "rotateY(" + c.right.toFixed(2) + "deg)", N.style.setProperty("--jsc-s", c.shadeRight.toFixed(3)));
       }
   }, []), G = i.useCallback(
-    (t) => {
+    (e) => {
       y.current = 0;
-      const e = A.current;
-      if (e) {
-        const r = e.dur > 0 ? m((t - e.t0) / e.dur, 0, 1) : 1;
-        b.current = e.from + (e.to - e.from) * e.ease(r), r >= 1 && (A.current = null);
+      const t = A.current;
+      if (t) {
+        const r = t.dur > 0 ? m((e - t.t0) / t.dur, 0, 1) : 1;
+        b.current = t.from + (t.to - t.from) * t.ease(r), r >= 1 && (A.current = null);
       }
       k(), A.current && (y.current = requestAnimationFrame(G));
     },
@@ -110,41 +110,41 @@ function pe({
   ), P = i.useCallback(() => {
     y.current || (y.current = requestAnimationFrame(G));
   }, [G]), d = i.useCallback(
-    (t, e = ce) => {
-      const r = m(t, 0, Math.max(0, o - 1));
+    (e, t = ce) => {
+      const r = m(e, 0, Math.max(0, o - 1));
       r !== h.current && (h.current = r, Y(r), J.current?.(r));
       const c = Q.current ? 0 : ne(Math.abs(r - b.current));
-      A.current = { from: b.current, to: r, t0: performance.now(), dur: c, ease: e }, P();
+      A.current = { from: b.current, to: r, t0: performance.now(), dur: c, ease: t }, P();
     },
     [o, P]
   );
   i.useEffect(() => {
-    const t = window.matchMedia("(prefers-reduced-motion: reduce)"), e = () => {
-      Q.current = t.matches, Z(t.matches);
+    const e = window.matchMedia("(prefers-reduced-motion: reduce)"), t = () => {
+      Q.current = e.matches, Z(e.matches);
     };
-    return e(), t.addEventListener("change", e), () => t.removeEventListener("change", e);
+    return t(), e.addEventListener("change", t), () => e.removeEventListener("change", t);
   }, []), i.useEffect(() => {
-    const t = V.current, e = S.current;
-    if (!t || !e) return;
+    const e = V.current, t = S.current;
+    if (!e || !t) return;
     const r = new ResizeObserver(([c]) => {
       const { width: u, height: N } = c.contentRect, K = re(u, N);
-      W.current = K, e.style.setProperty("--jsc-w", K + "px"), e.style.setProperty("--jsc-h", Math.round(K / B(u)) + "px"), k();
+      W.current = K, t.style.setProperty("--jsc-w", K + "px"), t.style.setProperty("--jsc-h", Math.round(K / B(u)) + "px"), k();
     });
-    return r.observe(t), () => {
+    return r.observe(e), () => {
       r.disconnect(), cancelAnimationFrame(y.current), y.current = 0;
     };
   }, [k]), i.useEffect(() => {
     b.current > o - 1 ? d(o - 1) : k();
   }, [o, d, k]), i.useEffect(() => {
-    const t = S.current;
-    if (!j || D || o < 2 || !t) return;
-    let e = !0;
+    const e = S.current;
+    if (!j || D || o < 2 || !e) return;
+    let t = !0;
     const r = new IntersectionObserver(([u]) => {
-      e = u.isIntersecting;
+      t = u.isIntersecting;
     });
-    r.observe(t);
+    r.observe(e);
     const c = window.setInterval(() => {
-      z.current || !e || document.hidden || w.current || d(h.current >= o - 1 ? 0 : h.current + 1);
+      z.current || !t || document.hidden || w.current || d(h.current >= o - 1 ? 0 : h.current + 1);
     }, j);
     return () => {
       window.clearInterval(c), r.disconnect();
@@ -152,43 +152,43 @@ function pe({
   }, [j, D, o, d]);
   const q = () => {
     z.current = !0;
-  }, H = (t) => {
-    t.button !== 0 || o < 1 || (q(), A.current = null, w.current = { id: t.pointerId, x: t.clientX, from: b.current, lastX: t.clientX, lastT: t.timeStamp, v: 0, moved: !1 });
-  }, _ = (t) => {
-    const e = w.current, r = W.current;
-    if (!e || e.id !== t.pointerId || !r) return;
-    const c = t.clientX - e.x;
-    if (!e.moved && Math.abs(c) > 6 && (e.moved = !0, E(!0), t.currentTarget.setPointerCapture(t.pointerId)), !e.moved) return;
-    const u = Math.max(1, t.timeStamp - e.lastT);
-    e.v = e.v * 0.6 + -(t.clientX - e.lastX) / (r * 0.42) / (u / 1e3) * 0.4, e.lastX = t.clientX, e.lastT = t.timeStamp, b.current = m(e.from - c / (r * 0.42), -0.3, o - 0.7), P();
-  }, O = (t) => {
-    const e = w.current;
-    if (!e || e.id !== t.pointerId) return;
-    if (w.current = null, E(!1), e.moved) {
-      d(ae(b.current, e.v, o), ie);
+  }, H = (e) => {
+    e.button !== 0 || o < 1 || (q(), A.current = null, w.current = { id: e.pointerId, x: e.clientX, from: b.current, lastX: e.clientX, lastT: e.timeStamp, v: 0, moved: !1 });
+  }, _ = (e) => {
+    const t = w.current, r = W.current;
+    if (!t || t.id !== e.pointerId || !r) return;
+    const c = e.clientX - t.x;
+    if (!t.moved && Math.abs(c) > 6 && (t.moved = !0, E(!0), e.currentTarget.setPointerCapture(e.pointerId)), !t.moved) return;
+    const u = Math.max(1, e.timeStamp - t.lastT);
+    t.v = t.v * 0.6 + -(e.clientX - t.lastX) / (r * 0.42) / (u / 1e3) * 0.4, t.lastX = e.clientX, t.lastT = e.timeStamp, b.current = m(t.from - c / (r * 0.42), -0.3, o - 0.7), P();
+  }, O = (e) => {
+    const t = w.current;
+    if (!t || t.id !== e.pointerId) return;
+    if (w.current = null, E(!1), t.moved) {
+      d(ae(b.current, t.v, o), ie);
       return;
     }
-    const r = t.target.closest("[data-i]"), c = r ? Number(r.getAttribute("data-i")) : h.current;
+    const r = e.target.closest("[data-i]"), c = r ? Number(r.getAttribute("data-i")) : h.current;
     d(c);
-  }, $ = (t) => {
-    const e = { ArrowRight: 1, ArrowDown: 1, PageDown: 1, ArrowLeft: -1, ArrowUp: -1, PageUp: -1 };
-    if (t.target === t.currentTarget) {
-      if (t.key in e) d(h.current + e[t.key]);
-      else if (t.key === "Home") d(0);
-      else if (t.key === "End") d(o - 1);
+  }, $ = (e) => {
+    const t = { ArrowRight: 1, ArrowDown: 1, PageDown: 1, ArrowLeft: -1, ArrowUp: -1, PageUp: -1 };
+    if (e.target === e.currentTarget) {
+      if (e.key in t) d(h.current + t[e.key]);
+      else if (e.key === "Home") d(0);
+      else if (e.key === "End") d(o - 1);
       else return;
-      t.preventDefault(), q();
+      e.preventDefault(), q();
     }
   }, ee = i.useRef({ acc: 0, at: 0 });
   i.useEffect(() => {
-    const t = V.current;
-    if (!t) return;
-    const e = (r) => {
+    const e = V.current;
+    if (!e) return;
+    const t = (r) => {
       if (Math.abs(r.deltaX) <= Math.abs(r.deltaY)) return;
       const c = ee.current;
       c.acc += r.deltaX, !(Math.abs(c.acc) < 40 || r.timeStamp - c.at < 320) && (z.current = !0, c.at = r.timeStamp, d(h.current + (c.acc > 0 ? 1 : -1)), c.acc = 0);
     };
-    return t.addEventListener("wheel", e, { passive: !0 }), () => t.removeEventListener("wheel", e);
+    return e.addEventListener("wheel", t, { passive: !0 }), () => e.removeEventListener("wheel", t);
   }, [d]);
   const C = s[p], te = l ?? o * 2 + " Pages";
   return /* @__PURE__ */ n.jsxs(
@@ -203,7 +203,7 @@ function pe({
       "aria-label": a,
       onKeyDown: $,
       children: [
-        /* @__PURE__ */ n.jsx("style", { children: le + ".jsc-root{background:#0a211b;color:#f4efe6}.jsc-page{background:#0a211b}.jsc-menu-page{width:100%;height:100%;object-fit:contain;padding:4px;box-sizing:border-box}.jsc-bar{align-items:center}.jsc-btn{background:#164438;color:#f1d58b}.jsc-btn:disabled{opacity:.4}.jsc-floor{background:#050e0b}.jsc-bg{object-fit:contain}@media(max-width:767px){.jsc-root{height:calc(188vw + 200px)!important;max-height:none}.jsc-stage{margin-top:100px}.jsc-head{white-space:normal;width:95%}}" }),
+        /* @__PURE__ */ n.jsx("style", { children: le + ".jsc-root{background:#0a211b;color:#f4efe6}.jsc-page{background:#0a211b}.jsc-menu-page{width:100%;height:100%;object-fit:contain;padding:4px;box-sizing:border-box}.jsc-bar{align-items:center}.jsc-btn{background:#164438;color:#f1d58b}.jsc-btn:disabled{opacity:.4}.jsc-floor{background:#050e0b}.jsc-bg{object-fit:contain}.jsc-page.jsc-flat-page{width:var(--jsc-w);transform:none!important;border-radius:0;box-shadow:none}@media(max-width:767px){.jsc-root{height:calc(188vw + 200px)!important;max-height:none}.jsc-stage{margin-top:100px}.jsc-head{white-space:normal;width:95%}}" }),
         /* @__PURE__ */ n.jsx("div", { className: "jsc-top", children: /* @__PURE__ */ n.jsxs("div", { className: "jsc-head", children: [
           /* @__PURE__ */ n.jsx("h2", { className: "jsc-title", children: a }),
           /* @__PURE__ */ n.jsx("p", { children: te })
@@ -220,40 +220,40 @@ function pe({
             onPointerCancel: O,
             children: [
               /* @__PURE__ */ n.jsx("div", { className: "jsc-floor", "aria-hidden": "true" }),
-              /* @__PURE__ */ n.jsx("div", { className: "jsc-view", children: /* @__PURE__ */ n.jsx("div", { className: "jsc-scene", children: s.map((t, e) => /* @__PURE__ */ n.jsxs(
+              /* @__PURE__ */ n.jsx("div", { className: "jsc-view", children: /* @__PURE__ */ n.jsx("div", { className: "jsc-scene", children: s.map((e, t) => /* @__PURE__ */ n.jsxs(
                 "div",
                 {
                   ref: (r) => {
-                    F.current[e] = r;
+                    F.current[t] = r;
                   },
                   className: "jsc-item",
-                  "data-i": e,
+                  "data-i": t,
                   role: "group",
                   "aria-roledescription": "spread",
-                  "aria-label": (t.label ?? "Spread " + (e + 1)) + ", " + (e + 1) + " of " + o,
-                  "aria-hidden": e !== p,
+                  "aria-label": (e.label ?? "Spread " + (t + 1)) + ", " + (t + 1) + " of " + o,
+                  "aria-hidden": t !== p,
                   children: [
-                    t.alt ? /* @__PURE__ */ n.jsx("span", { className: "jsc-sr", children: t.alt }) : null,
-                    ["l", "r"].map((r, c) => /* @__PURE__ */ n.jsxs(
+                    e.alt ? /* @__PURE__ */ n.jsx("span", { className: "jsc-sr", children: e.alt }) : null,
+                    (e.image ? ["l"] : ["l", "r"]).map((r, c) => /* @__PURE__ */ n.jsxs(
                       "div",
                       {
                         ref: (u) => {
-                          M.current[e * 2 + c] = u;
+                          M.current[t * 2 + c] = u;
                         },
-                        className: "jsc-page",
+                        className: "jsc-page" + (e.image ? " jsc-flat-page" : ""),
                         "data-side": r,
                         children: [
-                          t.image ? /* @__PURE__ */ n.jsx(de, { spread: t }) : null,
-                          (r === "l" ? t.leftImage : t.rightImage) && /* @__PURE__ */ n.jsx("img", { className: "jsc-menu-page", src: r === "l" ? t.leftImage : t.rightImage, alt: t.label, loading: "lazy", draggable: !1 }),
-                          /* @__PURE__ */ n.jsx("div", { className: "jsc-gutter" }),
-                          /* @__PURE__ */ n.jsx("div", { className: "jsc-shade" })
+                          e.image ? /* @__PURE__ */ n.jsx(de, { spread: e }) : null,
+                          (r === "l" ? e.leftImage : e.rightImage) && /* @__PURE__ */ n.jsx("img", { className: "jsc-menu-page", src: r === "l" ? e.leftImage : e.rightImage, alt: e.label, loading: "lazy", draggable: !1 }),
+                          !e.image && /* @__PURE__ */ n.jsx("div", { className: "jsc-gutter" }),
+                          !e.image && /* @__PURE__ */ n.jsx("div", { className: "jsc-shade" })
                         ]
                       },
                       r
                     ))
                   ]
                 },
-                t.id ?? e
+                e.id ?? t
               )) }) })
             ]
           }
