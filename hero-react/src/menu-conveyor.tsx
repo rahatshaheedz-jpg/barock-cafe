@@ -1,3 +1,4 @@
+import { lazy, Suspense, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import SushiConveyorMenu from "./components/ui/sushi-conveyor-menu";
 import "./menu-conveyor.css";
@@ -48,9 +49,16 @@ if (document.querySelector("[data-menu-viewer]")) {
  if(!entries.some(e=>e.isIntersecting)) return;
  observer.disconnect();
  try {
- const {default: BookSlider} = await import("./components/ui/book-slider");
+ const BookSlider = lazy(() => import("./components/ui/book-slider"));
+ const Journal = lazy(() => import("./components/ui/journal-spread-carousel"));
+ const pages=Array.from({length:22},(_,i)=>({label:`Page ${i+1} of 22`,image:`./assets/menu-current/page-${String(i+1).padStart(2,"0")}.webp?v=20261116-menu-v2`}));
+ function ResponsiveMenu() {
+  const [phone,setPhone]=useState(matchMedia("(max-width: 767px)").matches);
+  useEffect(()=>{const mq=matchMedia("(max-width: 767px)");const update=()=>setPhone(mq.matches);mq.addEventListener("change",update);return()=>mq.removeEventListener("change",update)},[]);
+  return <Suspense fallback={<p role="status">Loading menu…</p>}>{phone ? <Journal spreads={pages} title="BAROCK Menu" meta="22 original pages · Swipe to browse" height="clamp(940px, 85vw, 1160px)" autoPlay={false}/> : <BookSlider/>}</Suspense>;
+ }
  const mount=document.createElement("div");mount.className="menu-journal-desktop";fallback.before(mount);
- createRoot(mount).render(<BookSlider/>);
+ createRoot(mount).render(<ResponsiveMenu/>);
  fallback.hidden=true; fallback.style.display="none";
  const download=fallback.querySelector("a[download]");if(download){const link=download.cloneNode(true) as HTMLElement;link.classList.add("menu-journal-desktop");mount.after(link);}
  } catch { /* Preserve the PDF viewer when loading fails. */ }
